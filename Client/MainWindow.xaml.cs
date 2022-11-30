@@ -24,6 +24,7 @@ namespace Client
         int index;
         static String nome;
         List<Chat> chatList;
+        //List<Messaggio> chatMess;
         Window1 w;
         connessioneTCP tcp;
         public MainWindow()
@@ -51,26 +52,8 @@ namespace Client
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ListChat.SelectedIndex != -1)
-                 index = ListChat.SelectedIndex;
-            try
-            {
-                if (chatList[index].chatCaricata)
-                {
-
-                }
-                else
-                {
-                    //richiedo
-                    tcp.send("richiedoChat" + index);
-                    tcp.recive();
-                }
-
-
-                ListChat.SelectedIndex = index;
-            }
-            catch
-            {
-            }
+                index = ListChat.SelectedIndex;
+            reloadChat();
         }
 
         public static String getNome()
@@ -78,5 +61,51 @@ namespace Client
             return nome;
         }
 
+        private void bttSend_Click(object sender, RoutedEventArgs e)
+        {
+            tcp.send("send;" + index + txtMess.Text);
+            if (tcp.recive() == "ok")
+            {
+                Messaggio m = new Messaggio(nome, txtMess.Text);
+                chatList[index].messaggi.Add(m);
+            }
+            reloadChat();
+        }
+
+        public void reloadChat()
+        {
+            try
+            {
+                if (chatList[index].chatCaricata == false)
+                {
+                    //richiedo
+                    tcp.send("richiedoChat" + index);
+                    String chat = tcp.recive();
+                    //chatMess = parseClass.toChat(chat);
+                    chatList[index].messaggi = parseClass.toChat(chat);
+                }
+
+                List<Messaggio> chatMess = chatList[index].messaggi;
+
+                for (int i = 0; i < chatMess.Count; i++)
+                {
+                    if (nome == chatMess[i].nome)
+                    {
+                        ListChatHost.Items.Add(chatMess[i].toMessHost());
+                        ListChatGuest.Items.Add("");
+                    }
+                    else
+                    {
+                        ListChatHost.Items.Add("");
+                        ListChatGuest.Items.Add(chatMess[i].toMessGuest());
+                    }
+                }
+
+                ListChat.SelectedIndex = index;
+            }
+            catch
+            {
+            }
+        }
     }
 }

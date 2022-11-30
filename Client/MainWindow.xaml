@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <ListBox x:Name="ListChat" HorizontalAlignment="Left" Height="354" Margin="48,0,0,0" VerticalAlignment="Center" Width="208" SelectionChanged="List_SelectionChanged"/>
+        <ListBox x:Name="ListChat" HorizontalAlignment="Left" Height="390" Margin="10,0,0,0" VerticalAlignment="Center" Width="208" SelectionChanged="List_SelectionChanged"/>
+        <Grid Margin="237,22,21,53">
+
+        </Grid>
+        <TextBox x:Name="txtMess" HorizontalAlignment="Left" Margin="237,386,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="461" Height="26" FontSize="18"/>
+        <Button x:Name="bttSend" Content="Send" HorizontalAlignment="Left" Margin="712,386,0,0" VerticalAlignment="Top" Height="26" Width="67" Click="bttSend_Click"/>
+        <ListBox x:Name="ListChatGuest" HorizontalAlignment="Left" Height="352" Margin="237,26,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged"/>
+        <ListBox x:Name="ListChatHost" HorizontalAlignment="Left" Height="352" Margin="508,26,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged"/>
     </Grid>
 </Window>

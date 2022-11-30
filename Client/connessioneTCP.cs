@@ -13,7 +13,7 @@ namespace Client
     {
         public static TcpClient client { get; set; }
         public Int32 port { get; set; }
-        public String server = 
+        public String server = "127.0.0.1";
 
         public connessioneTCP()
         {

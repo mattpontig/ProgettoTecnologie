@@ -25,7 +25,7 @@ namespace Client
                     {
                         for (int j = 2; j < chat.Length; j++)
                         {
-                             utente.Add(chat[j].ToString());
+                            utente.Add(chat[j].ToString());
 
                         }
                         list.Add(new Chat(utente, chat[1].ToString()));
@@ -39,7 +39,7 @@ namespace Client
                         utente.Add(s[2].ToString());
                         list.Add(new Chat(utente));
                     }
-                    
+
 
                 }
             }
@@ -56,6 +56,18 @@ namespace Client
                     b = true;
             }
             return b;
+        }
+
+        public static List<Messaggio> toChat(String s)
+        {
+            List<Messaggio> messaggi = new List<Messaggio>();
+            String[] chat = s.Split(';');
+            for (int i = 1; i < chat.Length; i++)
+            {
+                String[] mess = chat[i].ToString().Split(',');
+                messaggi.Add(new Messaggio(mess[0], mess[1]));
+            }
+            return messaggi;
         }
     }
 }

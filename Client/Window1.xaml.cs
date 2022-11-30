@@ -33,9 +33,11 @@ namespace Client
         {
             c.invia("Login" + ";" + txtUtente.Text + ";" + txtPassword.Text);
             String s = c.recive();
-            if (s != "0") {
+            if (s != "0")
+            {
                 labelErrato.IsEnabled = true;
-            }else if(s == "1")
+            }
+            else if (s == "1")
             {
                 record = c.recive();
                 this.Close();

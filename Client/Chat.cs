@@ -12,7 +12,7 @@ namespace Client
         //int id;
         List<String> utenti;
         String titolo = "";
-        List<Messaggio> messaggi;
+        public List<Messaggio> messaggi { get; set; }
         public String nome = MainWindow.getNome();
         public bool chatCaricata { get; set; }
 
@@ -21,6 +21,7 @@ namespace Client
             this.utenti = utenti;
             this.titolo = titolo;
             chatCaricata = false;
+            messaggi= new List<Messaggio>();
             //this.id = id;
         }
 
@@ -28,6 +29,7 @@ namespace Client
         {
             this.utenti = utenti;
             chatCaricata = false;
+            messaggi = new List<Messaggio>();
             //this.id = id;
         }
 
@@ -43,15 +45,5 @@ namespace Client
                 return titolo;
             return "";
         }
-
-        /*public List<Messaggio> toChat(String s)
-        {
-            String[] mess = s.Split(';');
-            for (int i = 1; i < mess.Length; i++)
-            {
-                
-            }
-
-        }*/
     }
 }
