@@ -21,7 +21,7 @@ namespace Client
     public partial class Window1 : Window
     {
         Connection c;
-        static String record;
+        public String record;
         public Window1()
         {
             InitializeComponent();

@@ -57,7 +57,9 @@
     </ApplicationDefinition>
     <Compile Include="Chat.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="connessioneTCP.cs" />
     <Compile Include="Messaggio.cs" />
+    <Compile Include="parseClass.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>

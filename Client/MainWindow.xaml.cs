@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Diagnostics;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -20,10 +21,11 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        int index;
         static String nome;
         List<Chat> chatList;
         Window1 w;
-
+        connessioneTCP tcp;
         public MainWindow()
         {
             InitializeComponent();
@@ -31,23 +33,50 @@ namespace Client
             w.ShowDialog();
             nome = w.txtUtente.Text;
             refresh();
+            index = -1;
+            tcp = new connessioneTCP();
         }
 
         private void refresh()
         {
-            chatList = w.
-            foreach (Chat c in chatList)
-                ListChat.Items.Add(c.ToString());
+            try
+            {
+                chatList = parseClass.toList(nome, w.record);
+                foreach (Chat c in chatList)
+                    ListChat.Items.Add(c.ToString());
+            }
+            catch (Exception ex) { ListChat.SelectedIndex = -1; }
         }
 
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (ListChat.SelectedIndex != -1)
+                 index = ListChat.SelectedIndex;
+            try
+            {
+                if (chatList[index].chatCaricata)
+                {
 
+                }
+                else
+                {
+                    //richiedo
+                    tcp.send("richiedoChat" + index);
+                    tcp.recive();
+                }
+
+
+                ListChat.SelectedIndex = index;
+            }
+            catch
+            {
+            }
         }
 
         public static String getNome()
         {
             return nome;
         }
+
     }
 }

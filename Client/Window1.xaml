@@ -13,7 +13,7 @@
         <TextBox x:Name="txtUtente" HorizontalAlignment="Center" Margin="0,160,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="252" FontSize="18"/>
         <TextBox x:Name="txtPassword" HorizontalAlignment="Center" Margin="0,221,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="252" FontSize="18"/>
         <Button x:Name="bttLogin" Content="Login" HorizontalAlignment="Center" Margin="0,295,0,0" VerticalAlignment="Top" Height="58" Width="172" FontSize="22" Click="bttLogin_Click"/>
-        <Label x:Name="labelErrato" Content="Login errato" HorizontalAlignment="Center" Margin="0,110,0,0" VerticalAlignment="Top" Width="114" FontSize="18" Background="#FFF7F7F7" Foreground="Red"/>
+        <Label x:Name="labelErrato" Content="Login errato" HorizontalAlignment="Center" Margin="0,110,0,0" VerticalAlignment="Top" Width="114" FontSize="18" Background="#FFF7F7F7" Foreground="Red" IsEnabled="False"/>
         <Button x:Name="bttRegistrati" Content="Registrazione" HorizontalAlignment="Center" Margin="0,368,0,0" VerticalAlignment="Top" Width="172" Click="bttRegistrati_Click" Height="30"/>
     </Grid>
 </Window>
