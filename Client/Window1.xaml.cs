@@ -26,6 +26,7 @@ namespace Client
         {
             InitializeComponent();
             c = new Connection();
+            labelErrato.IsEnabled = false;
         }
 
         private void bttLogin_Click(object sender, RoutedEventArgs e)

@@ -20,9 +20,34 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        static String nome;
+        List<Chat> chatList;
+        Window1 w;
+
         public MainWindow()
         {
             InitializeComponent();
+            w = new Window1();
+            w.ShowDialog();
+            nome = w.txtUtente.Text;
+            refresh();
+        }
+
+        private void refresh()
+        {
+            chatList = w.
+            foreach (Chat c in chatList)
+                ListChat.Items.Add(c.ToString());
+        }
+
+        private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        public static String getNome()
+        {
+            return nome;
         }
     }
 }
