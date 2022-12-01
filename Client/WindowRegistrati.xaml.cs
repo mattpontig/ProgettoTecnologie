@@ -29,7 +29,7 @@ namespace Client
 
         private void bttRegistrazione_Click(object sender, RoutedEventArgs e)
         {
-            c.invia("Register" + ";" + txtUtente.Text + ";" + txtPassword.Text);
+            c.invia("Register" + ";" + txtUtente.Text + ";" + txtPassword.Text + ";");
             String s = c.recive();
             if (s == "ok")
             {

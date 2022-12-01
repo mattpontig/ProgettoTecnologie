@@ -31,9 +31,10 @@ namespace Client
 
         private void bttLogin_Click(object sender, RoutedEventArgs e)
         {
-            c.invia("Login" + ";" + txtUtente.Text + ";" + txtPassword.Text);
+            c.invia("Login" + ";" + txtUtente.Text + ";" + txtPassword.Text + ";");
             String s = c.recive();
-            if (s != "0")
+            //MessageBox.Show(s);
+            if (s == "0")
             {
                 labelErrato.IsEnabled = true;
             }
@@ -48,9 +49,10 @@ namespace Client
         {
             WindowRegistrati w = new WindowRegistrati();
             w.ShowDialog();
-            c.invia("Login" + ";" + w.txtUtente.Text + ";" + w.txtPassword.Text);
+            c.invia("Login" + ";" + w.txtUtente.Text + ";" + w.txtPassword.Text + ";");
             String s = c.recive();
-            if (s != "0")
+            //MessageBox.Show(s);
+            if (s == "0")
             {
                 labelErrato.IsEnabled = true;
             }
