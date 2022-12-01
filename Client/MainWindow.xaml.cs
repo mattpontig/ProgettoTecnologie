@@ -24,7 +24,7 @@ namespace Client
         int index;
         static String nome;
         List<Chat> chatList;
-        //List<Messaggio> chatMess;
+        List<String> tuttiUtenti;
         Window1 w;
         connessioneTCP tcp;
         public MainWindow()
@@ -40,6 +40,7 @@ namespace Client
 
         private void refresh()
         {
+            ListChat.Items.Clear();
             try
             {
                 chatList = parseClass.toList(nome, w.record);
@@ -74,6 +75,8 @@ namespace Client
 
         public void reloadChat()
         {
+            ListChatHost.Items.Clear();
+            ListChatGuest.Items.Clear();
             try
             {
                 if (chatList[index].chatCaricata == false)
@@ -106,6 +109,17 @@ namespace Client
             catch
             {
             }
+        }
+
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            List<String> filteredList = tuttiUtenti.Where(x => x.Contains(txtSearch.Text)).ToList();
+            ListChat.Items.Clear();
+            foreach(String s in tuttiUtenti)
+            {
+                ListChat.Items.Add(s);
+            }
+
         }
     }
 }
