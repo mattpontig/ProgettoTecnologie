@@ -11,7 +11,7 @@ namespace Client
     {
         public static List<Chat> toList(String s, String nome)
         {
-            //"g/s,(titolo),nome,nome,nome..."
+            //"id,g/s,(titolo),nome,nome,nome..."
 
             String[] riga = s.Split(';');
             List<Chat> list = new List<Chat>();
@@ -19,35 +19,32 @@ namespace Client
             {
                 String[] chat = riga[i].Split(',');
                 List<String> utente = new List<String>();
-                if (s[0] == 'g')
+                if (s[1] == 'g')
                 {
-                    if (checkChat(chat, nome))
-                    {
+                    /*if (checkChat(chat, nome))
+                    {*/
                         for (int j = 2; j < chat.Length; j++)
                         {
                             utente.Add(chat[j].ToString());
-
                         }
-                        list.Add(new Chat(utente, chat[1].ToString()));
-                    }
+                        list.Add(new Chat(utente, chat[1].ToString(), int.Parse(s[0].ToString())));
+                    //}
                 }
-                else if (s[0] == 's')
+                else if (s[1] == 's')
                 {
-                    if (checkChat(chat, nome))
-                    {
-                        utente.Add(s[1].ToString());
+                    /*if (checkChat(chat, nome))
+                    {*/
                         utente.Add(s[2].ToString());
-                        list.Add(new Chat(utente));
-                    }
-
-
+                        utente.Add(s[3].ToString());
+                        list.Add(new Chat(utente, int.Parse(s[0].ToString())));
+                    //}
                 }
             }
             return list;
         }
 
 
-        public static bool checkChat(String[] chat, String nome)
+        /*public static bool checkChat(String[] chat, String nome)
         {
             bool b = false;
             for (int i = 0; i < chat.Length - 1; i++)
@@ -56,7 +53,7 @@ namespace Client
                     b = true;
             }
             return b;
-        }
+        }*/
 
         public static List<Messaggio> toChat(String s)
         {

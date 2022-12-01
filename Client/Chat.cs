@@ -9,28 +9,28 @@ namespace Client
 {
     internal class Chat
     {
-        //int id;
+        public int id { get; set; }
         List<String> utenti;
         String titolo = "";
         public List<Messaggio> messaggi { get; set; }
         public String nome = MainWindow.getNome();
         public bool chatCaricata { get; set; }
 
-        public Chat(List<String> utenti, String titolo)
+        public Chat(List<String> utenti, String titolo, int id)
         {
             this.utenti = utenti;
             this.titolo = titolo;
             chatCaricata = false;
-            messaggi= new List<Messaggio>();
-            //this.id = id;
+            messaggi = new List<Messaggio>();
+            this.id = id;
         }
 
-        public Chat(List<String> utenti)
+        public Chat(List<String> utenti,int id)
         {
             this.utenti = utenti;
             chatCaricata = false;
             messaggi = new List<Messaggio>();
-            //this.id = id;
+            this.id = id;
         }
 
         public String toString()

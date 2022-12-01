@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace Client
 {
@@ -14,8 +15,21 @@ namespace Client
         public static TcpClient client { get; set; }
         public Int32 port { get; set; }
         public String server = "127.0.0.1";
+        public bool toClose = false;
+        NetworkStream stream;
 
-        public connessioneTCP()
+
+        private static connessioneTCP _instance = null;
+        public static connessioneTCP getInstance()
+        {
+            if (_instance == null)
+                _instance = new connessioneTCP();
+
+            return _instance;
+        }
+        private connessioneTCP() { }
+
+        /*public connessioneTCP()
         {
             // Create a TcpClient.
             // Note, for this client to work you need to have a TcpServer
@@ -23,7 +37,7 @@ namespace Client
             // combination.
             port = 8080;
             client = new TcpClient(server, port);
-        }
+        }*/
         public void send(String message)
         {
             try
@@ -35,14 +49,14 @@ namespace Client
                 // Get a client stream for reading and writing.
                 //  Stream stream = client.GetStream();
 
-                NetworkStream stream = client.GetStream();
+                //NetworkStream stream = client.GetStream();
 
                 // Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
 
                 Console.WriteLine("Sent: {0}", message);
 
-           
+
                 // Close everything.
                 stream.Close();
             }
@@ -97,7 +111,20 @@ namespace Client
             Console.Read();
             return responseData;
         }
-        
+
+
+        public TcpClient getSocket()
+        {
+            return client;
+        }
+
+        public void setSocket(TcpClient socket)
+        {
+            client = socket;
+            stream = client.GetStream();
+
+        }
     }
+
 }
 

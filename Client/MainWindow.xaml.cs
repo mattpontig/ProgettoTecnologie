@@ -1,18 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Diagnostics;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Client
 {
@@ -26,16 +17,28 @@ namespace Client
         List<Chat> chatList;
         List<String> tuttiUtenti;
         Window1 w;
-        connessioneTCP tcp;
+        bool searchM;
+        ClientSocket s;
+
         public MainWindow()
         {
             InitializeComponent();
             w = new Window1();
             w.ShowDialog();
-            nome = w.txtUtente.Text;
-            refresh();
-            index = -1;
-            tcp = new connessioneTCP();
+            if (w.txtUtente.Text == "")
+            {
+                this.Close();
+            }
+            else
+            {
+                nome = w.txtUtente.Text;
+                refresh();
+                index = -1;
+                searchM = false;
+            }
+
+            s = new ClientSocket("127.0.0.1", 8080);
+            Thread t = new Thread(new ThreadStart(s.run));
         }
 
         private void refresh()
@@ -52,8 +55,15 @@ namespace Client
 
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            connessioneTCP inst = connessioneTCP.getInstance();
             if (ListChat.SelectedIndex != -1)
                 index = ListChat.SelectedIndex;
+            if (searchM == false)
+            { }
+            else
+            {
+                inst.send("nuovaChat" + ";" + ListChat.SelectedItem);
+            }
             reloadChat();
         }
 
@@ -64,17 +74,31 @@ namespace Client
 
         private void bttSend_Click(object sender, RoutedEventArgs e)
         {
-            tcp.send("send;" + index + txtMess.Text);
-            if (tcp.recive() == "ok")
+            connessioneTCP inst = connessioneTCP.getInstance();
+
+            while (!inst.toClose)
+            {
+                if (inst.getSocket() == null)
+                    continue;
+
+                inst.send("send;" + chatList[index].id + txtMess.Text);
+                Chat chat = chatList[index];
+                chatList.RemoveAt(index);
+                chatList.Insert(0, chat);
+            }
+            if (inst.recive() == "ok")
             {
                 Messaggio m = new Messaggio(nome, txtMess.Text);
                 chatList[index].messaggi.Add(m);
             }
+
             reloadChat();
+
         }
 
         public void reloadChat()
         {
+            connessioneTCP inst = connessioneTCP.getInstance();
             ListChatHost.Items.Clear();
             ListChatGuest.Items.Clear();
             try
@@ -82,8 +106,8 @@ namespace Client
                 if (chatList[index].chatCaricata == false)
                 {
                     //richiedo
-                    tcp.send("richiedoChat" + index);
-                    String chat = tcp.recive();
+                    inst.send("richiedoChat" + index);
+                    String chat = inst.recive();
                     //chatMess = parseClass.toChat(chat);
                     chatList[index].messaggi = parseClass.toChat(chat);
                 }
@@ -115,11 +139,22 @@ namespace Client
         {
             List<String> filteredList = tuttiUtenti.Where(x => x.Contains(txtSearch.Text)).ToList();
             ListChat.Items.Clear();
-            foreach(String s in tuttiUtenti)
+            foreach (String s in tuttiUtenti)
             {
                 ListChat.Items.Add(s);
+                searchM = true;
             }
 
+        }
+
+        private void bttGruppo_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBox chk = new CheckBox();
+            foreach (String s in tuttiUtenti)
+            {
+                ListChat.Items.Add(chk + s);
+                searchM = true;
+            }
         }
     }
 }

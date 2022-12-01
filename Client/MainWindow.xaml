@@ -15,6 +15,7 @@
         <Button x:Name="bttSend" Content="Send" HorizontalAlignment="Left" Margin="712,386,0,0" VerticalAlignment="Top" Height="26" Width="67" Click="bttSend_Click"/>
         <ListBox x:Name="ListChatGuest" HorizontalAlignment="Left" Height="338" Margin="237,40,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged"/>
         <ListBox x:Name="ListChatHost" HorizontalAlignment="Left" Height="338" Margin="508,40,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged"/>
-        <TextBox x:Name="txtSearch" HorizontalAlignment="Left" Margin="10,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="208" Height="26" FontSize="18" TextChanged="txtSearch_TextChanged"/>
+        <TextBox x:Name="txtSearch" HorizontalAlignment="Left" Margin="10,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" Height="26" FontSize="18" TextChanged="txtSearch_TextChanged"/>
+        <Button x:Name="bttGruppo" Content="+" HorizontalAlignment="Left" Margin="182,40,0,0" VerticalAlignment="Top" Height="26" Width="36" Click="bttGruppo_Click"/>
     </Grid>
 </Window>
