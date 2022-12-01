@@ -20,16 +20,17 @@ public class server {
                 risposta = loginer.verifica(true, mexSplit[1], mexSplit[2]);
                 invia(risposta);
                 if (risposta.equals("1")) {
-                    // risposta=loginer.getChatNames(mexSplit[1]);
-                    // invia(risposta);
+                    risposta = loginer.getChatNames(mexSplit[1]);
+                    invia(risposta);
+                    flag = false;
                 }
             }
             if (mexSplit[0].equals("Register")) {
                 risposta = loginer.verifica(false, mexSplit[1], mexSplit[2]);
                 invia(risposta);
             }
-            flag = false;
-            socket.close();
+            if (flag == false)
+                socket.close();
         }
     }
 
