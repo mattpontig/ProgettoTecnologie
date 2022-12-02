@@ -12,7 +12,7 @@ public class loginer {
             BufferedReader reader = new BufferedReader(fr);
             String line;
             while ((line = reader.readLine()) != null) {
-                if ((line.split(";")[0]).equals(nomeU) && (line.split(";")[1]).equals(pass))
+                if ((line.split(";")[1]).equals(nomeU) && (line.split(";")[2]).equals(pass))
                     rispo = "1";
             }
             fr.close();
@@ -22,7 +22,7 @@ public class loginer {
             String ver = verGiaPresente(nomeU, pass);
             if (ver.equals("")) {
                 FileWriter fw = new FileWriter("file/credenziali.csv", true);
-                fw.write(nomeU + ";" + pass + "\n");
+                fw.write(getLastId() + ";" + nomeU + ";" + pass + "\n");
                 fw.flush();
                 fw.close();
                 rispo = "ok";
@@ -33,16 +33,31 @@ public class loginer {
         return rispo;
     }
 
+    public static String getLastId() throws IOException {
+        String lastId = "";
+        FileReader fr = new FileReader("file/credenziali.csv");
+        BufferedReader reader = new BufferedReader(fr);
+        String line = "";
+        while ((line = reader.readLine()) != null)
+            lastId = line.split(";")[0];
+        fr.close();
+        int last = Integer.parseInt(lastId);
+        last++;
+
+        return Integer.toString(last);
+    }
+
     public static String verGiaPresente(String Uten, String pass) throws IOException {
         FileReader fr = new FileReader("file/credenziali.csv");
         BufferedReader reader = new BufferedReader(fr);
         String line, rit = "";
         while ((line = reader.readLine()) != null) {
-            if (line.split(";")[0].equals(Uten) && line.split(";")[1].equals(pass))
+            if (line.split(";")[1].equals(Uten) && line.split(";")[2].equals(pass))
                 rit = "Utente già registrato!";
-            else if (line.split(";")[0].equals(Uten))
+            else if (line.split(";")[1].equals(Uten))
                 rit = "Nome Utente non disponibile!";
         }
+        fr.close();
         return rit;
     }
 
