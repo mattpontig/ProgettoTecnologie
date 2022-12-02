@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -23,6 +24,9 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
+            bttGruppoConfirm.IsEnabled = false;
+            labelGruppo.IsEnabled= false;
+            txtNomeGruppo.IsEnabled= false;
             w = new Window1();
             w.ShowDialog();
             if (w.txtUtente.Text == "")
@@ -35,10 +39,10 @@ namespace Client
                 refresh();
                 index = -1;
                 searchM = false;
-            }
 
-            s = new ClientSocket("127.0.0.1", 8080);
-            Thread t = new Thread(new ThreadStart(s.run));
+                s = new ClientSocket("127.0.0.1", 8080);
+                Thread t = new Thread(new ThreadStart(s.run));
+            }
         }
 
         private void refresh()
@@ -62,7 +66,7 @@ namespace Client
             { }
             else
             {
-                inst.send("nuovaChat" + ";" + ListChat.SelectedItem);
+                inst.send("nuovaChat" + ";" + ListChat.SelectedIndex);
             }
             reloadChat();
         }
@@ -106,7 +110,7 @@ namespace Client
                 if (chatList[index].chatCaricata == false)
                 {
                     //richiedo
-                    inst.send("richiedoChat" + index);
+                    inst.send("richiedoChat" + chatList[index].id);
                     String chat = inst.recive();
                     //chatMess = parseClass.toChat(chat);
                     chatList[index].messaggi = parseClass.toChat(chat);
@@ -152,9 +156,63 @@ namespace Client
             CheckBox chk = new CheckBox();
             foreach (String s in tuttiUtenti)
             {
-                ListChat.Items.Add(chk + s);
+                chk = new CheckBox();
+                chk.Click += aggiuntaGruppo;
+                chk.Content = s;
+                ListChat.Items.Add(chk);
                 searchM = true;
             }
+        }
+
+        List<String> gruppo;
+
+        private void aggiuntaGruppo(object sender, RoutedEventArgs e)
+        {
+            bttGruppoConfirm.IsEnabled = false;
+            bttGruppo.IsEnabled = true;
+            gruppo = new List<string>();
+            CheckBox chk = e.Source as CheckBox;
+            if (chk.IsChecked == true)
+            {
+                gruppo.Add(chk.Content.ToString());
+            }
+            else
+            {
+                gruppo.Remove(chk.Content.ToString());
+            }
+
+        }
+
+        int step = 0;
+
+        private void bttGruppoConfirm_Click(object sender, RoutedEventArgs e)
+        {
+            connessioneTCP inst = connessioneTCP.getInstance();
+
+            String str = "";
+            if (step == 0)
+            {
+                foreach (String s in gruppo)
+                    str += s + ",";
+
+                labelGruppo.IsEnabled = true;
+                txtNomeGruppo.IsEnabled = true;
+                ListChat.IsEnabled = false;
+            }
+            else if (step == 1)
+            {
+                step = 0;
+
+                labelGruppo.IsEnabled = false;
+                txtNomeGruppo.IsEnabled = false;
+                ListChat.IsEnabled = true;
+
+                bttGruppoConfirm.IsEnabled = true;
+                bttGruppo.IsEnabled = false;
+
+                inst.send("newGruppo;" + txtNomeGruppo.Text + ";" + str);
+            }
+
         }
     }
 }

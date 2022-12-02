@@ -26,7 +26,6 @@ namespace Client
         {
             InitializeComponent();
             c = new Connection();
-            labelErrato.IsEnabled = false;
         }
 
         private void bttLogin_Click(object sender, RoutedEventArgs e)
@@ -36,7 +35,7 @@ namespace Client
             //MessageBox.Show(s);
             if (s == "0")
             {
-                labelErrato.IsEnabled = true;
+                txtUtente.Text = "Login Errato";
             }
             else if (s == "1")
             {
@@ -51,10 +50,9 @@ namespace Client
             w.ShowDialog();
             c.invia("Login" + ";" + w.txtUtente.Text + ";" + w.txtPassword.Text + ";");
             String s = c.recive();
-            //MessageBox.Show(s);
             if (s == "0")
             {
-                labelErrato.IsEnabled = true;
+                txtUtente.Text = "Login Errato";
             }
             else if (s == "1")
             {
