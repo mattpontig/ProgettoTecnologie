@@ -35,15 +35,16 @@ namespace Client
 
         public String toString()
         {
+            String den = "";
             if (titolo == "")
             {
                 for (int i = 0; i < utenti.Count; i++)
                     if (utenti[i] != nome)
-                        return utenti[i];
+                        den = utenti[i];
             }
             else
-                return titolo;
-            return "";
+                den =  titolo;
+            return den;
         }
     }
 }

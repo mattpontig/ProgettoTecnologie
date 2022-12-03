@@ -9,34 +9,37 @@ namespace Client
 {
     internal class parseClass
     {
-        public static List<Chat> toList(String s, String nome)
+        public static List<Chat> toList(String nome, String s)
         {
             //"id,g/s,(titolo),nome,nome,nome..."
 
             String[] riga = s.Split(';');
             List<Chat> list = new List<Chat>();
-            for (int i = 0; i < riga.Length; i++)
+            for (int i = 0; i < riga.Length-1; i++)
             {
                 String[] chat = riga[i].Split(',');
                 List<String> utente = new List<String>();
-                if (s[1] == 'g')
+                if (chat[1] == "g")
                 {
                     /*if (checkChat(chat, nome))
                     {*/
-                        for (int j = 2; j < chat.Length; j++)
+                        for (int j = 3; j < chat.Length; j++)
                         {
+                        if (chat[j].ToString() != nome)
                             utente.Add(chat[j].ToString());
                         }
-                        list.Add(new Chat(utente, chat[1].ToString(), int.Parse(s[0].ToString())));
+                        list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString())));
                     //}
                 }
-                else if (s[1] == 's')
+                else if (chat[1] == "s")
                 {
                     /*if (checkChat(chat, nome))
                     {*/
-                        utente.Add(s[2].ToString());
-                        utente.Add(s[3].ToString());
-                        list.Add(new Chat(utente, int.Parse(s[0].ToString())));
+                    if (chat[3].ToString() != nome)
+                        utente.Add(chat[3].ToString());
+                    else
+                        utente.Add(chat[4].ToString());
+                        list.Add(new Chat(utente, int.Parse(chat[0].ToString())));
                     //}
                 }
             }

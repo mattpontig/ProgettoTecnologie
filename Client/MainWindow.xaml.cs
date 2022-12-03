@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading;
@@ -16,7 +17,7 @@ namespace Client
         int index;
         static String nome;
         List<Chat> chatList;
-        List<String> tuttiUtenti;
+        List<String> tuttiUtenti = null;
         Window1 w;
         bool searchM;
         ClientSocket s;
@@ -24,9 +25,9 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
-            bttGruppoConfirm.IsEnabled = false;
-            labelGruppo.IsEnabled= false;
-            txtNomeGruppo.IsEnabled= false;
+            bttGruppoConfirm.Visibility = Visibility.Hidden;
+            labelGruppo.Visibility = Visibility.Hidden;
+            txtNomeGruppo.Visibility = Visibility.Hidden;
             w = new Window1();
             w.ShowDialog();
             if (w.txtUtente.Text == "")
@@ -52,7 +53,7 @@ namespace Client
             {
                 chatList = parseClass.toList(nome, w.record);
                 foreach (Chat c in chatList)
-                    ListChat.Items.Add(c.ToString());
+                    ListChat.Items.Add(c.toString());
             }
             catch (Exception ex) { ListChat.SelectedIndex = -1; }
         }
@@ -195,24 +196,45 @@ namespace Client
                 foreach (String s in gruppo)
                     str += s + ",";
 
-                labelGruppo.IsEnabled = true;
-                txtNomeGruppo.IsEnabled = true;
-                ListChat.IsEnabled = false;
+                labelGruppo.Visibility = Visibility.Visible;
+                txtNomeGruppo.Visibility = Visibility.Hidden;
+                ListChat.Visibility = Visibility.Hidden;
             }
             else if (step == 1)
             {
                 step = 0;
 
-                labelGruppo.IsEnabled = false;
-                txtNomeGruppo.IsEnabled = false;
-                ListChat.IsEnabled = true;
+                labelGruppo.Visibility = Visibility.Hidden;
+                txtNomeGruppo.Visibility = Visibility.Hidden;
+                ListChat.Visibility = Visibility.Visible;
 
-                bttGruppoConfirm.IsEnabled = true;
-                bttGruppo.IsEnabled = false;
+                bttGruppoConfirm.Visibility = Visibility.Visible;
+                bttGruppo.Visibility = Visibility.Hidden;
 
                 inst.send("newGruppo;" + txtNomeGruppo.Text + ";" + str);
             }
 
+        }
+
+        void DataWindow_Closing(object sender, CancelEventArgs e)
+        {
+            MessageBox.Show("Closing called");
+
+            connessioneTCP inst = connessioneTCP.getInstance();
+            inst.send("Close");
+        }
+
+        void getUtenti()
+        {
+            if(tuttiUtenti == null)
+            {
+                connessioneTCP inst = connessioneTCP.getInstance();
+                inst.send("getUtenti");
+                String s = inst.recive();
+                String[] ut = s.Split(';');
+                foreach(String s2 in ut)
+                    tuttiUtenti.Add(s2);
+            }
         }
     }
 }
