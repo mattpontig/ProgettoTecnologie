@@ -61,8 +61,14 @@ public class loginer {
         return rit;
     }
 
-    public static String getChatNames(String string) {
-        return null;
+    public static String getChatNames(String string) throws IOException {
+        FileReader fr = new FileReader("file/chatUtenti.csv");
+        BufferedReader reader = new BufferedReader(fr);
+        String line, stringaChat = "";
+        while ((line = reader.readLine()) != null) {
+            stringaChat += line;
+        }
+        return stringaChat;
     }
 
 }

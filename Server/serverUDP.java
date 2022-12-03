@@ -22,8 +22,8 @@ public class serverUDP {
                 risposta = loginer.verifica(true, mexSplit[1], mexSplit[2]);
                 invia(risposta);
                 if (risposta.equals("1")) {
-                    // risposta = loginer.getChatNames(mexSplit[1]);
-                    // invia(risposta);
+                    risposta = loginer.getChatNames(mexSplit[1]);
+                    invia(risposta);
                     flag = false;
                 }
             }
