@@ -1,6 +1,9 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ public class serverTCP {
     static int i = 0;
 
     public static void avvia() throws IOException {
-        // server is listening on port 1234
+        // server is listening on port 8080
         ServerSocket ss = new ServerSocket(port);
         Socket s;
         // running infinite loop for getting
@@ -25,8 +28,9 @@ public class serverTCP {
             s = ss.accept();
             System.out.println("New client request received : " + s);
             // obtain input and output streams
-            DataInputStream dis = new DataInputStream(s.getInputStream());
-            DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+            BufferedReader dis = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            PrintWriter dos = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())),
+                    true);
             System.out.println("Creating a new handler for this client...");
             // Create a new handler object for handling this request.
             ClientHandler mtch = new ClientHandler(s, "client " + i, dis, dos);
@@ -49,16 +53,16 @@ public class serverTCP {
 class ClientHandler implements Runnable {
     Scanner scn = new Scanner(System.in);
     private String name;
-    final DataInputStream dis;
-    final DataOutputStream dos;
+    final BufferedReader dis;
+    final PrintWriter dos;
     Socket s;
     boolean isloggedin;
 
     // constructor
     public ClientHandler(Socket s, String name,
-            DataInputStream dis, DataOutputStream dos) {
-        this.dis = dis;
-        this.dos = dos;
+            BufferedReader dis2, PrintWriter dos2) {
+        this.dis = dis2;
+        this.dos = dos2;
         this.name = name;
         this.s = s;
         this.isloggedin = true;
@@ -70,22 +74,24 @@ class ClientHandler implements Runnable {
         while (true) {
             try {
                 // receive the string
-                received = dis.readUTF();
+                received = dis.readLine();
                 System.out.println(received);
-                if (received.equals("logout")) {
+                if (received.equals("Close")) {
                     this.isloggedin = false;
                     this.s.close();
                     break;
                 }
                 // break the string into message and recipient part
                 String[] st = received.split(";");
+                // toDo: metodi a seconda del messaggio
+
                 // search for the client in the connected devices list.
                 // ar is the vector storing client of active users
-                // for (ClientHandler mc : server.ar) {
-                // // if the client is found, write on its
-                // // output stream
-                // if (mc.name.equals(recipient) && mc.isloggedin == true) {
-                // mc.dos.writeUTF(this.name + " : " + MsgToSend);
+                // for (ClientHandler mc : serverTCP.ar) {
+                // // // if the client is found, write on its
+                // // // output stream
+                // if (mc.name.equals(/*nome destinatario messaggio */)) {
+                // mc.dos.println(this.name + " : ciao" /*+ MsgToSend*/);
                 // break;
                 // }
                 // }
