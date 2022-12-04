@@ -26,7 +26,6 @@ namespace Client
 
             try
             {
-
                 inst.setSocket(socket);
                 while (true)
                 {
@@ -50,5 +49,6 @@ namespace Client
                 return;
             }
         }
+
     }
 }

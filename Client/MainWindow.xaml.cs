@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace Client
 {
@@ -43,6 +44,7 @@ namespace Client
 
                 s = new ClientSocket("127.0.0.1", 8080);
                 Thread t = new Thread(new ThreadStart(s.run));
+                t.Start();
             }
         }
 
@@ -64,7 +66,9 @@ namespace Client
             if (ListChat.SelectedIndex != -1)
                 index = ListChat.SelectedIndex;
             if (searchM == false)
-            { }
+            {
+                reloadChat();
+            }
             else
             {
                 inst.send("nuovaChat" + ";" + ListChat.SelectedIndex);
@@ -87,6 +91,7 @@ namespace Client
                     continue;
 
                 inst.send("send;" + chatList[index].id + txtMess.Text);
+                inst.send("send;" + chatList[index].id + txtMess.Text);
                 Chat chat = chatList[index];
                 chatList.RemoveAt(index);
                 chatList.Insert(0, chat);
@@ -96,6 +101,23 @@ namespace Client
                 Messaggio m = new Messaggio(nome, txtMess.Text);
                 chatList[index].messaggi.Add(m);
             }
+            /*connessioneTCP inst = connessioneTCP.getInstance();
+
+            while (!inst.toClose)
+            {
+                if (inst.getSocket() == null)
+                    continue;
+
+                inst.send("send;" + chatList[index].id + txtMess.Text);
+                Chat chat = chatList[index];
+                chatList.RemoveAt(index);
+                chatList.Insert(0, chat);
+            }
+            if (inst.recive() == "ok")
+            {
+                Messaggio m = new Messaggio(nome, txtMess.Text);
+                chatList[index].messaggi.Add(m);
+            }*/
 
             reloadChat();
 
@@ -111,7 +133,7 @@ namespace Client
                 if (chatList[index].chatCaricata == false)
                 {
                     //richiedo
-                    inst.send("richiedoChat" + chatList[index].id);
+                    inst.send("richiedoChat;" + chatList[index].id);
                     String chat = inst.recive();
                     //chatMess = parseClass.toChat(chat);
                     chatList[index].messaggi = parseClass.toChat(chat);
