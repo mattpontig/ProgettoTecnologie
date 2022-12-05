@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -14,10 +15,8 @@ namespace Client
     {
         public static TcpClient client { get; set; }
         public Int32 port { get; set; }
-        public String server = "127.0.0.1";
+        public String server = "172.0.0.1";
         public bool toClose = false;
-        NetworkStream stream;
-
 
         private static connessioneTCP _instance = null;
         public static connessioneTCP getInstance()
@@ -38,24 +37,24 @@ namespace Client
             port = 8080;
             client = new TcpClient(server, port);
         }*/
+
+        Byte[] data;
+        NetworkStream stream;
         public void send(String message)
         {
+            stream = client.GetStream();
             try
             {
                 // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                data = System.Text.Encoding.UTF8.GetBytes(message + "\n\rEND");
 
                 // Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
-
-                //NetworkStream stream = client.GetStream();
-
+                //Stream stream = client.GetStream();
                 // Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
+                stream.Flush();
 
                 Console.WriteLine("Sent: {0}", message);
-
-
                 
             }
             catch (ArgumentNullException e)
@@ -67,30 +66,28 @@ namespace Client
                 Console.WriteLine("SocketException: {0}", e);
             }
 
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
         }
 
         public String recive()
         {
+            stream = client.GetStream();
             // String to store the response ASCII representation.
             String responseData = String.Empty;
             try
             {
 
                 // Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
-
                 //stream = client.GetStream();
 
                 // Receive the TcpServer.response.
 
                 // Buffer to store the response bytes.
-                Byte[] data = new Byte[256];
+                data = new Byte[256];
 
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                stream.Flush();
+                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
                 Console.WriteLine("Received: {0}", responseData);
 
             }
@@ -117,8 +114,6 @@ namespace Client
         public void setSocket(TcpClient socket)
         {
             client = socket;
-            stream = client.GetStream();
-
         }
     }
 

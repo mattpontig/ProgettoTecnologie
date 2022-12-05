@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +15,15 @@ namespace Client
     {
         private int PORT;
         public TcpClient socket;
-
-        public ClientSocket(String addr, int port)
+        NetworkStream stream;
+        
+        public ClientSocket(int port)
         {
             this.PORT = port;
-            socket = new TcpClient(addr, PORT);
+            //socket = new TcpClient(addr, PORT);
+            socket = new TcpClient();
+            socket.Connect("localhost", port);
+            stream = socket.GetStream();
         }
 
         public void run()
@@ -48,6 +54,11 @@ namespace Client
                 inst.toClose = true;  //impossibile prendere lo stream di input
                 return;
             }
+        }
+
+        private NetworkStream getStream()
+        {
+            return stream;
         }
 
     }

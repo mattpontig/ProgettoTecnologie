@@ -29,25 +29,31 @@ namespace Client
             bttGruppoConfirm.Visibility = Visibility.Hidden;
             labelGruppo.Visibility = Visibility.Hidden;
             txtNomeGruppo.Visibility = Visibility.Hidden;
-            w = new Window1();
-            w.ShowDialog();
+            //w = new Window1();
+            /*w.ShowDialog();
             if (w.txtUtente.Text == "")
             {
                 this.Close();
             }
             else
             {
-                nome = w.txtUtente.Text;
+                /*nome = w.txtUtente.Text;
                 refresh();
                 index = -1;
-                searchM = false;
+                searchM = false;*/
 
-                s = new ClientSocket("127.0.0.1", 8080);
+                s = new ClientSocket(8080);
                 Thread t = new Thread(new ThreadStart(s.run));
                 t.Start();
-            }
+            prova();
+            //}
         }
 
+        void prova()
+        {
+            connessioneTCP inst = connessioneTCP.getInstance();
+            inst.send("prova");
+        }
         private void refresh()
         {
             ListChat.Items.Clear();
@@ -248,13 +254,13 @@ namespace Client
 
         void getUtenti()
         {
-            if(tuttiUtenti == null)
+            if (tuttiUtenti == null)
             {
                 connessioneTCP inst = connessioneTCP.getInstance();
                 inst.send("getUtenti");
                 String s = inst.recive();
                 String[] ut = s.Split(';');
-                foreach(String s2 in ut)
+                foreach (String s2 in ut)
                     tuttiUtenti.Add(s2);
             }
         }
