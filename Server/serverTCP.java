@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class serverTCP {
+public class serverTCP extends Thread {
     public final static int port = 8080;
     // Vector to store active clients
     static List<ClientHandler> ar = new ArrayList<ClientHandler>();
@@ -71,7 +71,8 @@ class ClientHandler implements Runnable {
     @Override
     public void run() {
         String received;
-        while (true) {
+        boolean cicla = true;
+        while (cicla) {
             try {
                 // receive the string
                 received = dis.readLine();
@@ -79,6 +80,7 @@ class ClientHandler implements Runnable {
                 if (received.equals("Close")) {
                     this.isloggedin = false;
                     this.s.close();
+                    cicla = false;
                     break;
                 }
                 // break the string into message and recipient part
@@ -97,6 +99,13 @@ class ClientHandler implements Runnable {
                 // }
             } catch (IOException e) {
                 e.printStackTrace();
+                cicla = false;
+                try {
+                    this.s.close();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             }
         }
         try {
