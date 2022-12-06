@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
+using System.IO;
 using System.Linq;
+using System.Security;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +25,7 @@ namespace Client
         Window1 w;
         bool searchM;
         ClientSocket s;
+        OpenFileDialog openFileDialog1;
 
         public MainWindow()
         {
@@ -262,6 +266,24 @@ namespace Client
                 String[] ut = s.Split(';');
                 foreach (String s2 in ut)
                     tuttiUtenti.Add(s2);
+            }
+        }
+
+        private void bttSendFile_Click(object sender, RoutedEventArgs e)
+        {
+            connessioneTCP inst = connessioneTCP.getInstance();
+            openFileDialog1 = new OpenFileDialog();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var sr = new StreamReader(openFileDialog1.FileName);
+                }
+                catch (SecurityException ex)
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
             }
         }
     }
