@@ -46,7 +46,7 @@ namespace Client
             try
             {
                 // Translate the passed message into ASCII and store it as a Byte array.
-                data = System.Text.Encoding.UTF8.GetBytes(message + "\n\rEND");
+                data = System.Text.Encoding.UTF8.GetBytes(message + "\r\nEND");
 
                 // Get a client stream for reading and writing.
                 //Stream stream = client.GetStream();

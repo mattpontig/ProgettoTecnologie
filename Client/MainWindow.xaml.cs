@@ -29,25 +29,25 @@ namespace Client
             bttGruppoConfirm.Visibility = Visibility.Hidden;
             labelGruppo.Visibility = Visibility.Hidden;
             txtNomeGruppo.Visibility = Visibility.Hidden;
-            //w = new Window1();
-            /*w.ShowDialog();
+            w = new Window1();
+            w.ShowDialog();
             if (w.txtUtente.Text == "")
             {
                 this.Close();
             }
             else
             {
-                /*nome = w.txtUtente.Text;
+                nome = w.txtUtente.Text;
                 refresh();
                 index = -1;
-                searchM = false;*/
+                searchM = false;
 
-                s = new ClientSocket(8080);
-                Thread t = new Thread(new ThreadStart(s.run));
-                t.Start();
-            prova();
-            //}
+            s = new ClientSocket(8080);
+            Thread t = new Thread(new ThreadStart(s.run));
+            t.Start();
+            //prova();
         }
+    }
 
         void prova()
         {
