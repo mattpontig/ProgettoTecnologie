@@ -33,7 +33,7 @@ namespace Client
             bttGruppoConfirm.Visibility = Visibility.Hidden;
             labelGruppo.Visibility = Visibility.Hidden;
             txtNomeGruppo.Visibility = Visibility.Hidden;
-            w = new Window1();
+            /*w = new Window1();
             w.ShowDialog();
             if (w.txtUtente.Text == "")
             {
@@ -46,12 +46,11 @@ namespace Client
                 index = -1;
                 searchM = false;
 
-            s = new ClientSocket(8080);
-            Thread t = new Thread(new ThreadStart(s.run));
-            t.Start();
+            s = new ClientSocket(8080);*/
+            //Thread t = new Thread(new ThreadStart(s.run));
+            //t.Start();
             //prova();
         }
-    }
 
         void prova()
         {
@@ -273,11 +272,12 @@ namespace Client
         {
             connessioneTCP inst = connessioneTCP.getInstance();
             openFileDialog1 = new OpenFileDialog();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == true)
             {
                 try
                 {
-                    var sr = new StreamReader(openFileDialog1.FileName);
+                    //var sr = new StreamReader(openFileDialog1.FileName);
+                    inst.sendImg(openFileDialog1.FileName);
                 }
                 catch (SecurityException ex)
                 {

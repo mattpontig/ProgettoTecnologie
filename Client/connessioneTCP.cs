@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Client
         public Int32 port { get; set; }
         public String server = "172.0.0.1";
         public bool toClose = false;
+        Socket socket;
 
         private static connessioneTCP _instance = null;
         public static connessioneTCP getInstance()
@@ -41,7 +43,7 @@ namespace Client
         Byte[] data;
         NetworkStream stream;
         public void send(String message)
-        {
+        { 
             stream = client.GetStream();
             try
             {
@@ -67,6 +69,45 @@ namespace Client
                 Console.WriteLine("SocketException: {0}", e);
             }
 
+        }
+
+        public void sendImg(String path)
+        {
+            socket = client.Client;
+
+            FileStream stream = File.OpenRead(path);
+
+            /*int length = IPAddress.HostToNetworkOrder((int)stream.Length);
+            socket.Send(BitConverter.GetBytes(length), SocketFlags.None);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                socket.Send(buffer, 0, read, SocketFlags.None);
+            }*/
+            // send the file
+            byte[] buffer = ReadImageFile(path);
+
+            socket.Send(buffer, buffer.Length, SocketFlags.None);
+
+        }
+
+        public void reciveImg(String path)
+        {
+            socket = client.Client;
+
+            FileStream stream = File.OpenRead(path);
+
+            int length = IPAddress.HostToNetworkOrder((int)stream.Length);
+            socket.Send(BitConverter.GetBytes(length), SocketFlags.None);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                socket.Send(buffer, 0, read, SocketFlags.None);
+            }
         }
 
         public String recive()
@@ -112,9 +153,23 @@ namespace Client
             return client;
         }
 
+
         public void setSocket(TcpClient socket)
         {
             client = socket;
+        }
+
+        private static byte[] ReadImageFile(String img)
+        {
+            FileInfo fileInfo = new FileInfo(img);
+            byte[] buf = new byte[fileInfo.Length];
+            FileStream fs = new FileStream(img, FileMode.Open, FileAccess.Read);
+            fs.Read(buf, 0, buf.Length);
+            fs.Close();
+            //fileInfo.Delete ();
+            GC.ReRegisterForFinalize(fileInfo);
+            GC.ReRegisterForFinalize(fs);
+            return buf;
         }
     }
 
