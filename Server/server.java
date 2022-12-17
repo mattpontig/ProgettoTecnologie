@@ -3,8 +3,8 @@ import java.io.IOException;
 public class server {
 
     public static void main(String[] args) throws IOException {
-        // serverUDP.avviaServerUDP();
-        // serverTCP.avvia();
+        serverUDP.avviaServerUDP();
+        serverTCP.avvia();
         gestoreDB.connetti();
     }
 }
