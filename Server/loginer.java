@@ -1,5 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -25,15 +23,4 @@ public class loginer {
         }
         return rispo;
     }
-
-    public static String getChatNames(String string) throws IOException {
-        FileReader fr = new FileReader("file/chatUtenti.csv");
-        BufferedReader reader = new BufferedReader(fr);
-        String line, stringaChat = "";
-        while ((line = reader.readLine()) != null) {
-            stringaChat += line;
-        }
-        return stringaChat;
-    }
-
 }
