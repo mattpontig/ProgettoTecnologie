@@ -49,7 +49,7 @@ namespace Client
             {
 
                 // Translate the passed message into ASCII and store it as a Byte array.
-                data = System.Text.Encoding.UTF8.GetBytes(message + "\r\nEND");
+                data = System.Text.Encoding.Default.GetBytes(message + "\r\nEND");
 
                 // Get a client stream for reading and writing.
                 //Stream stream = client.GetStream();
@@ -90,7 +90,6 @@ namespace Client
             byte[] buffer = ReadImageFile(path);
 
             socket.Send(buffer, buffer.Length, SocketFlags.None);
-
         }
 
         public void reciveImg(String path)
@@ -128,9 +127,10 @@ namespace Client
 
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
-                stream.Flush();
-                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
+                //stream.Flush();
+                responseData = System.Text.Encoding.Default.GetString(data, 0, bytes);
+                
+                //Console.WriteLine("Received: {0}", bytes);
 
             }
             catch (ArgumentNullException e)
@@ -141,9 +141,8 @@ namespace Client
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
-
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
+            catch(IOException e) { }
+            //Console.Read();
             return responseData;
         }
 

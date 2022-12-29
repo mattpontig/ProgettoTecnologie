@@ -28,4 +28,13 @@ public class MySocket {
         MySocket tmp = (MySocket) obj;
         return tmp.id == id;
     }
+
+    public void Close() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

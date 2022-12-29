@@ -33,7 +33,7 @@ namespace Client
             bttGruppoConfirm.Visibility = Visibility.Hidden;
             labelGruppo.Visibility = Visibility.Hidden;
             txtNomeGruppo.Visibility = Visibility.Hidden;
-            /*w = new Window1();
+            w = new Window1();
             w.ShowDialog();
             if (w.txtUtente.Text == "")
             {
@@ -46,17 +46,20 @@ namespace Client
                 index = -1;
                 searchM = false;
 
-            s = new ClientSocket(8080);*/
-            //Thread t = new Thread(new ThreadStart(s.run));
-            //t.Start();
-            //prova();
+                s = new ClientSocket(8080);
+            }
+            s = new ClientSocket(8080);
+            Thread t = new Thread(new ThreadStart(s.run));
+            t.Start();
+            prova();
         }
 
         void prova()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
-            inst.send("prova");
+            inst.send("start");
         }
+
         private void refresh()
         {
             ListChat.Items.Clear();

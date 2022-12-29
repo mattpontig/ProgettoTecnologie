@@ -38,21 +38,18 @@ namespace Client
                     try
                     {
                         String line = inst.recive();
-                        Console.WriteLine("Ricevuto dall'altro client: " + line);
+                        Console.WriteLine("Ricevuto dal server: " + line);
                     }
                     catch (IOException e)
                     {
 
                     }
-
                 }
-
-
             }
             catch (IOException e)
             {
-                inst.toClose = true;  //impossibile prendere lo stream di input
-                return;
+                //inst.toClose = true;  //impossibile prendere lo stream di input
+                //return;
             }
         }
 

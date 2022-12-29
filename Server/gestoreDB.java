@@ -1,6 +1,7 @@
 import java.sql.*;
 
 public class gestoreDB {
+    
     public static void connetti() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
