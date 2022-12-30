@@ -12,36 +12,39 @@ namespace Client
         public static List<Chat> toList(String nome, String s)
         {
             //"id,g/s,(titolo),nome,nome,nome..."
-
-            String[] riga = s.Split(';');
-            List<Chat> list = new List<Chat>();
-            for (int i = 0; i < riga.Length-1; i++)
+                String[] riga = s.Split(';');
+                List<Chat> list = new List<Chat>();
+            try
             {
-                String[] chat = riga[i].Split(',');
-                List<String> utente = new List<String>();
-                if (chat[1] == "g")
+                for (int i = 0; i < riga.Length - 1; i++)
                 {
-                    /*if (checkChat(chat, nome))
-                    {*/
+                    String[] chat = riga[i].Split(',');
+                    List<String> utente = new List<String>();
+                    if (chat[1] == "g")
+                    {
+                        /*if (checkChat(chat, nome))
+                        {*/
                         for (int j = 3; j < chat.Length; j++)
                         {
-                        if (chat[j].ToString() != nome)
-                            utente.Add(chat[j].ToString());
+                            if (chat[j].ToString() != nome)
+                                utente.Add(chat[j].ToString());
                         }
                         list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString())));
-                    //}
-                }
-                else if (chat[1] == "s")
-                {
-                    /*if (checkChat(chat, nome))
-                    {*/
-                    if (chat[3].ToString() != nome)
-                        utente.Add(chat[3].ToString());
-                    else
-                        utente.Add(chat[4].ToString());
+                        //}
+                    }
+                    else if (chat[1] == "s")
+                    {
+                        /*if (checkChat(chat, nome))
+                        {*/
+                        if (chat[3].ToString() != nome)
+                            utente.Add(chat[3].ToString());
+                        else
+                            utente.Add(chat[4].ToString());
                         list.Add(new Chat(utente, int.Parse(chat[0].ToString())));
-                    //}
+                        //}
+                    }
                 }
+            }catch(Exception e) { 
             }
             return list;
         }

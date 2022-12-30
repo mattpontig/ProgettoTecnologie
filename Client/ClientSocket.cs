@@ -11,11 +11,12 @@ using System.Windows.Shapes;
 
 namespace Client
 {
-    internal class ClientSocket
+    public class ClientSocket
     {
         private int PORT;
         public TcpClient socket;
         NetworkStream stream;
+        public String m;
         
         public ClientSocket(int port)
         {
@@ -24,20 +25,24 @@ namespace Client
             socket = new TcpClient();
             socket.Connect("localhost", port);
             stream = socket.GetStream();
+
+            connessioneTCP inst = connessioneTCP.getInstance();
+            inst.setSocket(socket, stream);
         }
 
         public void run()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
-
             try
             {
-                inst.setSocket(socket);
+                //inst.setSocket(socket,stream);
                 while (true)
                 {
                     try
                     {
                         String line = inst.recive();
+                        m = "";
+                        m = line;
                         Console.WriteLine("Ricevuto dal server: " + line);
                     }
                     catch (IOException e)
@@ -48,12 +53,12 @@ namespace Client
             }
             catch (IOException e)
             {
-                //inst.toClose = true;  //impossibile prendere lo stream di input
-                //return;
+                inst.toClose = true;  //impossibile prendere lo stream di input
+                return;
             }
         }
 
-        private NetworkStream getStream()
+        public NetworkStream getStream()
         {
             return stream;
         }

@@ -72,19 +72,38 @@ public class gestoreDB {
             if (ris.contains(Integer.toString(rs.getInt(2))))
                 ris += "," + rs.getString(3);
             else
-                ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3);
+                ris += /*";" + */rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) + ";";
         }
 
         /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
         stmt = con.createStatement();
         rs = stmt
                 .executeQuery(
-                        "select user, c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not lo.user='"
+                        "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not lo.user='"
                                 + string
                                 + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
                                 + string + "' and c.titolo='')");
         while (rs.next()) {
-            ris += ";" + rs.getInt(2) + ",s,," + rs.getString(1) + ";";
+            ris += /*";" + */rs.getInt(2) + ",s,," + rs.getString(1) + ";";
+        }
+        return ris;
+    }
+
+    public static String getNames(String string)  throws SQLException, ClassNotFoundException {
+        String ris = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
+
+        /*
+         * query per avere tutti i nomi dei gruppi che sono in contatto con string che
+         * sarebbe l'user inserito nel login
+         */
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt
+                .executeQuery(
+                        "select user from login where not user=" + string);
+        while (rs.next()) {
+            ris += rs.getString(0) + ";";
         }
         return ris;
     }

@@ -42,16 +42,14 @@ namespace Client
             else
             {
                 nome = w.txtUtente.Text;
-                refresh();
                 index = -1;
                 searchM = false;
-
-                s = new ClientSocket(8080);
             }
             s = new ClientSocket(8080);
             Thread t = new Thread(new ThreadStart(s.run));
             t.Start();
-            prova();
+            //prova();
+            refresh();
         }
 
         void prova()
@@ -62,10 +60,17 @@ namespace Client
 
         private void refresh()
         {
+            connessioneTCP inst = connessioneTCP.getInstance();
             ListChat.Items.Clear();
             try
             {
-                chatList = parseClass.toList(nome, w.record);
+                inst.send("RichiedoChats;" + nome + ";");
+                String chats;
+                do
+                {
+                    chats = s.m;
+                } while (chats == null);
+                chatList = parseClass.toList(nome, chats);
                 foreach (Chat c in chatList)
                     ListChat.Items.Add(c.toString());
             }
@@ -103,7 +108,7 @@ namespace Client
                     continue;
 
                 inst.send("send;" + chatList[index].id + txtMess.Text);
-                inst.send("send;" + chatList[index].id + txtMess.Text);
+                //inst.send("send;" + chatList[index].id + txtMess.Text);
                 Chat chat = chatList[index];
                 chatList.RemoveAt(index);
                 chatList.Insert(0, chat);
@@ -176,6 +181,7 @@ namespace Client
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
+            getUtenti();
             List<String> filteredList = tuttiUtenti.Where(x => x.Contains(txtSearch.Text)).ToList();
             ListChat.Items.Clear();
             foreach (String s in tuttiUtenti)
@@ -188,6 +194,7 @@ namespace Client
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
         {
+
             CheckBox chk = new CheckBox();
             foreach (String s in tuttiUtenti)
             {
@@ -260,20 +267,17 @@ namespace Client
 
         void getUtenti()
         {
-            if (tuttiUtenti == null)
-            {
                 connessioneTCP inst = connessioneTCP.getInstance();
-                inst.send("getUtenti");
+                inst.send("getUtenti;" + nome + ";");
                 String s = inst.recive();
                 String[] ut = s.Split(';');
                 foreach (String s2 in ut)
                     tuttiUtenti.Add(s2);
-            }
         }
 
         private void bttSendFile_Click(object sender, RoutedEventArgs e)
         {
-            connessioneTCP inst = connessioneTCP.getInstance();
+            /*connessioneTCP inst = connessioneTCP.getInstance();
             openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == true)
             {
@@ -287,7 +291,7 @@ namespace Client
                     MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
                     $"Details:\n\n{ex.StackTrace}");
                 }
-            }
+            }*/
         }
     }
 }

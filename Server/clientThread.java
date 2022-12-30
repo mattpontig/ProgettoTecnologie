@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class clientThread extends Thread{
@@ -22,27 +22,39 @@ public class clientThread extends Thread{
     @Override
     public void run() {
 
-        String received;
+        String received = "";
         boolean cicla = true;
+        String daMandare = "";
         while (cicla) {
             try {
                 // receive the string
                 received = in.readLine();
                 System.out.println(received);
-                if (received.equals("Close")) {
+                if (received == null);
+                else if (received.equals("Close")) {
                     this.isloggedin = false;
-                    this.s.Close();;
+                    this.s.Close();
+                    ;
                     cicla = false;
                     break;
                 }
+                
+                else if (received.equals("END")) {}
 
-                if (received.equals("start")) {
+                else if (received.equals("start")) {
                     this.s.out.println("start");
                 } else {
-
                     // break the string into message and recipient part
                     String[] st = received.split(";");
+                    if (st[0].equals("RichiedoChats")) {
+                        daMandare = gestoreDB.getChatNames(st[1]);
+                    }
+                    else if (st[0].equals("getUtenti")) {
+                        daMandare = gestoreDB.getNames(st[1]);
+                    }
+                    this.s.out.println(daMandare);
                 }
+                System.out.println(daMandare);
                 // toDo: metodi a seconda del messaggio
 
                 // search for the client in the connected devices list.
@@ -59,6 +71,12 @@ public class clientThread extends Thread{
                 e.printStackTrace();
                 cicla = false;
                 this.s.Close();
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
         try {

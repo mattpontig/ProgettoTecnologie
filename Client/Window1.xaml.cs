@@ -21,7 +21,6 @@ namespace Client
     public partial class Window1 : Window
     {
         Connection c;
-        public String record;
         public Window1()
         {
             InitializeComponent();
@@ -39,7 +38,6 @@ namespace Client
             }
             else if (s == "1")
             {
-                record = c.recive();
                 this.Close();
             }
         }
@@ -56,7 +54,6 @@ namespace Client
             }
             else if (s == "1")
             {
-                record = c.recive();
                 this.Close();
             }
         }
