@@ -72,11 +72,10 @@ namespace Client
 
                 // Buffer to store the response bytes.
                 data = new Byte[256];
-
+                stream.Flush();
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
-                //stream.Flush();
-                responseData = System.Text.Encoding.Default.GetString(data, 0, bytes);
+                responseData = System.Text.Encoding.Default.GetString(data/*, 0, bytes*/);
 
                 //Console.WriteLine("Received: {0}", bytes);
 

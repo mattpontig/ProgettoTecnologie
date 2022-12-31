@@ -65,11 +65,11 @@ namespace Client
             try
             {
                 inst.send("RichiedoChats;" + nome + ";");
-                String chats;
+                String chats = "";
                 do
                 {
                     chats = s.m;
-                } while (chats == null);
+                } while (chats == "" || chats == null || chats.StartsWith("RichiedoChats") == true);
                 chatList = parseClass.toList(nome, chats);
                 foreach (Chat c in chatList)
                     ListChat.Items.Add(c.toString());

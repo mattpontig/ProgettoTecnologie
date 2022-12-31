@@ -101,9 +101,9 @@ public class gestoreDB {
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
                 .executeQuery(
-                        "select user from login where not user=" + string);
+                        "select user from login where not user='"+ string + "'");
         while (rs.next()) {
-            ris += rs.getString(0) + ";";
+            ris += rs.getString(1) + ";";
         }
         return ris;
     }
