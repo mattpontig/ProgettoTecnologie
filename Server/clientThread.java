@@ -4,16 +4,16 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class clientThread extends Thread{
-    
+public class clientThread extends Thread {
+
     BufferedReader in;
     Scanner scn = new Scanner(System.in);
     private String name;
     MySocket s;
     boolean isloggedin;
 
-    public clientThread(MySocket s, String name) throws IOException{
-        in =new BufferedReader(new InputStreamReader(s.socket.getInputStream()));
+    public clientThread(MySocket s, String name) throws IOException {
+        in = new BufferedReader(new InputStreamReader(s.socket.getInputStream()));
         this.name = name;
         this.s = s;
         this.isloggedin = true;
@@ -29,33 +29,34 @@ public class clientThread extends Thread{
             try {
                 // receive the string
                 received = in.readLine();
-                System.out.println(received);
-                if (received == null);
-                else if (received.equals("Close")) {
-                    this.isloggedin = false;
-                    this.s.Close();
-                    ;
-                    cicla = false;
-                    break;
-                }
-                
-                else if (received.equals("END")) {}
+                if (received != null) {
+                    System.out.println(received);
+                    if (received.equals("Close")) {
+                        this.isloggedin = false;
+                        this.s.Close();
 
-                else if (received.equals("start")) {
-                    this.s.out.println("start");
-                } else {
-                    // break the string into message and recipient part
-                    String[] st = received.split(";");
-                    if (st[0].equals("RichiedoChats")) {
-                        daMandare = gestoreDB.getChatNames(st[1]);
+                        cicla = false;
+                        break;
+                    } else if (received.equals("END")) {
                     }
-                    else if (st[0].equals("getUtenti")) {
-                        daMandare = gestoreDB.getNames(st[1]);
+
+                    else if (received.equals("start")) {
+                        this.s.out.println("start");
+                    } else {
+                        // break the string into message and recipient part
+                        String[] st = received.split(";");
+                        if (st[0].equals("RichiedoChats")) {
+                            daMandare = gestoreDB.getChatNames(st[1]);
+                        } else if (st[0].equals("getUtenti")) {
+                            daMandare = gestoreDB.getNames(st[1]);
+                        } else if (st[0].equals("richiedoChat")) {
+                            daMandare = gestoreDB.getChatMex(st[1]);
+                        }
+                        this.s.out.println(daMandare);
+                        System.out.println(daMandare);
                     }
-                    this.s.out.println(daMandare + "\r\nEND\r\n");
-                    s.out.flush();
                 }
-                System.out.println(daMandare);
+
                 // toDo: metodi a seconda del messaggio
 
                 // search for the client in the connected devices list.
@@ -87,9 +88,8 @@ public class clientThread extends Thread{
             e.printStackTrace();
         }
 
-        //inst.removeSocket(_socket);
+        // inst.removeSocket(_socket);
 
     }
 
-    
 }

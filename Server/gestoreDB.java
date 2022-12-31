@@ -1,7 +1,7 @@
 import java.sql.*;
 
 public class gestoreDB {
-    
+
     public static void connetti() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -72,7 +72,7 @@ public class gestoreDB {
             if (ris.contains(Integer.toString(rs.getInt(2))))
                 ris += "," + rs.getString(3);
             else
-                ris += /*";" + */rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) + ";";
+                ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3);
         }
 
         /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
@@ -84,12 +84,12 @@ public class gestoreDB {
                                 + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
                                 + string + "' and c.titolo='')");
         while (rs.next()) {
-            ris += /*";" + */rs.getInt(2) + ",s,," + rs.getString(1) + ";";
+            ris += ";" + rs.getInt(2) + ",s,," + rs.getString(1) + ";";
         }
         return ris;
     }
 
-    public static String getNames(String string)  throws SQLException, ClassNotFoundException {
+    public static String getNames(String string) throws SQLException, ClassNotFoundException {
         String ris = "";
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
@@ -101,9 +101,29 @@ public class gestoreDB {
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
                 .executeQuery(
-                        "select user from login where not user='"+ string + "'");
+                        "select user from login where not user=" + string);
         while (rs.next()) {
             ris += rs.getString(1) + ";";
+        }
+        return ris;
+    }
+
+    public static String getChatMex(String string) throws ClassNotFoundException, SQLException {
+        String ris = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
+
+        /*
+         * query per avere tutti i nomi dei gruppi che sono in contatto con string che
+         * sarebbe l'user inserito nel login
+         */
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt
+                .executeQuery(
+                        "select lo.user,mc.messaggio from messaggichat as mc join login as lo on lo.id=mc.idMittente where mc.idChat="
+                                + Integer.parseInt(string));
+        while (rs.next()) {
+            ris += rs.getString(1) + "," + rs.getString(2) + ";";
         }
         return ris;
     }

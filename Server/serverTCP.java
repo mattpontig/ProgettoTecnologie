@@ -1,18 +1,9 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class serverTCP extends Thread {
     public final static int port = 8080;
-
 
     public static void avvia() throws IOException {
         // server is listening on port 8080
@@ -20,7 +11,7 @@ public class serverTCP extends Thread {
         Socket s;
         int i = 0;
 
-        shared inst=shared.getInstance();
+        shared inst = shared.getInstance();
         // running infinite loop for getting
         // client request
         while (true) {
@@ -32,29 +23,31 @@ public class serverTCP extends Thread {
 
                 MySocket ms = new MySocket(s);
 
-                if (inst.addSocket(ms)) //solo se le ho aggiunte ( ovvero c'era posto ) 
+                if (inst.addSocket(ms)) // solo se le ho aggiunte ( ovvero c'era posto )
                 {
                     clientThread ct = new clientThread(ms, "client " + i);
                     ct.start();
                 }
 
             } catch (IOException e) {
-                //errore ... fa niente, ritorno ad aspettare
+                // errore ... fa niente, ritorno ad aspettare
             }
 
-            /*System.out.println("Creating a new handler for this client...");
-            // Create a new handler object for handling this request.
-            ClientHandler mtch = new ClientHandler(ms, "client " + i, dis, dos);
-            // Create a new Thread with this object.
-            Thread t = new Thread(mtch);
-            System.out.println("Adding this client to active client list");
-            // add this client to active clients list
-            ar.add(mtch);
-            // start the thread.
-            t.start();
-            // increment i for new client.
-            // i is used for naming only, and can be replaced
-            // by any naming scheme*/
+            /*
+             * System.out.println("Creating a new handler for this client...");
+             * // Create a new handler object for handling this request.
+             * ClientHandler mtch = new ClientHandler(ms, "client " + i, dis, dos);
+             * // Create a new Thread with this object.
+             * Thread t = new Thread(mtch);
+             * System.out.println("Adding this client to active client list");
+             * // add this client to active clients list
+             * ar.add(mtch);
+             * // start the thread.
+             * t.start();
+             * // increment i for new client.
+             * // i is used for naming only, and can be replaced
+             * // by any naming scheme
+             */
             i++;
         }
     }
