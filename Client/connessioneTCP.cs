@@ -33,28 +33,29 @@ namespace Client
         Byte[] data;
         public void send(String message)
         {
-            try
-            {
-                // Translate the passed message into ASCII and store it as a Byte array.
-                data = System.Text.Encoding.Default.GetBytes(message + "\r\nEND\r\n");
+            while (stream.CanWrite == false){ }
+                try
+                {
+                    // Translate the passed message into ASCII and store it as a Byte array.
+                    data = System.Text.Encoding.Default.GetBytes(message + "\r\nEND\r\n");
 
-                // Get a client stream for reading and writing.
-                //Stream stream = client.GetStream();
-                // Send the message to the connected TcpServer.
-                stream.Write(data, 0, data.Length);
-                stream.Flush();
+                    // Get a client stream for reading and writing.
+                    //Stream stream = client.GetStream();
+                    // Send the message to the connected TcpServer.
+                    stream.Write(data, 0, data.Length);
+                    stream.Flush();
 
-                Console.WriteLine("Sent: {0}", message);
+                    Console.WriteLine("Sent: {0}", message);
 
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
+                }
+                catch (ArgumentNullException e)
+                {
+                    Console.WriteLine("ArgumentNullException: {0}", e);
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine("SocketException: {0}", e);
+                }
 
         }
 
@@ -62,34 +63,34 @@ namespace Client
         {
             // String to store the response ASCII representation.
             String responseData = String.Empty;
-            try
-            {
+            while (stream.CanRead == false) { }
+                try
+                {
 
-                // Get a client stream for reading and writing.
-                //stream = client.GetStream();
+                    // Get a client stream for reading and writing.
+                    //stream = client.GetStream();
 
-                // Receive the TcpServer.response.
+                    // Receive the TcpServer.response.
 
-                // Buffer to store the response bytes.
-                data = new Byte[256];
-                stream.Flush();
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.Default.GetString(data/*, 0, bytes*/);
+                    // Buffer to store the response bytes.
+                    data = new Byte[256];
+                    stream.Flush();
+                    // Read the first batch of the TcpServer response bytes.
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.Default.GetString(data/*, 0, bytes*/);
 
-                //Console.WriteLine("Received: {0}", bytes);
+                    //Console.WriteLine("Received: {0}", bytes);
 
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-            catch (IOException e) { }
-            //Console.Read();
+                }
+                catch (ArgumentNullException e)
+                {
+                    Console.WriteLine("ArgumentNullException: {0}", e);
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine("SocketException: {0}", e);
+                }
+                catch (IOException e) { }
             return responseData;
         }
 

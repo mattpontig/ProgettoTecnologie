@@ -41,6 +41,7 @@ namespace Client
                     try
                     {
                         String line = inst.recive();
+                        line.Trim();
                         m = "";
                         m = line;
                         Console.WriteLine("Ricevuto dal server: " + line);
