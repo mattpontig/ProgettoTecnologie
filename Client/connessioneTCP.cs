@@ -56,41 +56,42 @@ namespace Client
                 {
                     Console.WriteLine("SocketException: {0}", e);
                 }
-
+            stream.Flush();
         }
 
         public String recive()
         {
             // String to store the response ASCII representation.
-            String responseData = String.Empty;
+            String responseData = "";
             while (stream.CanRead == false) { }
-                try
-                {
+            try
+            {
 
-                    // Get a client stream for reading and writing.
-                    //stream = client.GetStream();
+                // Get a client stream for reading and writing.
+                //stream = client.GetStream();
 
-                    // Receive the TcpServer.response.
+                // Receive the TcpServer.response.
 
-                    // Buffer to store the response bytes.
-                    data = new Byte[256];
-                    stream.Flush();
-                    // Read the first batch of the TcpServer response bytes.
-                    Int32 bytes = stream.Read(data, 0, data.Length);
-                    responseData = System.Text.Encoding.Default.GetString(data/*, 0, bytes*/);
+                // Buffer to store the response bytes.
+                data = new Byte[256];
 
-                    //Console.WriteLine("Received: {0}", bytes);
+                // Read the first batch of the TcpServer response bytes.
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.Default.GetString(data, 0, bytes);
 
-                }
-                catch (ArgumentNullException e)
-                {
-                    Console.WriteLine("ArgumentNullException: {0}", e);
-                }
-                catch (SocketException e)
-                {
-                    Console.WriteLine("SocketException: {0}", e);
-                }
-                catch (IOException e) { }
+                //Console.WriteLine("Received: {0}", responseData);
+                stream.Flush();
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine("ArgumentNullException: {0}", e);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException: {0}", e);
+            }
+            catch (IOException e) { }
+
             return responseData;
         }
 

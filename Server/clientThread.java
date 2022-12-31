@@ -52,7 +52,8 @@ public class clientThread extends Thread{
                     else if (st[0].equals("getUtenti")) {
                         daMandare = gestoreDB.getNames(st[1]);
                     }
-                    this.s.out.println(daMandare);
+                    this.s.out.println(daMandare + "\r\nEND\r\n");
+                    s.out.flush();
                 }
                 System.out.println(daMandare);
                 // toDo: metodi a seconda del messaggio

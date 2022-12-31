@@ -26,6 +26,7 @@ namespace Client
         bool searchM;
         ClientSocket s;
         OpenFileDialog openFileDialog1;
+        Thread t;
 
         public MainWindow()
         {
@@ -46,7 +47,7 @@ namespace Client
                 searchM = false;
             }
             s = new ClientSocket(8080);
-            Thread t = new Thread(new ThreadStart(s.run));
+            t = new Thread(new ThreadStart(s.run));
             t.Start();
             //prova();
             refresh();
