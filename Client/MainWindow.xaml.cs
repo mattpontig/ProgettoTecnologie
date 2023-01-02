@@ -67,7 +67,7 @@ namespace Client
             {
                 inst.send("RichiedoChats;" + nome + ";");
                 String chats = "";
-                do 
+                do
                 {
                     if (s.nuovoMess)
                     {
@@ -123,23 +123,6 @@ namespace Client
                 Messaggio m = new Messaggio(nome, txtMess.Text);
                 chatList[index].messaggi.Add(m);
             }
-            /*connessioneTCP inst = connessioneTCP.getInstance();
-
-            while (!inst.toClose)
-            {
-                if (inst.getSocket() == null)
-                    continue;
-
-                inst.send("send;" + chatList[index].id + txtMess.Text);
-                Chat chat = chatList[index];
-                chatList.RemoveAt(index);
-                chatList.Insert(0, chat);
-            }
-            if (inst.recive() == "ok")
-            {
-                Messaggio m = new Messaggio(nome, txtMess.Text);
-                chatList[index].messaggi.Add(m);
-            }*/
 
             reloadChat();
 
@@ -164,7 +147,7 @@ namespace Client
                         if (s.nuovoMess)
                         {
                             chat = s.m;
-                            s.nuovoMess= false;
+                            s.nuovoMess = false;
                         }
                     } while (chat == "" || chat == null);
                     chatList[index].messaggi = parseClass.toChat(chat);
@@ -191,19 +174,6 @@ namespace Client
             catch
             {
             }
-        }
-
-        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            getUtenti();
-            List<String> filteredList = tuttiUtenti.Where(x => x.Contains(txtSearch.Text)).ToList();
-            ListChat.Items.Clear();
-            foreach (String s in tuttiUtenti)
-            {
-                ListChat.Items.Add(s);
-                searchM = true;
-            }
-
         }
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
@@ -281,12 +251,20 @@ namespace Client
 
         void getUtenti()
         {
-                connessioneTCP inst = connessioneTCP.getInstance();
-                inst.send("getUtenti;" + nome + ";");
-                String s = inst.recive();
-                String[] ut = s.Split(';');
-                foreach (String s2 in ut)
-                    tuttiUtenti.Add(s2);
+            connessioneTCP inst = connessioneTCP.getInstance();
+            inst.send("getUtenti;" + nome + ";");
+            String utenti = "";
+            do
+            {
+                if (s.nuovoMess)
+                {
+                    utenti = s.m;
+                    s.nuovoMess = false;
+                }
+            } while (utenti == "" || utenti == null);
+            String[] ut = utenti.Split(';');
+            foreach (String s2 in ut)
+                tuttiUtenti.Add(s2);
         }
 
         private void bttSendFile_Click(object sender, RoutedEventArgs e)
@@ -306,6 +284,18 @@ namespace Client
                     $"Details:\n\n{ex.StackTrace}");
                 }
             }*/
+        }
+
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            getUtenti();
+            List<String> filteredList = tuttiUtenti.Where(x => x.Contains(txtSearch.Text)).ToList();
+            ListChat.Items.Clear();
+            foreach (String s in tuttiUtenti)
+            {
+                ListChat.Items.Add(s);
+                searchM = true;
+            }
         }
     }
 }
