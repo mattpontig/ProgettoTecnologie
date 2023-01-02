@@ -51,6 +51,8 @@ public class clientThread extends Thread {
                             daMandare = gestoreDB.getNames(st[1]);
                         } else if (st[0].equals("richiedoChat")) {
                             daMandare = gestoreDB.getChatMex(st[1]);
+                        }else if (st[0].equals("nuovaChat")) {
+                            daMandare = gestoreDB.newChat(st[1],st[2]);
                         }
                         this.s.out.println(daMandare);
                         System.out.println(daMandare);

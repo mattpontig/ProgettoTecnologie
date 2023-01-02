@@ -72,5 +72,17 @@ namespace Client
             }
             return messaggi;
         }
+
+        public static List<Utente> toUser(String s)
+        {
+            List<Utente> utente = new List<Utente>();
+            String[] chat = s.Split(';');
+            for (int i = 0; i < chat.Length - 1; i++)
+            {
+                String[] ut = chat[i].ToString().Split(',');
+                utente.Add(new Utente(int.Parse(ut[0]), ut[1]));
+            }
+            return utente;
+        }
     }
 }

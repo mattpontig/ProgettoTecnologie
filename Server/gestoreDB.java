@@ -95,15 +95,14 @@ public class gestoreDB {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
 
         /*
-         * query per avere tutti i nomi dei gruppi che sono in contatto con string che
-         * sarebbe l'user inserito nel login
+         * query per avere tutti i nomi
          */
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
                 .executeQuery(
-                        "select user from login where not user=" + string);
+                        "select id,user from login where not user='" + string + "'");
         while (rs.next()) {
-            ris += rs.getString(1) + ";";
+            ris += rs.getInt(1) + "," + rs.getString(2) + ";";
         }
         return ris;
     }
@@ -126,5 +125,38 @@ public class gestoreDB {
             ris += rs.getString(1) + "," + rs.getString(2) + ";";
         }
         return ris;
+    }
+
+    public static String newChat(String utente1, String utente2) throws SQLException, ClassNotFoundException {
+        //non va per le restrizioni
+        String utente = "";
+        String chat = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
+
+        /*
+         * query per avere tutti i nomi dei gruppi che sono in contatto con string che
+         * sarebbe l'user inserito nel login
+         */
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate("insert into chat (gruppo)" + "  values (0)");
+
+        ResultSet rs;
+        rs = stmt.executeQuery(
+                        "select id from login where user='" + utente1 + "'");
+        while (rs.next())
+            utente += rs.getString(1);
+
+        rs = stmt.executeQuery(
+                        "select MAX(idChat) from chat");
+        while (rs.next())
+            chat += rs.getString(1);
+
+        stmt
+                .executeUpdate("insert into utentichat (idUtente,idChat) values (" + chat +"," + utente + ")");
+
+        stmt
+                .executeUpdate("insert into utentichat (idUtente,idChat) values (" + chat +"," + utente2 + ")");
+        return "ok";
     }
 }

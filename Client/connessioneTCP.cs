@@ -15,8 +15,6 @@ namespace Client
     public class connessioneTCP
     {
         public TcpClient client;
-        //public Int32 port { get; set; }
-        //public String server = "172.0.0.1";
         public bool toClose = false;
 
 
@@ -40,7 +38,6 @@ namespace Client
                     data = System.Text.Encoding.Default.GetBytes(message + "\r\nEND\r\n");
 
                     // Get a client stream for reading and writing.
-                    //Stream stream = client.GetStream();
                     // Send the message to the connected TcpServer.
                     stream.Write(data, 0, data.Length);
                     stream.Flush();
@@ -66,18 +63,15 @@ namespace Client
             while (stream.CanRead == false || stream.DataAvailable == false) { }
             try
             {
-                //stream.Flush();
                 // Get a client stream for reading and writing.
-                //stream = client.GetStream();
 
                 // Receive the TcpServer.response.
 
                 // Buffer to store the response bytes.
                 data = new Byte[256];
 
-                Int32 bytes = 0;
                 // Read the first batch of the TcpServer response bytes.
-                bytes = stream.Read(data, 0, data.Length);
+                Int32 bytes = stream.Read(data, 0, data.Length);
                 //bytes = stream.ReadAsync(data, 0, data.Length).Result;
                 responseData = System.Text.Encoding.Default.GetString(data, 0, bytes);
 
@@ -100,11 +94,6 @@ namespace Client
         public void setSocket(TcpClient socket, NetworkStream stream)
         {
             this.client = socket;
-            this.stream = stream;
-        }
-
-        public void setStream( NetworkStream stream)
-        {
             this.stream = stream;
         }
 

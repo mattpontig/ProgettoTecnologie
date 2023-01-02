@@ -21,7 +21,7 @@ namespace Client
         int index;
         static String nome;
         List<Chat> chatList;
-        List<String> tuttiUtenti = null;
+        List<Utente> tuttiUtenti = null;
         Window1 w;
         bool searchM;
         ClientSocket s;
@@ -31,9 +31,9 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
-            bttGruppoConfirm.Visibility = Visibility.Hidden;
-            labelGruppo.Visibility = Visibility.Hidden;
-            txtNomeGruppo.Visibility = Visibility.Hidden;
+            tuttiUtenti = new List<Utente>();
+            Closing += new System.ComponentModel.CancelEventHandler(MainWindow_Closing);
+            enableChat();
             w = new Window1();
             w.ShowDialog();
             if (w.txtUtente.Text == "")
@@ -49,15 +49,17 @@ namespace Client
             s = new ClientSocket(8080);
             t = new Thread(new ThreadStart(s.run));
             t.Start();
-            //prova();
             refresh();
         }
 
-        void prova()
+
+        void enableChat()
         {
-            connessioneTCP inst = connessioneTCP.getInstance();
-            inst.send("start");
+            bttGruppoConfirm.Visibility = Visibility.Hidden;
+            labelGruppo.Visibility = Visibility.Hidden;
+            txtNomeGruppo.Visibility = Visibility.Hidden;
         }
+
 
         private void refresh()
         {
@@ -93,7 +95,7 @@ namespace Client
             }
             else
             {
-                inst.send("nuovaChat" + ";" + ListChat.SelectedIndex);
+                inst.send("nuovaChat" + ";" + nome +";" + tuttiUtenti[ListChat.SelectedIndex].getId());
             }
             //reloadChat();
         }
@@ -112,19 +114,21 @@ namespace Client
                 if (inst.getSocket() == null)
                     continue;
 
+                int i = ListChat.SelectedIndex;
                 inst.send("send;" + chatList[index].id + txtMess.Text);
-                //inst.send("send;" + chatList[index].id + txtMess.Text);
-                Chat chat = chatList[index];
-                chatList.RemoveAt(index);
-                chatList.Insert(0, chat);
+
+                Utente u = (Utente)ListChat.SelectedItem;
+
+                ListChat.Items.RemoveAt(i);
+                ListChat.Items.Add(u);
             }
             if (inst.recive() == "ok")
             {
                 Messaggio m = new Messaggio(nome, txtMess.Text);
                 chatList[index].messaggi.Add(m);
+                reloadChat();
             }
 
-            reloadChat();
 
         }
 
@@ -137,11 +141,8 @@ namespace Client
             {
                 if (chatList[index].chatCaricata == false)
                 {
-                    //richiedo
-                    //s.m = "";
                     inst.send("richiedoChat;" + chatList[index].id);
                     String chat = "";
-                    //chatMess = parseClass.toChat(chat);
                     do
                     {
                         if (s.nuovoMess)
@@ -180,7 +181,7 @@ namespace Client
         {
 
             CheckBox chk = new CheckBox();
-            foreach (String s in tuttiUtenti)
+            foreach (Utente s in tuttiUtenti)
             {
                 chk = new CheckBox();
                 chk.Click += aggiuntaGruppo;
@@ -239,14 +240,7 @@ namespace Client
                 inst.send("newGruppo;" + txtNomeGruppo.Text + ";" + str);
             }
 
-        }
-
-        void DataWindow_Closing(object sender, CancelEventArgs e)
-        {
-            MessageBox.Show("Closing called");
-
-            connessioneTCP inst = connessioneTCP.getInstance();
-            inst.send("Close");
+            enableChat();
         }
 
         void getUtenti()
@@ -262,9 +256,7 @@ namespace Client
                     s.nuovoMess = false;
                 }
             } while (utenti == "" || utenti == null);
-            String[] ut = utenti.Split(';');
-            foreach (String s2 in ut)
-                tuttiUtenti.Add(s2);
+            tuttiUtenti = parseClass.toUser(utenti);
         }
 
         private void bttSendFile_Click(object sender, RoutedEventArgs e)
@@ -289,12 +281,23 @@ namespace Client
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             getUtenti();
-            List<String> filteredList = tuttiUtenti.Where(x => x.Contains(txtSearch.Text)).ToList();
+
             ListChat.Items.Clear();
-            foreach (String s in tuttiUtenti)
+            foreach (Utente u in tuttiUtenti)
             {
-                ListChat.Items.Add(s);
+                ListChat.Items.Add(u.toString());
                 searchM = true;
+            }
+        }
+
+        void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (MessageBox.Show("ARE YOU WANT TO CLOSE?", "CLOSING", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                MessageBox.Show("Closing called");
+
+                connessioneTCP inst = connessioneTCP.getInstance();
+                inst.send("Close");
             }
         }
     }
