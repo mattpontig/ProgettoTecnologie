@@ -17,7 +17,9 @@ namespace Client
         public TcpClient socket;
         NetworkStream stream;
         public String m;
-        
+        public Boolean nuovoMess;
+
+
         public ClientSocket(int port)
         {
             this.PORT = port;
@@ -25,6 +27,7 @@ namespace Client
             socket = new TcpClient();
             socket.Connect("localhost", port);
             stream = socket.GetStream();
+            nuovoMess = false;
 
             connessioneTCP inst = connessioneTCP.getInstance();
             inst.setSocket(socket, stream);
@@ -33,6 +36,7 @@ namespace Client
         public void run()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
+            //String line = "END";
             try
             {
                 //inst.setSocket(socket,stream);
@@ -41,9 +45,8 @@ namespace Client
                     try
                     {
                         String line = inst.recive();
-                        line.Trim();
-                        m = "";
                         m = line;
+                        nuovoMess = true;
                         Console.WriteLine("Ricevuto dal server: " + line);
                     }
                     catch (IOException e)
@@ -57,11 +60,6 @@ namespace Client
                 inst.toClose = true;  //impossibile prendere lo stream di input
                 return;
             }
-        }
-
-        public NetworkStream getStream()
-        {
-            return stream;
         }
 
     }

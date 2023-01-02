@@ -67,10 +67,14 @@ namespace Client
             {
                 inst.send("RichiedoChats;" + nome + ";");
                 String chats = "";
-                do
+                do 
                 {
-                    chats = s.m;
-                } while (chats == "" || chats == null || chats.StartsWith("RichiedoChats") == true);
+                    if (s.nuovoMess)
+                    {
+                        chats = s.m;
+                        s.nuovoMess = false;
+                    }
+                } while (chats == "" || chats == null);
                 chatList = parseClass.toList(nome, chats);
                 foreach (Chat c in chatList)
                     ListChat.Items.Add(c.toString());
@@ -91,7 +95,7 @@ namespace Client
             {
                 inst.send("nuovaChat" + ";" + ListChat.SelectedIndex);
             }
-            reloadChat();
+            //reloadChat();
         }
 
         public static String getNome()
@@ -151,9 +155,18 @@ namespace Client
                 if (chatList[index].chatCaricata == false)
                 {
                     //richiedo
+                    //s.m = "";
                     inst.send("richiedoChat;" + chatList[index].id);
-                    String chat = inst.recive();
+                    String chat = "";
                     //chatMess = parseClass.toChat(chat);
+                    do
+                    {
+                        if (s.nuovoMess)
+                        {
+                            chat = s.m;
+                            s.nuovoMess= false;
+                        }
+                    } while (chat == "" || chat == null);
                     chatList[index].messaggi = parseClass.toChat(chat);
                 }
 

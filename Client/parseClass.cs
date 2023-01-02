@@ -16,7 +16,7 @@ namespace Client
                 List<Chat> list = new List<Chat>();
             try
             {
-                for (int i = 0; i < riga.Length - 1; i++)
+                for (int i = 1; i < riga.Length - 1; i++)
                 {
                     String[] chat = riga[i].Split(',');
                     List<String> utente = new List<String>();
@@ -65,7 +65,7 @@ namespace Client
         {
             List<Messaggio> messaggi = new List<Messaggio>();
             String[] chat = s.Split(';');
-            for (int i = 1; i < chat.Length; i++)
+            for (int i = 0; i < chat.Length-1; i++)
             {
                 String[] mess = chat[i].ToString().Split(',');
                 messaggi.Add(new Messaggio(mess[0], mess[1]));

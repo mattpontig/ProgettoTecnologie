@@ -63,10 +63,10 @@ namespace Client
         {
             // String to store the response ASCII representation.
             String responseData = "";
-            while (stream.CanRead == false) { }
+            while (stream.CanRead == false || stream.DataAvailable == false) { }
             try
             {
-
+                //stream.Flush();
                 // Get a client stream for reading and writing.
                 //stream = client.GetStream();
 
@@ -75,12 +75,13 @@ namespace Client
                 // Buffer to store the response bytes.
                 data = new Byte[256];
 
+                Int32 bytes = 0;
                 // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
+                bytes = stream.Read(data, 0, data.Length);
+                //bytes = stream.ReadAsync(data, 0, data.Length).Result;
                 responseData = System.Text.Encoding.Default.GetString(data, 0, bytes);
 
                 //Console.WriteLine("Received: {0}", responseData);
-                stream.Flush();
             }
             catch (ArgumentNullException e)
             {
@@ -102,6 +103,10 @@ namespace Client
             this.stream = stream;
         }
 
+        public void setStream( NetworkStream stream)
+        {
+            this.stream = stream;
+        }
 
         public TcpClient getSocket()
         {

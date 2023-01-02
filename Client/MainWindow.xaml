@@ -19,8 +19,8 @@
         </Grid>
         <TextBox x:Name="txtMess" HorizontalAlignment="Left" Margin="237,386,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="422" Height="26" FontSize="18" Grid.ColumnSpan="2"/>
         <Button x:Name="bttSend" Content="Send" HorizontalAlignment="Left" Margin="139,386,0,0" VerticalAlignment="Top" Height="26" Width="67" Click="bttSend_Click" Grid.Column="1"/>
-        <ListBox x:Name="ListChatGuest" HorizontalAlignment="Left" Height="338" Margin="237,40,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged"/>
-        <ListBox x:Name="ListChatHost" HorizontalAlignment="Left" Height="338" Margin="508,40,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged" Grid.ColumnSpan="2"/>
+        <ListBox x:Name="ListChatHost" HorizontalAlignment="Left" Height="338" Margin="237,40,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged"/>
+        <ListBox x:Name="ListChatGuest" HorizontalAlignment="Left" Height="338" Margin="508,40,0,0" VerticalAlignment="Top" Width="271" SelectionChanged="List_SelectionChanged" Grid.ColumnSpan="2"/>
         <TextBox x:Name="txtSearch" HorizontalAlignment="Left" Margin="10,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" Height="26" FontSize="18" TextChanged="txtSearch_TextChanged"/>
         <Button x:Name="bttGruppo" Content="+" HorizontalAlignment="Left" Margin="182,40,0,0" VerticalAlignment="Top" Height="26" Width="36" Click="bttGruppo_Click"/>
         <Button x:Name="bttGruppoConfirm" Content="->" HorizontalAlignment="Left" Margin="182,4,0,0" VerticalAlignment="Top" Height="26" Width="36" Click="bttGruppoConfirm_Click"/>
