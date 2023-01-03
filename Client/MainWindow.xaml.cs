@@ -65,28 +65,31 @@ namespace Client
         {
             connessioneTCP inst = connessioneTCP.getInstance();
             ListChat.Items.Clear();
-            try
+            if (chatList == null)
             {
-                inst.send("RichiedoChats;" + nome + ";");
-                String chats = "";
-                do
+                try
                 {
-                    if (s.nuovoMess)
+                    inst.send("RichiedoChats;" + nome + ";");
+                    String chats = "";
+                    do
                     {
-                        chats = s.m;
-                        s.nuovoMess = false;
-                    }
-                } while (chats == "" || chats == null);
-                chatList = parseClass.toList(nome, chats);
-                foreach (Chat c in chatList)
-                    ListChat.Items.Add(c.toString());
+                        if (s.nuovoMess)
+                        {
+                            chats = s.m;
+                            s.nuovoMess = false;
+                        }
+                    } while (chats == "" || chats == null);
+                    chatList = parseClass.toList(nome, chats);
+                }
+                catch (Exception ex) { ListChat.SelectedIndex = -1; }
             }
-            catch (Exception ex) { ListChat.SelectedIndex = -1; }
+            foreach (Chat c in chatList)
+                ListChat.Items.Add(c.toString());
         }
 
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+
             if (ListChat.SelectedIndex != -1)
                 index = ListChat.SelectedIndex;
             if (searchM == false)
@@ -105,25 +108,32 @@ namespace Client
         {
             connessioneTCP inst = connessioneTCP.getInstance();
 
-            while (!inst.toClose)
+
+            inst.send("send;" + nome + ";" + chatList[index].id + ";" + txtMess.Text);
+
+            Chat u = chatList[index];
+
+            /*chatList.RemoveAt(index);
+            chatList.Insert(0, u);*/
+
+            String mess = "";
+            do
             {
-                if (inst.getSocket() == null)
-                    continue;
-
-                int i = ListChat.SelectedIndex;
-                inst.send("send;" +nome+";" +chatList[index].id +";"+ txtMess.Text);
-
-                Utente u = (Utente)ListChat.SelectedItem;
-
-                ListChat.Items.RemoveAt(i);
-                ListChat.Items.Add(u);
-            }
-            if (inst.recive() == "ok")
+                if (s.nuovoMess)
+                {
+                    mess = s.m;
+                    s.nuovoMess = false;
+                }
+            } while (mess == "" || mess == null);
+            //ListChat.SelectedIndex = 0;
+            txtMess.Text = "";
+            reloadChat();
+            /*if (mess == "ok")
             {
-                Messaggio m = new Messaggio(nome, txtMess.Text);
-                chatList[index].messaggi.Add(m);
+               // Messaggio m = new Messaggio(nome, txtMess.Text);
+               //chatList[index].messaggi.Add(m);
                 reloadChat();
-            }
+            }*/
 
 
         }
@@ -135,8 +145,6 @@ namespace Client
             ListChatGuest.Items.Clear();
             try
             {
-                if (chatList[index].chatCaricata == false)
-                {
                     inst.send("richiedoChat;" + chatList[index].id);
                     String chat = "";
                     do
@@ -148,11 +156,9 @@ namespace Client
                         }
                     } while (chat == "" || chat == null);
                     chatList[index].messaggi = parseClass.toChat(chat);
-                }
 
                 List<Messaggio> chatMess = chatList[index].messaggi;
-
-                for (int i = 0; i < chatMess.Count; i++)
+                for (int i = 0; i < chatMess.Count ; i++)
                 {
                     if (nome == chatMess[i].nome)
                     {
@@ -165,7 +171,6 @@ namespace Client
                         ListChatGuest.Items.Add(chatMess[i].toMessGuest());
                     }
                 }
-
                 ListChat.SelectedIndex = index;
             }
             catch
@@ -196,11 +201,11 @@ namespace Client
 
         private void aggiuntaChat(object sender, RoutedEventArgs e)
         {
-            chatGruppo= new List<Utente>();
+            chatGruppo = new List<Utente>();
             CheckBox chk = e.Source as CheckBox;
             int id = int.Parse(chk.Name.ToString().Substring(2));
-            chatGruppo.Add(new Utente(id,chk.Content.ToString()));
-            selezionato=true;
+            chatGruppo.Add(new Utente(id, chk.Content.ToString()));
+            selezionato = true;
             bttGruppoConfirm.Visibility = Visibility.Visible;
             /*bttGruppoConfirm.IsEnabled = false;
             bttGruppo.IsEnabled = true;
@@ -304,8 +309,6 @@ namespace Client
         {
             if (MessageBox.Show("ARE YOU WANT TO CLOSE?", "CLOSING", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Closing called");
-
                 connessioneTCP inst = connessioneTCP.getInstance();
                 inst.send("Close");
             }
