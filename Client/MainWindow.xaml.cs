@@ -111,7 +111,7 @@ namespace Client
                     continue;
 
                 int i = ListChat.SelectedIndex;
-                inst.send("send;" + chatList[index].id + txtMess.Text);
+                inst.send("send;" +nome+";" +chatList[index].id +";"+ txtMess.Text);
 
                 Utente u = (Utente)ListChat.SelectedItem;
 

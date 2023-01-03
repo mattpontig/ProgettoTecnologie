@@ -38,9 +38,7 @@ public class clientThread extends Thread {
                         cicla = false;
                         break;
                     } else if (received.equals("END")) {
-                    }
-
-                    else if (received.equals("start")) {
+                    } else if (received.equals("start")) {
                         this.s.out.println("start");
                     } else {
                         // break the string into message and recipient part
@@ -51,26 +49,15 @@ public class clientThread extends Thread {
                             daMandare = gestoreDB.getNames(st[1]);
                         } else if (st[0].equals("richiedoChat")) {
                             daMandare = gestoreDB.getChatMex(st[1]);
-                        }else if (st[0].equals("nuovaChat")) {
-                            daMandare = gestoreDB.newChat(st[1],st[2]);
+                        } else if (st[0].equals("nuovaChat")) {
+                            daMandare = gestoreDB.newChat(st[1], st[2]);
+                        } else if (st[0].equals("send")) {
+                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3]);
                         }
                         this.s.out.println(daMandare);
                         System.out.println(daMandare);
                     }
                 }
-
-                // toDo: metodi a seconda del messaggio
-
-                // search for the client in the connected devices list.
-                // ar is the vector storing client of active users
-                // for (ClientHandler mc : serverTCP.ar) {
-                // // // if the client is found, write on its
-                // // // output stream
-                // if (mc.name.equals(/*nome destinatario messaggio */)) {
-                // mc.dos.println(this.name + " : ciao" /*+ MsgToSend*/);
-                // break;
-                // }
-                // }
             } catch (IOException e) {
                 e.printStackTrace();
                 cicla = false;
@@ -89,9 +76,6 @@ public class clientThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // inst.removeSocket(_socket);
-
     }
-
 }

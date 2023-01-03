@@ -2,20 +2,22 @@ import java.sql.*;
 
 public class gestoreDB {
 
-    public static void connetti() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
-            // Statement stmt = con.createStatement();
-            // ResultSet rs = stmt.executeQuery("select * from login");
-            // while (rs.next())
-            // System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " +
-            // rs.getString(3));
-            // con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // public static void connetti() {
+    // try {
+    // Class.forName("com.mysql.cj.jdbc.Driver");
+    // Connection con =
+    // DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+    // "root", "");
+    // // Statement stmt = con.createStatement();
+    // // ResultSet rs = stmt.executeQuery("select * from login");
+    // // while (rs.next())
+    // // System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " +
+    // // rs.getString(3));
+    // // con.close();
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // }
 
     public static String verificaLogin(String nomeU, String pass)
             throws ClassNotFoundException, SQLException {
@@ -74,7 +76,7 @@ public class gestoreDB {
             else
                 ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3);
         }
-
+        ris += ";";
         /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
         stmt = con.createStatement();
         rs = stmt
@@ -84,7 +86,7 @@ public class gestoreDB {
                                 + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
                                 + string + "' and c.titolo='')");
         while (rs.next()) {
-            ris += ";" + rs.getInt(2) + ",s,," + rs.getString(1) + ";";
+            ris += rs.getInt(2) + ",s,," + rs.getString(1) + ";";
         }
         return ris;
     }
@@ -95,7 +97,7 @@ public class gestoreDB {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
 
         /*
-         * query per avere tutti i nomi
+         * query per avere tutti i nomi di chi si è registrato
          */
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
@@ -113,8 +115,7 @@ public class gestoreDB {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
 
         /*
-         * query per avere tutti i nomi dei gruppi che sono in contatto con string che
-         * sarebbe l'user inserito nel login
+         * query per avere tutti i messaggi delle chat selezionata
          */
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
@@ -128,36 +129,75 @@ public class gestoreDB {
     }
 
     public static String newChat(String utente1, String utente2) throws SQLException, ClassNotFoundException {
-        //non va per le restrizioni
+        // non va per le restrizioni
         String utente = "";
         String chat = "";
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
-
         /*
-         * query per avere tutti i nomi dei gruppi che sono in contatto con string che
-         * sarebbe l'user inserito nel login
+         * prende tutte le chat singole con utente1 per vedere se può creare una nuova
+         * chat o no
          */
+        String ris = "";
         Statement stmt = con.createStatement();
-        stmt.executeUpdate("insert into chat (gruppo)" + "  values (0)");
+        ResultSet rs;
+        rs = stmt
+                .executeQuery(
+                        "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not lo.user='"
+                                + utente1
+                                + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
+                                + utente1 + "' and c.titolo='')");
+        while (rs.next()) {
+            ris += rs.getInt(2) + ",s,," + rs.getString(1) + ";";
+        }
+        /*
+         * se non c'è giaà una chat singola con l'altro utente la crea
+         */
+        if (!ris.contains("utente2")) {
+            /*
+             * crea una chat non di gruppo vuota
+             */
+            stmt = con.createStatement();
+            stmt.executeUpdate("insert into chat (gruppo)" + "  values (0)");
 
+            rs = stmt.executeQuery(
+                    "select id from login where user='" + utente1 + "'");
+            while (rs.next())
+                utente += rs.getString(1);
+
+            rs = stmt.executeQuery(
+                    "select MAX(idChat) from chat");
+            while (rs.next())
+                chat += rs.getString(1);
+
+            stmt.executeUpdate("insert into utentichat (idUtente,idChat)" + " values (" + Integer.parseInt(utente) + ","
+                    + Integer.parseInt(chat) + ")");
+
+            stmt.executeUpdate(
+                    "insert into utentichat (idUtente,idChat)" + " values (" + Integer.parseInt(utente2) + ","
+                            + Integer.parseInt(chat) + ")");
+
+            return "ok";
+        }
+        return "chat già esistente";
+    }
+
+    public static String sendMex(String chi, String chat, String mex) throws ClassNotFoundException, SQLException {
+        String idAltro = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
         ResultSet rs;
         rs = stmt.executeQuery(
-                        "select id from login where user='" + utente1 + "'");
+                "select id from login where user='" + chi + "'");
         while (rs.next())
-            utente += rs.getString(1);
+            idAltro += rs.getString(1);
 
-        rs = stmt.executeQuery(
-                        "select MAX(idChat) from chat");
-        while (rs.next())
-            chat += rs.getString(1);
+        stmt.executeUpdate("insert into messaggichat (messaggio,idChat,IdMittente) values('" + mex + "',"
+                + Integer.parseInt(chat) + "," + Integer.parseInt(idAltro) + ")");
 
-        stmt.executeUpdate("insert into utentichat (idUtente,idChat)" + " values (" + Integer.parseInt(utente) + ","
-                + Integer.parseInt(chat) + ")");
-
-        stmt.executeUpdate("insert into utentichat (idUtente,idChat)" + " values (" + Integer.parseInt(utente2) + ","
-                + Integer.parseInt(chat) + ")");
-        
         return "ok";
     }
 }
