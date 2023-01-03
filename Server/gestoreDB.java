@@ -152,11 +152,12 @@ public class gestoreDB {
         while (rs.next())
             chat += rs.getString(1);
 
-        stmt
-                .executeUpdate("insert into utentichat (idUtente,idChat) values (" + chat +"," + utente + ")");
+        stmt.executeUpdate("insert into utentichat (idUtente,idChat)" + " values (" + Integer.parseInt(utente) + ","
+                + Integer.parseInt(chat) + ")");
 
-        stmt
-                .executeUpdate("insert into utentichat (idUtente,idChat) values (" + chat +"," + utente2 + ")");
+        stmt.executeUpdate("insert into utentichat (idUtente,idChat)" + " values (" + Integer.parseInt(utente2) + ","
+                + Integer.parseInt(chat) + ")");
+        
         return "ok";
     }
 }

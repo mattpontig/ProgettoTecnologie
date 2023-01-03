@@ -86,16 +86,12 @@ namespace Client
 
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            connessioneTCP inst = connessioneTCP.getInstance();
+            
             if (ListChat.SelectedIndex != -1)
                 index = ListChat.SelectedIndex;
             if (searchM == false)
             {
                 reloadChat();
-            }
-            else
-            {
-                inst.send("nuovaChat" + ";" + nome +";" + tuttiUtenti[ListChat.SelectedIndex].getId());
             }
             //reloadChat();
         }
@@ -179,23 +175,34 @@ namespace Client
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
         {
+            getUtenti();
 
-            CheckBox chk = new CheckBox();
+            ListChat.Items.Clear();
+
+            CheckBox chk;
             foreach (Utente s in tuttiUtenti)
             {
                 chk = new CheckBox();
-                chk.Click += aggiuntaGruppo;
-                chk.Content = s;
+                chk.Click += aggiuntaChat;
+                chk.Content = s.toString();
+                chk.Name = "Id" + s.getId();
                 ListChat.Items.Add(chk);
                 searchM = true;
             }
         }
 
-        List<String> gruppo;
+        List<Utente> chatGruppo;
+        Boolean selezionato = false;
 
-        private void aggiuntaGruppo(object sender, RoutedEventArgs e)
+        private void aggiuntaChat(object sender, RoutedEventArgs e)
         {
-            bttGruppoConfirm.IsEnabled = false;
+            chatGruppo= new List<Utente>();
+            CheckBox chk = e.Source as CheckBox;
+            int id = int.Parse(chk.Name.ToString().Substring(2));
+            chatGruppo.Add(new Utente(id,chk.Content.ToString()));
+            selezionato=true;
+            bttGruppoConfirm.Visibility = Visibility.Visible;
+            /*bttGruppoConfirm.IsEnabled = false;
             bttGruppo.IsEnabled = true;
             gruppo = new List<string>();
             CheckBox chk = e.Source as CheckBox;
@@ -206,7 +213,7 @@ namespace Client
             else
             {
                 gruppo.Remove(chk.Content.ToString());
-            }
+            }*/
 
         }
 
@@ -216,7 +223,9 @@ namespace Client
         {
             connessioneTCP inst = connessioneTCP.getInstance();
 
-            String str = "";
+            inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
+
+            /*String str = "";
             if (step == 0)
             {
                 foreach (String s in gruppo)
@@ -238,9 +247,10 @@ namespace Client
                 bttGruppo.Visibility = Visibility.Hidden;
 
                 inst.send("newGruppo;" + txtNomeGruppo.Text + ";" + str);
-            }
+            }*/
 
             enableChat();
+            refresh();
         }
 
         void getUtenti()
@@ -280,14 +290,14 @@ namespace Client
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            getUtenti();
+            /*getUtenti();
 
             ListChat.Items.Clear();
             foreach (Utente u in tuttiUtenti)
             {
                 ListChat.Items.Add(u.toString());
                 searchM = true;
-            }
+            }*/
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
