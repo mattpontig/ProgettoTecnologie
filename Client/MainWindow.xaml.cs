@@ -26,7 +26,8 @@ namespace Client
         bool searchM;
         ClientSocket s;
         OpenFileDialog openFileDialog1;
-        Thread t;
+        Thread clientSocket;
+        Thread nuovoMess;
 
         public MainWindow()
         {
@@ -47,11 +48,49 @@ namespace Client
                 searchM = false;
             }
             s = new ClientSocket(8080);
-            t = new Thread(new ThreadStart(s.run));
-            t.Start();
+            clientSocket = new Thread(new ThreadStart(s.run));
+            clientSocket.Start();
+
+            nuovoMess = new Thread(new ThreadStart(controlloMess));
+            nuovoMess.Start();
             refresh();
         }
 
+
+        void controlloMess()
+        {
+            String str = "";
+            while (true)
+            {
+                if (s.messaggioCoda)
+                {
+                    str = s.m;
+                    notificaNuovoMess(str);
+                    s.messaggioCoda= false;
+                }
+            }
+        }
+
+        void notificaNuovoMess(String str)
+        {
+            String[] chat = str.Split(';');
+            int idChat = int.Parse(chat[1]);
+            Chat c = new Chat();
+            int i= 0,idChatPrelevare = 0;
+            foreach (Chat cht in chatList)
+            {
+                if (cht.id == idChat)
+                {
+                    c = cht;
+                    idChatPrelevare = i;
+                }
+                i++;
+            }
+            /*chatList.RemoveAt(idChatPrelevare);
+            chatList.Insert(0, c);*/
+            refresh();
+
+        }
 
         void enableChat()
         {
@@ -145,20 +184,20 @@ namespace Client
             ListChatGuest.Items.Clear();
             try
             {
-                    inst.send("richiedoChat;" + chatList[index].id);
-                    String chat = "";
-                    do
+                inst.send("richiedoChat;" + chatList[index].id);
+                String chat = "";
+                do
+                {
+                    if (s.nuovoMess)
                     {
-                        if (s.nuovoMess)
-                        {
-                            chat = s.m;
-                            s.nuovoMess = false;
-                        }
-                    } while (chat == "" || chat == null);
-                    chatList[index].messaggi = parseClass.toChat(chat);
+                        chat = s.m;
+                        s.nuovoMess = false;
+                    }
+                } while (chat == "" || chat == null);
+                chatList[index].messaggi = parseClass.toChat(chat);
 
                 List<Messaggio> chatMess = chatList[index].messaggi;
-                for (int i = 0; i < chatMess.Count ; i++)
+                for (int i = 0; i < chatMess.Count; i++)
                 {
                     if (nome == chatMess[i].nome)
                     {

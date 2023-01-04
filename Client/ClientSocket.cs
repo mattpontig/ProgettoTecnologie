@@ -18,7 +18,7 @@ namespace Client
         NetworkStream stream;
         public String m;
         public Boolean nuovoMess;
-
+        public Boolean messaggioCoda;
 
         public ClientSocket(int port)
         {
@@ -28,6 +28,7 @@ namespace Client
             socket.Connect("localhost", port);
             stream = socket.GetStream();
             nuovoMess = false;
+            messaggioCoda = false;
 
             connessioneTCP inst = connessioneTCP.getInstance();
             inst.setSocket(socket, stream);
@@ -48,6 +49,10 @@ namespace Client
                         m = line;
                         nuovoMess = true;
                         Console.WriteLine("Ricevuto dal server: " + line);
+                        if (m.StartsWith("messInArr"))
+                        {
+                            messaggioCoda=true;
+                        }
                     }
                     catch (IOException e)
                     {

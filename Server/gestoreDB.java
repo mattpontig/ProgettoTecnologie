@@ -120,10 +120,10 @@ public class gestoreDB {
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
                 .executeQuery(
-                        "select lo.user,mc.messaggio from messaggichat as mc join login as lo on lo.id=mc.idMittente where mc.idChat="
+                        "select mc.idMex,lo.user,mc.messaggio from messaggichat as mc join login as lo on lo.id=mc.idMittente where mc.idChat="
                                 + Integer.parseInt(string));
         while (rs.next()) {
-            ris += rs.getString(1) + "," + rs.getString(2) + ";";
+            ris += rs.getInt(1) + "," + rs.getString(2) + "," + rs.getString(3) + ";";
         }
         return ris;
     }
@@ -199,5 +199,21 @@ public class gestoreDB {
                 + Integer.parseInt(chat) + "," + Integer.parseInt(idAltro) + ")");
 
         return "ok";
+    }
+
+    public static String chatToId(String chi, String chat) throws ClassNotFoundException, SQLException {
+        String idAltro = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+        rs = stmt.executeQuery(
+                "select id from login join utentichat on id = idUtente where not user='" + chi + "'");
+        while (rs.next())
+            idAltro += rs.getString(1);
+
+        return idAltro;
     }
 }

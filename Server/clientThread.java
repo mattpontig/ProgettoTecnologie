@@ -21,7 +21,7 @@ public class clientThread extends Thread {
 
     @Override
     public void run() {
-
+        shared inst=shared.getInstance();
         String received = "";
         boolean cicla = true;
         String daMandare = "";
@@ -53,6 +53,10 @@ public class clientThread extends Thread {
                             daMandare = gestoreDB.newChat(st[1], st[2]);
                         } else if (st[0].equals("send")) {
                             daMandare = gestoreDB.sendMex(st[1], st[2], st[3]);
+                            /*Long idDest = Long.parseLong(gestoreDB.chatToId(st[1], st[2]));
+                            MySocket tmp = inst.findDifferentSocketById(idDest);
+                            if(tmp!=null)
+                                tmp.out.println("messInArr;" + st[2] + ";");*/
                         }
                         this.s.out.println(daMandare);
                         System.out.println(daMandare);

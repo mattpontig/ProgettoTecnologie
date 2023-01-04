@@ -71,9 +71,27 @@ namespace Client
             for (int i = 0; i < chat.Length-1; i++)
             {
                 String[] mess = chat[i].ToString().Split(',');
-                messaggi.Add(new Messaggio(mess[0], mess[1]));
+                messaggi.Add(new Messaggio(int.Parse(mess[0]),mess[1], mess[2]));
             }
+            messaggi = bubbleSortChat(messaggi);
             return messaggi;
+        }
+
+        public static List<Messaggio> bubbleSortChat(List<Messaggio> arr)
+        {
+            List<Messaggio> l = arr;
+            int i, j;
+            for (i = 0; i < l.Count; i++)
+
+                // Last i elements are already in place
+                for (j = 0; j < l.Count - i - 1; j++)
+                    if (l[j].id > l[j + 1].id)
+                    {
+                        Messaggio tempswap = l[j];
+                        l[j] = l[j + 1];
+                        l[j + 1] = tempswap;
+                    }
+            return l;
         }
 
         public static List<Utente> toUser(String s)

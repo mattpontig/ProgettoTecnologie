@@ -16,6 +16,15 @@ namespace Client
         public String nome = MainWindow.getNome();
         public bool chatCaricata { get; set; }
 
+        public Chat()
+        {
+            this.utenti = new List<String>();
+            this.titolo = "";
+            chatCaricata = false;
+            messaggi = new List<Messaggio>();
+            this.id = 0;
+        }
+
         public Chat(List<String> utenti, String titolo, int id)
         {
             this.utenti = utenti;

@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class MySocket {
     static long idCounter = 0;
-    long id;
+    public long id;
     Socket socket;
     PrintWriter out;
 
@@ -37,4 +37,5 @@ public class MySocket {
             e.printStackTrace();
         }
     }
+
 }

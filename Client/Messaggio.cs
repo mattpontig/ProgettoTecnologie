@@ -9,9 +9,11 @@ namespace Client
     public class Messaggio
     {
         public String nome, messaggio;
+        public int id;
 
-        public Messaggio(String nome, String messaggio)
+        public Messaggio(int id,String nome, String messaggio)
         {
+            this.id = id;
             this.nome = nome;
             this.messaggio = messaggio;
         }
