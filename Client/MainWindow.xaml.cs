@@ -88,7 +88,8 @@ namespace Client
             }
             /*chatList.RemoveAt(idChatPrelevare);
             chatList.Insert(0, c);*/
-            refresh();
+            this.Dispatcher.Invoke(() => { reloadChat(); });
+            //refresh();
 
         }
 
@@ -100,7 +101,7 @@ namespace Client
         }
 
 
-        private void refresh()
+        public void refresh()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
             ListChat.Items.Clear();
@@ -166,15 +167,7 @@ namespace Client
             } while (mess == "" || mess == null);
             //ListChat.SelectedIndex = 0;
             txtMess.Text = "";
-            reloadChat();
-            /*if (mess == "ok")
-            {
-               // Messaggio m = new Messaggio(nome, txtMess.Text);
-               //chatList[index].messaggi.Add(m);
-                reloadChat();
-            }*/
-
-
+            this.Dispatcher.Invoke(() => { reloadChat(); });
         }
 
         public void reloadChat()
@@ -182,6 +175,7 @@ namespace Client
             connessioneTCP inst = connessioneTCP.getInstance();
             ListChatHost.Items.Clear();
             ListChatGuest.Items.Clear();
+
             try
             {
                 inst.send("richiedoChat;" + chatList[index].id);
@@ -212,8 +206,9 @@ namespace Client
                 }
                 ListChat.SelectedIndex = index;
             }
-            catch
+            catch(Exception e)
             {
+                this.Dispatcher.Invoke(() => { reloadChat(); });
             }
         }
 
@@ -350,6 +345,8 @@ namespace Client
             {
                 connessioneTCP inst = connessioneTCP.getInstance();
                 inst.send("Close");
+                clientSocket.Abort();
+                nuovoMess.Abort();
             }
         }
     }

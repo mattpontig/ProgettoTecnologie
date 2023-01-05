@@ -47,8 +47,11 @@ namespace Client
                     {
                         String line = inst.recive();
                         m = line;
-                        nuovoMess = true;
-                        Console.WriteLine("Ricevuto dal server: " + line);
+                        if (line != "ok\r\n")
+                        {
+                            nuovoMess = true;
+                            Console.WriteLine("Ricevuto dal server: " + line);
+                        }
                         if (m.StartsWith("messInArr"))
                         {
                             messaggioCoda=true;

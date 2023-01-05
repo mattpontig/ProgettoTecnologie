@@ -63,18 +63,20 @@ namespace Client
             while (stream.CanRead == false || stream.DataAvailable == false) { }
             try
             {
-                // Get a client stream for reading and writing.
+                while (stream.DataAvailable == true)
+                {
+                    // Get a client stream for reading and writing.
 
-                // Receive the TcpServer.response.
+                    // Receive the TcpServer.response.
 
-                // Buffer to store the response bytes.
-                data = new Byte[256];
+                    // Buffer to store the response bytes.
+                    data = new Byte[256];
 
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                //bytes = stream.ReadAsync(data, 0, data.Length).Result;
-                responseData = System.Text.Encoding.Default.GetString(data, 0, bytes);
-
+                    // Read the first batch of the TcpServer response bytes.
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    //bytes = stream.ReadAsync(data, 0, data.Length).Result;
+                    responseData += System.Text.Encoding.Default.GetString(data, 0, bytes);
+                }
                 //Console.WriteLine("Received: {0}", responseData);
             }
             catch (ArgumentNullException e)
