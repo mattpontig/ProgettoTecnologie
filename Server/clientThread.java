@@ -21,7 +21,7 @@ public class clientThread extends Thread {
 
     @Override
     public void run() {
-        shared inst=shared.getInstance();
+        shared inst = shared.getInstance();
         String received = "";
         boolean cicla = true;
         String daMandare = "";
@@ -45,6 +45,7 @@ public class clientThread extends Thread {
                         String[] st = received.split(";");
                         if (st[0].equals("RichiedoChats")) {
                             daMandare = gestoreDB.getChatNames(st[1]);
+                            this.s.id = gestoreDB.getIdFromName(st[1]);
                         } else if (st[0].equals("getUtenti")) {
                             daMandare = gestoreDB.getNames(st[1]);
                         } else if (st[0].equals("richiedoChat")) {
@@ -53,10 +54,14 @@ public class clientThread extends Thread {
                             daMandare = gestoreDB.newChat(st[1], st[2]);
                         } else if (st[0].equals("send")) {
                             daMandare = gestoreDB.sendMex(st[1], st[2], st[3]);
-                            /*Long idDest = Long.parseLong(gestoreDB.chatToId(st[1], st[2]));
-                            MySocket tmp = inst.findDifferentSocketById(idDest);
-                            if(tmp!=null)
-                                tmp.out.println("messInArr;" + st[2] + ";");*/
+                            String utenti = gestoreDB.chatToId(st[1], st[2]);
+                            notificaUtenti(utenti, st[2]);
+                            /*
+                             * Long idDest = Long.parseLong(gestoreDB.chatToId(st[1], st[2]));
+                             * MySocket tmp = inst.findDifferentSocketById(idDest);
+                             * if(tmp!=null)
+                             * tmp.out.println("messInArr;" + st[2] + ";");
+                             */
                         }
                         this.s.out.println(daMandare);
                         System.out.println(daMandare);
@@ -66,6 +71,7 @@ public class clientThread extends Thread {
                 e.printStackTrace();
                 cicla = false;
                 this.s.Close();
+                shared.getInstance().removeSocket(s); // rimuove la socket dalla lista di socket attive
             } catch (ClassNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -81,5 +87,15 @@ public class clientThread extends Thread {
             e.printStackTrace();
         }
         // inst.removeSocket(_socket);
+    }
+
+    public void notificaUtenti(String utenti, String chat) {
+        String[] idSocket = utenti.split(";");
+        for (int i = 0; i < idSocket.length; i++) {
+            for (int j = 0; j < shared.getInstance().sockets.size(); j++) {
+                if (shared.getInstance().sockets.get(j).id == Integer.parseInt(idSocket[i]))
+                    shared.getInstance().sockets.get(j).out.println("messInArr;" + chat + ";");
+            }
+        }
     }
 }

@@ -210,10 +210,27 @@ public class gestoreDB {
         Statement stmt = con.createStatement();
         ResultSet rs;
         rs = stmt.executeQuery(
-                "select id from login join utentichat on id = idUtente where not user='" + chi + "'");
+                "select id from login join utentichat on id = idUtente where not user='" + chi + "' and idChat="
+                        + Integer.parseInt(chat) + "");
         while (rs.next())
-            idAltro += rs.getString(1);
+            idAltro += Integer.toString(rs.getInt(1)) + ";";
 
         return idAltro;
+    }
+
+    public static long getIdFromName(String string) throws ClassNotFoundException, SQLException {
+        long id = 0;
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+        rs = stmt.executeQuery(
+                "select id from login where user='" + string + "'");
+        while (rs.next())
+            id = rs.getInt(1);
+
+        return id;
     }
 }
