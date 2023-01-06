@@ -100,8 +100,11 @@ namespace Client
             chatList.RemoveAt(idChatPrelevare);
             chatList.Insert(0, u);
             this.Dispatcher.Invoke(() => { refresh(); });
-
-            this.Dispatcher.Invoke(() => { reloadChat(); });
+            if (index != -1)
+            {
+                if (ListChat.Items[index].ToString() == chatList[idChatPrelevare].getName())
+                    this.Dispatcher.Invoke(() => { reloadChat(); });
+            }
             //refresh();
 
         }
@@ -162,28 +165,15 @@ namespace Client
         private void bttSend_Click(object sender, RoutedEventArgs e)
         {
             connessioneTCP inst = connessioneTCP.getInstance();
-
-
             inst.send("send;" + nome + ";" + chatList[index].id + ";" + txtMess.Text);
-
             Chat u = chatList[index];
-
             chatList.RemoveAt(index);
             chatList.Insert(0, u);
             index = 0;
-            /*String mess = "";
-            do
-            {
-                if (s.nuovoMess)
-                {
-                    mess = s.m;
-                    s.nuovoMess = false;
-                }
-            } while (mess == "" || mess == null);*/
-            //ListChat.SelectedIndex = 0;
             txtMess.Text = "";
             refresh();
             this.Dispatcher.Invoke(() => { reloadChat(); });
+            ListChat.SelectedIndex = index;
         }
 
         public void reloadChat()
@@ -226,8 +216,7 @@ namespace Client
                             //SingleChat.Items.Add(chatMess[i].toMessGuest());
                         }
                     }
-                    ListChat.SelectedIndex = index;
-                    SingleChat.Items.Refresh();
+                    ListChat.SelectedIndex = -1;
                 }
                 catch (Exception e)
                 {
@@ -267,7 +256,15 @@ namespace Client
             }
             else if (chk.IsChecked == false)
             {
-                chatGruppo.Remove(new Utente(id, chk.Content.ToString()));
+                int i = -1;
+                int j = 0;
+                foreach(Utente s in chatGruppo)
+                {
+                    if (s.getId() == id)
+                        i = j;
+                    j++;
+                }
+                chatGruppo.RemoveAt(i);
             }
             //selezionato = true;+
             if(chatGruppo.Count > 0)
@@ -290,7 +287,7 @@ namespace Client
 
         }
 
-        //int step = 0;
+        int step = 0;
 
         private void bttGruppoConfirm_Click(object sender, RoutedEventArgs e)
         {
@@ -300,37 +297,35 @@ namespace Client
                 inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
             else
             {
-                String s = "";
-                foreach (Utente te in chatGruppo)
-                    s += te.ToString() + "-";
-                inst.send("nuovaChat" + ";" + txtNomeGruppo.Text + ";" + s + ";");
+                String str = "";
+                if (step == 0)
+                {
+                    labelGruppo.Visibility = Visibility.Visible;
+                    txtNomeGruppo.Visibility = Visibility.Visible;
+                    ListChat.Visibility = Visibility.Hidden;
+                    step++;
+                }
+                else if (step == 1)
+                {
+                    step = 0;
+
+                    labelGruppo.Visibility = Visibility.Hidden;
+                    txtNomeGruppo.Visibility = Visibility.Hidden;
+                    ListChat.Visibility = Visibility.Visible;
+
+                    bttGruppoConfirm.Visibility = Visibility.Visible;
+                    bttGruppo.Visibility = Visibility.Visible;
+
+                    String s = "";
+                    foreach (Utente te in chatGruppo)
+                        s += te.toString() + "-";
+                    inst.send("nuovaChat" + ";" + txtNomeGruppo.Text + ";" + s + ";");
+
+                    chatGruppo = new List<Utente>();
+                    enableChat();
+                    refresh();
+                }
             }
-            /*String str = "";
-            if (step == 0)
-            {
-                foreach (String s in gruppo)
-                    str += s + ",";
-
-                labelGruppo.Visibility = Visibility.Visible;
-                txtNomeGruppo.Visibility = Visibility.Hidden;
-                ListChat.Visibility = Visibility.Hidden;
-            }
-            else if (step == 1)
-            {
-                step = 0;
-
-                labelGruppo.Visibility = Visibility.Hidden;
-                txtNomeGruppo.Visibility = Visibility.Hidden;
-                ListChat.Visibility = Visibility.Visible;
-
-                bttGruppoConfirm.Visibility = Visibility.Visible;
-                bttGruppo.Visibility = Visibility.Hidden;
-
-                inst.send("newGruppo;" + txtNomeGruppo.Text + ";" + str);
-            }*/
-            chatGruppo = new List<Utente>();
-            enableChat();
-            refresh();
         }
 
         void getUtenti()
