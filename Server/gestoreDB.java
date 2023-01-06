@@ -233,4 +233,46 @@ public class gestoreDB {
 
         return id;
     }
+
+    public static String newGroup(String creatore, String titoloG, String utentiG)
+            throws ClassNotFoundException, SQLException {
+        String[] utenti = utentiG.split("-");
+        int idCreatore = 0;
+        int idChat = 0;
+        String idUtenti = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+        stmt = con.createStatement();
+
+        stmt.executeUpdate("insert into chat (gruppo,titolo)" + "  values (1,'" + titoloG + "'')");
+
+        rs = stmt.executeQuery("select id from login where user='" + creatore + "'");
+        while (rs.next())
+            idCreatore = rs.getInt(1);
+
+        rs = stmt.executeQuery("select MAX(idChat) from chat where titolo='" + titoloG + "'");
+        while (rs.next())
+            idChat = rs.getInt(1);
+
+        stmt.executeUpdate("insert into utentichat (idUtente,idChat)" + " values (" + idCreatore + ","
+                + idChat + ")");
+
+        for (int i = 0; i < utenti.length; i++) {
+            rs = stmt.executeQuery("select id from login where user='" + utenti[i] + "'");
+            while (rs.next())
+                idUtenti += rs.getString(1) + ";";
+        }
+
+        String[] utentiSplit = idUtenti.split(";");
+        for (int i = 0; i < utentiSplit.length; i++) {
+            stmt.executeUpdate(
+                    "insert into utentichat (idUtente,idChat)" + " values (" + Integer.parseInt(utentiSplit[i])
+                            + "," + idChat + ")");
+        }
+        return "ok";
+    }
 }
