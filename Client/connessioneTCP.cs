@@ -92,6 +92,13 @@ namespace Client
             return responseData;
         }
 
+        /*public void sendFile(String s)
+        {
+            Socket socket = client.Client;
+            socket.SendFile(s);
+            
+        }*/
+
         NetworkStream stream;
         public void setSocket(TcpClient socket, NetworkStream stream)
         {

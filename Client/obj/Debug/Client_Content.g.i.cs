@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("graffetta.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/luna_sole.png")]
 
 

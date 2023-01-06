@@ -61,6 +61,9 @@ namespace Client
             bttGruppoConfirm.Visibility = Visibility.Hidden;
             labelGruppo.Visibility = Visibility.Hidden;
             txtNomeGruppo.Visibility = Visibility.Hidden;
+            bttIndietro.Visibility= Visibility.Hidden;
+
+            ListChat.Visibility= Visibility.Visible;
         }
 
         void controlloMess()
@@ -154,7 +157,6 @@ namespace Client
             {
                 reloadChat();
             }
-            //reloadChat();
         }
 
         public static String getNome()
@@ -208,15 +210,19 @@ namespace Client
                         if (nome == chatMess[i].nome)
                         {
                             SingleChat.Items.Add("\t\t\t\t\t\t\t" + chatMess[i].toMessHost());
-                            //SingleChat.Items.Add("\t\t\t");
                         }
                         else
                         {
                             SingleChat.Items.Add(chatMess[i].toMessGuest());
-                            //SingleChat.Items.Add(chatMess[i].toMessGuest());
                         }
                     }
+                    SingleChat.Items.Add("");
                     ListChat.SelectedIndex = -1;
+
+                    SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
+                    SingleChat.ScrollIntoView(SingleChat.SelectedItem);
+                    SingleChat.SelectedIndex = -1;
+
                 }
                 catch (Exception e)
                 {
@@ -229,6 +235,8 @@ namespace Client
         {
             getUtenti();
 
+            bttIndietro.Visibility = Visibility.Visible;
+            
             ListChat.Items.Clear();
 
             CheckBox chk;
@@ -244,7 +252,6 @@ namespace Client
         }
 
         List<Utente> chatGruppo = new List<Utente>();
-        //Boolean selezionato = false;
 
         private void aggiuntaChat(object sender, RoutedEventArgs e)
         {
@@ -266,25 +273,10 @@ namespace Client
                 }
                 chatGruppo.RemoveAt(i);
             }
-            //selezionato = true;+
             if(chatGruppo.Count > 0)
                 bttGruppoConfirm.Visibility = Visibility.Visible;
             else if(chatGruppo.Count == 0)
                 bttGruppoConfirm.Visibility = Visibility.Hidden;
-
-            /*bttGruppoConfirm.IsEnabled = false;
-            bttGruppo.IsEnabled = true;
-            gruppo = new List<string>();
-            CheckBox chk = e.Source as CheckBox;
-            if (chk.IsChecked == true)
-            {
-                gruppo.Add(chk.Content.ToString());
-            }
-            else
-            {
-                gruppo.Remove(chk.Content.ToString());
-            }*/
-
         }
 
         int step = 0;
@@ -381,9 +373,18 @@ namespace Client
             {
                 connessioneTCP inst = connessioneTCP.getInstance();
                 inst.send("Close");
+                s.socket.Close();
                 clientSocket.Abort();
                 nuovoMess.Abort();
             }
+        }
+
+        private void bttIndietro_Click(object sender, RoutedEventArgs e)
+        {
+            enableChat();
+            refresh();
+            chatGruppo = new List<Utente>();
+            searchM = false;
         }
     }
 }
