@@ -209,11 +209,11 @@ namespace Client
                     {
                         if (nome == chatMess[i].nome)
                         {
-                            SingleChat.Items.Add("\t\t\t\t\t\t\t" + chatMess[i].toMessHost());
+                            SingleChat.Items.Add("\t\t\t\t\t\t\t" + chatMess[i].toMess());
                         }
                         else
                         {
-                            SingleChat.Items.Add(chatMess[i].toMessGuest());
+                            SingleChat.Items.Add(chatMess[i].toMess());
                         }
                     }
                     SingleChat.Items.Add("");
@@ -286,7 +286,11 @@ namespace Client
             connessioneTCP inst = connessioneTCP.getInstance();
 
             if (chatGruppo.Count() == 1)
+            {
                 inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
+                enableChat();
+                refresh();
+            }
             else
             {
                 String str = "";
@@ -311,10 +315,11 @@ namespace Client
                     String s = "";
                     foreach (Utente te in chatGruppo)
                         s += te.toString() + "-";
-                    inst.send("nuovaChat" + ";" + txtNomeGruppo.Text + ";" + s + ";");
+                    inst.send("nuovoGruppo" + ";" + nome + ";" + txtNomeGruppo.Text + ";" + s + ";");
 
                     chatGruppo = new List<Utente>();
                     enableChat();
+                    chatList = null;
                     refresh();
                 }
             }

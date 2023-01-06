@@ -248,7 +248,7 @@ public class gestoreDB {
         ResultSet rs;
         stmt = con.createStatement();
 
-        stmt.executeUpdate("insert into chat (gruppo,titolo)" + "  values (1,'" + titoloG + "'')");
+        stmt.executeUpdate("insert into chat (gruppo,titolo)" + "  values (1,'" + titoloG + "')");
 
         rs = stmt.executeQuery("select id from login where user='" + creatore + "'");
         while (rs.next())
