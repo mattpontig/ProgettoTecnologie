@@ -101,8 +101,6 @@ namespace Client
             chatList.Insert(0, u);
             this.Dispatcher.Invoke(() => { refresh(); });
 
-            /*chatList.RemoveAt(idChatPrelevare);
-            chatList.Insert(0, c);*/
             this.Dispatcher.Invoke(() => { reloadChat(); });
             //refresh();
 
@@ -173,8 +171,8 @@ namespace Client
             chatList.RemoveAt(index);
             chatList.Insert(0, u);
             index = 0;
-            String mess = "";
-            /*do
+            /*String mess = "";
+            do
             {
                 if (s.nuovoMess)
                 {
@@ -191,7 +189,6 @@ namespace Client
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
-            SingleChat.Items.Clear();
 
             if (index != -1)
             {
@@ -200,7 +197,7 @@ namespace Client
                     chatList[index].messNonLetti = 0;
                     refresh();
                 }
-
+                SingleChat.Items.Clear();
                 try
                 {
                     inst.send("richiedoChat;" + chatList[index].id);
@@ -230,6 +227,7 @@ namespace Client
                         }
                     }
                     ListChat.SelectedIndex = index;
+                    SingleChat.Items.Refresh();
                 }
                 catch (Exception e)
                 {
@@ -256,17 +254,27 @@ namespace Client
             }
         }
 
-        List<Utente> chatGruppo;
-        Boolean selezionato = false;
+        List<Utente> chatGruppo = new List<Utente>();
+        //Boolean selezionato = false;
 
         private void aggiuntaChat(object sender, RoutedEventArgs e)
         {
-            chatGruppo = new List<Utente>();
             CheckBox chk = e.Source as CheckBox;
             int id = int.Parse(chk.Name.ToString().Substring(2));
-            chatGruppo.Add(new Utente(id, chk.Content.ToString()));
-            selezionato = true;
-            bttGruppoConfirm.Visibility = Visibility.Visible;
+            if (chk.IsChecked == true)
+            {
+                chatGruppo.Add(new Utente(id, chk.Content.ToString()));
+            }
+            else if (chk.IsChecked == false)
+            {
+                chatGruppo.Remove(new Utente(id, chk.Content.ToString()));
+            }
+            //selezionato = true;+
+            if(chatGruppo.Count > 0)
+                bttGruppoConfirm.Visibility = Visibility.Visible;
+            else if(chatGruppo.Count == 0)
+                bttGruppoConfirm.Visibility = Visibility.Hidden;
+
             /*bttGruppoConfirm.IsEnabled = false;
             bttGruppo.IsEnabled = true;
             gruppo = new List<string>();
@@ -282,14 +290,21 @@ namespace Client
 
         }
 
-        int step = 0;
+        //int step = 0;
 
         private void bttGruppoConfirm_Click(object sender, RoutedEventArgs e)
         {
             connessioneTCP inst = connessioneTCP.getInstance();
 
-            inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
-
+            if (chatGruppo.Count() == 1)
+                inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
+            else
+            {
+                String s = "";
+                foreach (Utente te in chatGruppo)
+                    s += te.ToString() + "-";
+                inst.send("nuovaChat" + ";" + txtNomeGruppo.Text + ";" + s + ";");
+            }
             /*String str = "";
             if (step == 0)
             {
@@ -313,7 +328,7 @@ namespace Client
 
                 inst.send("newGruppo;" + txtNomeGruppo.Text + ";" + str);
             }*/
-
+            chatGruppo = new List<Utente>();
             enableChat();
             refresh();
         }
