@@ -92,12 +92,21 @@ namespace Client
             return responseData;
         }
 
-        /*public void sendFile(String s)
+        public void sendFile(String fileName)
         {
             Socket socket = client.Client;
-            socket.SendFile(s);
-            
-        }*/
+
+            // Create the preBuffer data.
+            string string1 = String.Format("This is text data that precedes the file.{0}", Environment.NewLine);
+            byte[] preBuf = Encoding.ASCII.GetBytes(string1);
+
+            // Create the postBuffer data.
+            string string2 = String.Format("This is text data that will follow the file.{0}", Environment.NewLine);
+            byte[] postBuf = Encoding.ASCII.GetBytes(string2);
+
+            socket.SendFile(fileName, preBuf, postBuf, TransmitFileOptions.UseDefaultWorkerThread);
+
+        }
 
         NetworkStream stream;
         public void setSocket(TcpClient socket, NetworkStream stream)

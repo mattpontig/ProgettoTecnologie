@@ -338,21 +338,21 @@ namespace Client
 
         private void bttSendFile_Click(object sender, RoutedEventArgs e)
         {
-            /*connessioneTCP inst = connessioneTCP.getInstance();
+            connessioneTCP inst = connessioneTCP.getInstance();
             openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == true)
             {
                 try
                 {
                     //var sr = new StreamReader(openFileDialog1.FileName);
-                    inst.sendImg(openFileDialog1.FileName);
+                    inst.sendFile(openFileDialog1.FileName);
                 }
                 catch (SecurityException ex)
                 {
                     MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
                     $"Details:\n\n{ex.StackTrace}");
                 }
-            }*/
+            }
         }
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
