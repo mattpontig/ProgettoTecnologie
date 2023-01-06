@@ -15,6 +15,7 @@ namespace Client
         public List<Messaggio> messaggi { get; set; }
         public String nome = MainWindow.getNome();
         public bool chatCaricata { get; set; }
+        public int messNonLetti { get; set; }
 
         public Chat()
         {
@@ -23,6 +24,7 @@ namespace Client
             chatCaricata = false;
             messaggi = new List<Messaggio>();
             this.id = 0;
+            messNonLetti = 0;
         }
 
         public Chat(List<String> utenti, String titolo, int id)
@@ -32,6 +34,7 @@ namespace Client
             chatCaricata = false;
             messaggi = new List<Messaggio>();
             this.id = id;
+            messNonLetti = 0;
         }
 
         public Chat(List<String> utenti,int id)
@@ -40,6 +43,7 @@ namespace Client
             chatCaricata = false;
             messaggi = new List<Messaggio>();
             this.id = id;
+            messNonLetti = 0;
         }
 
         public String toString()
@@ -53,6 +57,21 @@ namespace Client
             }
             else
                 den =  titolo;
+            if (messNonLetti != 0)
+                den += "\t\t" + messNonLetti;
+            return den;
+        }
+        public String getName()
+        {
+            String den = "";
+            if (titolo == "")
+            {
+                for (int i = 0; i < utenti.Count; i++)
+                    if (utenti[i] != nome)
+                        den = utenti[i];
+            }
+            else
+                den = titolo;
             return den;
         }
     }

@@ -56,6 +56,12 @@ namespace Client
             refresh();
         }
 
+        void enableChat()
+        {
+            bttGruppoConfirm.Visibility = Visibility.Hidden;
+            labelGruppo.Visibility = Visibility.Hidden;
+            txtNomeGruppo.Visibility = Visibility.Hidden;
+        }
 
         void controlloMess()
         {
@@ -66,7 +72,7 @@ namespace Client
                 {
                     str = s.m;
                     notificaNuovoMess(str);
-                    s.messaggioCoda= false;
+                    s.messaggioCoda = false;
                 }
             }
         }
@@ -76,7 +82,7 @@ namespace Client
             String[] chat = str.Split(';');
             int idChat = int.Parse(chat[1]);
             Chat c = new Chat();
-            int i= 0,idChatPrelevare = 0;
+            int i = 0, idChatPrelevare = 0;
             foreach (Chat cht in chatList)
             {
                 if (cht.id == idChat)
@@ -86,6 +92,15 @@ namespace Client
                 }
                 i++;
             }
+
+            this.Dispatcher.Invoke(() => { addMessNonLetti(idChatPrelevare); });
+
+            Chat u = chatList[idChatPrelevare];
+
+            chatList.RemoveAt(idChatPrelevare);
+            chatList.Insert(0, u);
+            this.Dispatcher.Invoke(() => { refresh(); });
+
             /*chatList.RemoveAt(idChatPrelevare);
             chatList.Insert(0, c);*/
             this.Dispatcher.Invoke(() => { reloadChat(); });
@@ -93,13 +108,16 @@ namespace Client
 
         }
 
-        void enableChat()
+        public void addMessNonLetti(int id)
         {
-            bttGruppoConfirm.Visibility = Visibility.Hidden;
-            labelGruppo.Visibility = Visibility.Hidden;
-            txtNomeGruppo.Visibility = Visibility.Hidden;
+            bool nonSelezionato = false;
+            if (index == -1)
+                nonSelezionato = true;
+            else if (ListChat.Items[index].ToString() != chatList[id].getName())
+                nonSelezionato = true;
+            if (nonSelezionato)
+                chatList[id].messNonLetti++;
         }
-
 
         public void refresh()
         {
@@ -129,7 +147,6 @@ namespace Client
 
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             if (ListChat.SelectedIndex != -1)
                 index = ListChat.SelectedIndex;
             if (searchM == false)
@@ -153,62 +170,71 @@ namespace Client
 
             Chat u = chatList[index];
 
-            /*chatList.RemoveAt(index);
-            chatList.Insert(0, u);*/
-
+            chatList.RemoveAt(index);
+            chatList.Insert(0, u);
+            index = 0;
             String mess = "";
-            do
+            /*do
             {
                 if (s.nuovoMess)
                 {
                     mess = s.m;
                     s.nuovoMess = false;
                 }
-            } while (mess == "" || mess == null);
+            } while (mess == "" || mess == null);*/
             //ListChat.SelectedIndex = 0;
             txtMess.Text = "";
+            refresh();
             this.Dispatcher.Invoke(() => { reloadChat(); });
         }
 
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
-            ListChatHost.Items.Clear();
-            ListChatGuest.Items.Clear();
+            SingleChat.Items.Clear();
 
-            try
+            if (index != -1)
             {
-                inst.send("richiedoChat;" + chatList[index].id);
-                String chat = "";
-                do
+                if (chatList[index].messNonLetti != 0)
                 {
-                    if (s.nuovoMess)
-                    {
-                        chat = s.m;
-                        s.nuovoMess = false;
-                    }
-                } while (chat == "" || chat == null);
-                chatList[index].messaggi = parseClass.toChat(chat);
-
-                List<Messaggio> chatMess = chatList[index].messaggi;
-                for (int i = 0; i < chatMess.Count; i++)
-                {
-                    if (nome == chatMess[i].nome)
-                    {
-                        ListChatHost.Items.Add(chatMess[i].toMessHost());
-                        ListChatGuest.Items.Add("");
-                    }
-                    else
-                    {
-                        ListChatHost.Items.Add("");
-                        ListChatGuest.Items.Add(chatMess[i].toMessGuest());
-                    }
+                    chatList[index].messNonLetti = 0;
+                    refresh();
                 }
-                ListChat.SelectedIndex = index;
-            }
-            catch(Exception e)
-            {
-                this.Dispatcher.Invoke(() => { reloadChat(); });
+
+                try
+                {
+                    inst.send("richiedoChat;" + chatList[index].id);
+                    String chat = "";
+                    do
+                    {
+                        if (s.nuovoMess)
+                        {
+                            chat = s.m;
+                            s.nuovoMess = false;
+                        }
+                    } while (chat == "" || chat == null);
+                    chatList[index].messaggi = parseClass.toChat(chat);
+
+                    List<Messaggio> chatMess = chatList[index].messaggi;
+                    for (int i = 0; i < chatMess.Count; i++)
+                    {
+                        if (nome == chatMess[i].nome)
+                        {
+                            SingleChat.Items.Add("\t\t\t\t\t\t\t" + chatMess[i].toMessHost());
+                            //SingleChat.Items.Add("\t\t\t");
+                        }
+                        else
+                        {
+                            SingleChat.Items.Add(chatMess[i].toMessGuest());
+                            //SingleChat.Items.Add(chatMess[i].toMessGuest());
+                        }
+                    }
+                    ListChat.SelectedIndex = index;
+                }
+                catch (Exception e)
+                {
+                    this.Dispatcher.Invoke(() => { reloadChat(); });
+                }
             }
         }
 
