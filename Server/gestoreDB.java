@@ -92,7 +92,7 @@ public class gestoreDB {
                     for (int i = 0; i < ultimiMessaggi.length; i++) {
                         String[] last = ultimiMessaggi[i].split(",");
                         if (last[0].equals(Integer.toString(rs.getInt(2))))
-                            ris += "," + last[1] + "," + last[2] + "," + last[3];
+                            ris += "-" + last[1] + "," + last[2] + "," + last[3];
                     }
                 }
                 rs.next();
@@ -115,7 +115,7 @@ public class gestoreDB {
             for (int i = 0; i < ultimiMessaggi.length; i++) {
                 String[] last = ultimiMessaggi[i].split(",");
                 if (last[0].equals(Integer.toString(rs.getInt(2))))
-                    ris += "," + last[1] + "," + last[2] + "," + last[3] + ";";
+                    ris += "-" + last[1] + "," + last[2] + "," + last[3] + ";";
             }
         }
         return ris;

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Gen 06, 2023 alle 23:39
--- Versione del server: 10.4.25-MariaDB
--- Versione PHP: 8.1.10
+-- Creato il: Gen 07, 2023 alle 20:52
+-- Versione del server: 10.4.27-MariaDB
+-- Versione PHP: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,8 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `chat` (
   `idChat` int(11) NOT NULL,
   `gruppo` tinyint(1) NOT NULL,
-  `titolo` varchar(25) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `titolo` varchar(25) DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `chat`
@@ -39,7 +39,9 @@ CREATE TABLE `chat` (
 
 INSERT INTO `chat` (`idChat`, `gruppo`, `titolo`) VALUES
 (1, 0, ''),
-(2, 1, 'primo gruppo');
+(2, 1, 'primoGruppo'),
+(3, 0, ''),
+(7, 1, 'ProvaCreaGruppo');
 
 -- --------------------------------------------------------
 
@@ -51,7 +53,7 @@ CREATE TABLE `login` (
   `id` int(11) NOT NULL,
   `user` varchar(25) NOT NULL,
   `pass` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `login`
@@ -60,7 +62,8 @@ CREATE TABLE `login` (
 INSERT INTO `login` (`id`, `user`, `pass`) VALUES
 (4, 'pippo', '0c88028bf3aa6a6a143ed846f2be1ea4'),
 (5, 'prova', '189bbbb00c5f1fb7fba9ad9285f193d1'),
-(6, 'prova2', '280093f2cfe260a00ee1bb06f96584de');
+(6, 'prova2', '280093f2cfe260a00ee1bb06f96584de'),
+(7, 'test', '098f6bcd4621d373cade4e832627b4f6');
 
 -- --------------------------------------------------------
 
@@ -73,7 +76,7 @@ CREATE TABLE `messaggichat` (
   `messaggio` varchar(200) NOT NULL,
   `idChat` int(11) NOT NULL,
   `idMittente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `messaggichat`
@@ -82,7 +85,25 @@ CREATE TABLE `messaggichat` (
 INSERT INTO `messaggichat` (`idMex`, `messaggio`, `idChat`, `idMittente`) VALUES
 (1, 'ciao', 1, 4),
 (2, 'ciao pippo!', 1, 5),
-(3, 'primo messaggio prova per gruppo', 2, 6);
+(3, 'primo messaggio prova per gruppo', 2, 6),
+(4, 'prova send', 3, 4),
+(16, 'mmm', 3, 6),
+(17, 'funziona?', 3, 4),
+(18, 'penso di si', 3, 6),
+(19, 'prova nuovo send', 1, 4),
+(20, 'forse', 1, 5),
+(21, 'mmm', 1, 4),
+(22, 'riciao', 1, 4),
+(23, 'ei', 3, 4),
+(24, 'mm', 2, 4),
+(25, 'see', 3, 4),
+(26, 'boh', 3, 4),
+(27, 'bug', 2, 4),
+(28, 'rompo tutto', 3, 6),
+(29, ' non letto', 1, 4),
+(30, 'nuovo g', 7, 7),
+(31, 'ciao', 7, 4),
+(32, 'triplo', 2, 5);
 
 -- --------------------------------------------------------
 
@@ -92,19 +113,25 @@ INSERT INTO `messaggichat` (`idMex`, `messaggio`, `idChat`, `idMittente`) VALUES
 
 CREATE TABLE `utentichat` (
   `idUtente` int(11) NOT NULL,
-  `idChat` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `idChat` int(11) NOT NULL,
+  `chatLetta` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `utentichat`
 --
 
-INSERT INTO `utentichat` (`idUtente`, `idChat`) VALUES
-(4, 1),
-(4, 2),
-(5, 1),
-(5, 2),
-(6, 2);
+INSERT INTO `utentichat` (`idUtente`, `idChat`, `chatLetta`) VALUES
+(4, 1, 0),
+(4, 2, 0),
+(4, 3, 0),
+(4, 7, NULL),
+(5, 1, 0),
+(5, 2, 0),
+(5, 7, NULL),
+(6, 2, 0),
+(6, 3, 0),
+(7, 7, NULL);
 
 --
 -- Indici per le tabelle scaricate
@@ -145,19 +172,19 @@ ALTER TABLE `utentichat`
 -- AUTO_INCREMENT per la tabella `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `idChat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idChat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT per la tabella `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT per la tabella `messaggichat`
 --
 ALTER TABLE `messaggichat`
-  MODIFY `idMex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idMex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- Limiti per le tabelle scaricate

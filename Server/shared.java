@@ -20,11 +20,9 @@ public class shared {
     List<MySocket> sockets = new ArrayList<MySocket>();
 
     public boolean addSocket(MySocket s) throws IOException {
-        if (sockets.size() < 2) {
-            sockets.add(s);
-            return true;
-        }
-        return false;
+        sockets.add(s);
+        return true;
+
     }
 
     public MySocket findSocketById(long id) {

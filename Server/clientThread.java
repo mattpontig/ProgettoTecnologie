@@ -86,6 +86,9 @@ public class clientThread extends Thread {
         try {
             // closing resources
             in.close();
+            cicla = false;
+            this.s.Close();
+            shared.getInstance().removeSocket(s); // rimuove la socket dalla lista di socket attive
         } catch (IOException e) {
             e.printStackTrace();
         }
