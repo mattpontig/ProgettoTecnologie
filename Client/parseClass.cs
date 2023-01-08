@@ -22,7 +22,7 @@ namespace Client
                 List<Chat> list = new List<Chat>();
             try
             {
-                for (int i = 2; i < riga.Length - 1; i++)
+                for (int i = 2; i < riga.Length; i++)
                 {
                     if (riga[i] != "")
                     {

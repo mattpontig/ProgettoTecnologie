@@ -97,6 +97,7 @@ public class gestoreDB {
                     //1,pippo, non letto&29
                 }
             }
+        }
             /*if (ris.contains(Integer.toString(rs.getInt(2)))) { // da sistemare questo if
                 ris += "," + rs.getString(3);
                 rs.previous();
@@ -110,7 +111,6 @@ public class gestoreDB {
                 rs.next();
             } else
                 ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) + "-" +ultimiMessaggi[j];*/
-        }
         //ris += ";";
         /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
 

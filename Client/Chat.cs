@@ -10,8 +10,8 @@ namespace Client
     internal class Chat
     {
         public int id { get; set; }
-        List<String> utenti;
-        String titolo = "";
+        public List<String> utenti { get; set; }
+        public String titolo { get; set; }
         public List<Messaggio> messaggi { get; set; }
         public String nome = MainWindow.getNome();
         public bool chatCaricata { get; set; }
@@ -24,7 +24,7 @@ namespace Client
             this.utenti = new List<String>();
             this.titolo = "";
             chatCaricata = false;
-            messaggi = new List<Messaggio>();
+            messaggi = null;
             this.id = 0;
             messNonLetti = 0;
             idUltimoMess = 0;
@@ -36,7 +36,7 @@ namespace Client
             this.utenti = utenti;
             this.titolo = titolo;
             chatCaricata = false;
-            messaggi = new List<Messaggio>();
+            messaggi = null;
             this.id = id;
             messNonLetti = 0;
             idUltimoMess = ultiMess;
@@ -47,7 +47,7 @@ namespace Client
         {
             this.utenti = utenti;
             chatCaricata = false;
-            messaggi = new List<Messaggio>();
+            messaggi = null;
             this.id = id;
             messNonLetti = 0;
             idUltimoMess = 0;

@@ -21,6 +21,7 @@ namespace Client
         int index;
         static String nome;
         List<Chat> chatList;
+        List<Chat> chatsFiltro;
         List<Utente> tuttiUtenti = null;
         Window1 w;
         bool searchM;
@@ -32,6 +33,7 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
+            txtSearch.Text = "";
             tuttiUtenti = new List<Utente>();
             Closing += new System.ComponentModel.CancelEventHandler(MainWindow_Closing);
             enableChat();
@@ -61,9 +63,9 @@ namespace Client
             bttGruppoConfirm.Visibility = Visibility.Hidden;
             labelGruppo.Visibility = Visibility.Hidden;
             txtNomeGruppo.Visibility = Visibility.Hidden;
-            bttIndietro.Visibility= Visibility.Hidden;
+            bttIndietro.Visibility = Visibility.Hidden;
 
-            ListChat.Visibility= Visibility.Visible;
+            ListChat.Visibility = Visibility.Visible;
         }
 
         void controlloMess()
@@ -142,11 +144,37 @@ namespace Client
                         }
                     } while (chats == "" || chats == null);
                     chatList = parseClass.toList(nome, chats);
+                    chatsFiltro = chatList;
                 }
                 catch (Exception ex) { ListChat.SelectedIndex = -1; }
             }
-            foreach (Chat c in chatList)
+            foreach (Chat c in chatsFiltro)
                 ListChat.Items.Add(c.toString());
+        }
+
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            chatsFiltro = new List<Chat>();
+            if (txtSearch.Text == "")
+                chatsFiltro = chatList;
+            else if (txtSearch.Text != "")
+            {
+                foreach (Chat c in chatList)
+                {
+                    if (c.titolo != "")
+                    {
+                        if (c.titolo.ToLower().StartsWith(txtSearch.Text))
+                            chatsFiltro.Add(c);
+                    }
+                    else if (c.titolo == "")
+                    {
+                        if (c.utenti[0].ToLower().StartsWith(txtSearch.Text))
+                            chatsFiltro.Add(c);
+                    }
+                }
+            }
+
+            refresh();
         }
 
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -181,53 +209,58 @@ namespace Client
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
-
+            bool messNoRead = false;
             if (index != -1)
             {
                 if (chatList[index].messNonLetti != 0)
                 {
                     chatList[index].messNonLetti = 0;
+                    messNoRead = true;
                     refresh();
                 }
-                SingleChat.Items.Clear();
-                try
+                if (messNoRead || chatList[index].messaggi == null)
                 {
-                    inst.send("richiedoChat;" + chatList[index].id);
-                    String chat = "";
-                    do
+                    try
                     {
-                        if (s.nuovoMess)
+                        inst.send("richiedoChat;" + chatList[index].id);
+                        String chat = "";
+                        do
                         {
-                            chat = s.m;
-                            s.nuovoMess = false;
-                        }
-                    } while (chat == "" || chat == null);
-                    chatList[index].messaggi = parseClass.toChat(chat);
+                            if (s.nuovoMess)
+                            {
+                                chat = s.m;
+                                s.nuovoMess = false;
+                            }
+                        } while (chat == "" || chat == null);
+                        chatList[index].messaggi = parseClass.toChat(chat);
 
-                    List<Messaggio> chatMess = chatList[index].messaggi;
-                    for (int i = 0; i < chatMess.Count; i++)
-                    {
-                        if (nome == chatMess[i].nome)
-                        {
-                            SingleChat.Items.Add("\t\t\t\t\t\t\t" + chatMess[i].toMess());
-                        }
-                        else
-                        {
-                            SingleChat.Items.Add(chatMess[i].toMess());
-                        }
                     }
-                    SingleChat.Items.Add("");
-                    ListChat.SelectedIndex = -1;
-
-                    SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
-                    SingleChat.ScrollIntoView(SingleChat.SelectedItem);
-                    SingleChat.SelectedIndex = -1;
-
+                    catch (Exception e)
+                    {
+                        this.Dispatcher.Invoke(() => { reloadChat(); });
+                    }
                 }
-                catch (Exception e)
+
+                SingleChat.Items.Clear();
+
+                List<Messaggio> chatMess = chatList[index].messaggi;
+                for (int i = 0; i < chatMess.Count; i++)
                 {
-                    this.Dispatcher.Invoke(() => { reloadChat(); });
+                    if (nome == chatMess[i].nome)
+                    {
+                        SingleChat.Items.Add("\t\t\t\t\t\t\t" + chatMess[i].toMess());
+                    }
+                    else
+                    {
+                        SingleChat.Items.Add(chatMess[i].toMess());
+                    }
                 }
+                SingleChat.Items.Add("");
+                ListChat.SelectedIndex = -1;
+
+                SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
+                SingleChat.ScrollIntoView(SingleChat.SelectedItem);
+                SingleChat.SelectedIndex = -1;
             }
         }
 
@@ -236,7 +269,7 @@ namespace Client
             getUtenti();
 
             bttIndietro.Visibility = Visibility.Visible;
-            
+
             ListChat.Items.Clear();
 
             CheckBox chk;
@@ -265,7 +298,7 @@ namespace Client
             {
                 int i = -1;
                 int j = 0;
-                foreach(Utente s in chatGruppo)
+                foreach (Utente s in chatGruppo)
                 {
                     if (s.getId() == id)
                         i = j;
@@ -273,9 +306,9 @@ namespace Client
                 }
                 chatGruppo.RemoveAt(i);
             }
-            if(chatGruppo.Count > 0)
+            if (chatGruppo.Count > 0)
                 bttGruppoConfirm.Visibility = Visibility.Visible;
-            else if(chatGruppo.Count == 0)
+            else if (chatGruppo.Count == 0)
                 bttGruppoConfirm.Visibility = Visibility.Hidden;
         }
 
@@ -358,18 +391,6 @@ namespace Client
                     $"Details:\n\n{ex.StackTrace}");
                 }
             }
-        }
-
-        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            /*getUtenti();
-
-            ListChat.Items.Clear();
-            foreach (Utente u in tuttiUtenti)
-            {
-                ListChat.Items.Add(u.toString());
-                searchM = true;
-            }*/
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
