@@ -203,22 +203,20 @@ namespace Client
             txtMess.Text = "";
             refresh();
             this.Dispatcher.Invoke(() => { reloadChat(); });
-            ListChat.SelectedIndex = index;
+            ListChat.SelectedIndex = -1;
         }
-
+        bool messNoRead = false;
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
-            bool messNoRead = false;
             if (index != -1)
             {
                 if (chatList[index].messNonLetti != 0)
                 {
                     chatList[index].messNonLetti = 0;
-                    messNoRead = true;
                     refresh();
                 }
-                if (messNoRead || chatList[index].messaggi == null)
+                //if (messNoRead || chatList[index].messaggi == null)
                 {
                     try
                     {
@@ -262,6 +260,7 @@ namespace Client
                 SingleChat.ScrollIntoView(SingleChat.SelectedItem);
                 SingleChat.SelectedIndex = -1;
             }
+            //messNoRead = false;
         }
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
