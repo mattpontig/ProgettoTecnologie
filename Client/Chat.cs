@@ -16,6 +16,8 @@ namespace Client
         public String nome = MainWindow.getNome();
         public bool chatCaricata { get; set; }
         public int messNonLetti { get; set; }
+        public int idUltimoMess { get; set; }
+        public String UltimoMess { get; set; }
 
         public Chat()
         {
@@ -25,9 +27,11 @@ namespace Client
             messaggi = new List<Messaggio>();
             this.id = 0;
             messNonLetti = 0;
+            idUltimoMess = 0;
+            UltimoMess = "";
         }
 
-        public Chat(List<String> utenti, String titolo, int id)
+        public Chat(List<String> utenti, String titolo, int id,int ultiMess,String UltimoMess)
         {
             this.utenti = utenti;
             this.titolo = titolo;
@@ -35,6 +39,8 @@ namespace Client
             messaggi = new List<Messaggio>();
             this.id = id;
             messNonLetti = 0;
+            idUltimoMess = ultiMess;
+            this.UltimoMess = UltimoMess;
         }
 
         public Chat(List<String> utenti,int id)
@@ -44,6 +50,8 @@ namespace Client
             messaggi = new List<Messaggio>();
             this.id = id;
             messNonLetti = 0;
+            idUltimoMess = 0;
+            UltimoMess = "";
         }
 
         public String toString()

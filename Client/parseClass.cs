@@ -9,6 +9,12 @@ namespace Client
 {
     internal class parseClass
     {
+        //;
+        //2,g,primoGruppo,prova-triplo&32;
+        //7,g,ProvaCreaGruppo,prova-ciao&31;
+        //1,s,prova- non letto&29;
+        //3,s,prova2-rompo tutto&28
+
         public static List<Chat> toList(String nome, String s)
         {
             //"id,g/s,(titolo),nome,nome,nome..."
@@ -16,7 +22,7 @@ namespace Client
                 List<Chat> list = new List<Chat>();
             try
             {
-                for (int i = 1; i < riga.Length - 1; i++)
+                for (int i = 2; i < riga.Length - 1; i++)
                 {
                     if (riga[i] != "")
                     {
@@ -26,33 +32,55 @@ namespace Client
                         {
                             /*if (checkChat(chat, nome))
                             {*/
-                            for (int j = 3; j < chat.Length; j++)
+                            /*for (int j = 3; j < chat.Length; j++)
                             {
                                 if (chat[j].ToString() != nome)
                                     utente.Add(chat[j].ToString());
-                            }
-                            list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString())));
+                            }*/
+                            //List<String> utenti, String titolo, int id,int ultiMess, String UltimoMess
+                            String[] mess = (chat[3].Split('-'))[1].Split('&');
+                            list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0]));
                             //}
                         }
                         else if (chat[1] == "s")
                         {
                             /*if (checkChat(chat, nome))
                             {*/
-                            if (chat[3].ToString() != nome)
+                            //"prova- non letto&29"
+                            /*if (chat[3].ToString() != nome)
                                 utente.Add(chat[3].ToString());
                             else
-                                utente.Add(chat[4].ToString());
-                            list.Add(new Chat(utente, int.Parse(chat[0].ToString())));
+                                utente.Add(chat[4].ToString());*/
+
+                            String[] div = chat[2].Split('-');
+                            utente.Add(div[0]);
+                            String[] mess = div[1].Split('&');
+                            list.Add(new Chat(utente, "", int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0]));
                             //}
                         }
                     }
                 }
             }catch(Exception e) { 
             }
+            list = bubbleSortChats(list);
             return list;
         }
 
-
+        public static List<Chat> bubbleSortChats(List<Chat> arr)
+        {
+            List<Chat> l = arr;
+            int i, j;
+            for (i = 0; i < l.Count; i++)
+                // Last i elements are already in place
+                for (j = 0; j < l.Count - i - 1; j++)
+                    if (l[j].idUltimoMess < l[j + 1].idUltimoMess)
+                    {
+                        Chat tempswap = l[j];
+                        l[j] = l[j + 1];
+                        l[j + 1] = tempswap;
+                    }
+            return l;
+        }
         /*public static bool checkChat(String[] chat, String nome)
         {
             bool b = false;

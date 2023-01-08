@@ -84,8 +84,20 @@ public class gestoreDB {
                                 + string
                                 + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
                                 + string + "')");
+
+        int id = 0;
         while (rs.next()) {
-            if (ris.contains(Integer.toString(rs.getInt(2)))) { // da sistemare questo if
+            if (rs.getInt(2) != id) {
+                id = rs.getInt(2);
+                for (int i = 0; i < ultimiMessaggi.length; i++) {
+                    String[] lastMex = ultimiMessaggi[i].split(",");
+                    if (Integer.parseInt(lastMex[0]) == id)
+                        ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) + "-" + lastMex[2];
+                    //;2,g,primoGruppo,prova,prova2-5,prova,triplo;
+                    //1,pippo, non letto&29
+                }
+            }
+            /*if (ris.contains(Integer.toString(rs.getInt(2)))) { // da sistemare questo if
                 ris += "," + rs.getString(3);
                 rs.previous();
                 if (ris.contains(Integer.toString(rs.getInt(2)))) {
@@ -97,11 +109,36 @@ public class gestoreDB {
                 }
                 rs.next();
             } else
-                ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3);
+                ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) + "-" +ultimiMessaggi[j];*/
         }
-        ris += ";";
+        //ris += ";";
         /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
+
         stmt = con.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+        rs = stmt
+                .executeQuery(
+                        "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where c.titolo='' and not lo.user='"
+                                + string
+                                + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
+                                + string + "')");
+
+        id = 0;
+        while (rs.next()) {
+            if (rs.getInt(2) != id) {
+                id = rs.getInt(2);
+                for (int i = 0; i < ultimiMessaggi.length; i++) {
+                    String[] lastMex = ultimiMessaggi[i].split(",");
+                    if (Integer.parseInt(lastMex[0]) == id)
+                        ris += ";" + rs.getInt(2) + ",s," + rs.getString(1) + "-" + lastMex[2];
+                    //;2,g,primoGruppo,prova,prova2-5,prova,triplo;
+                    //1,pippo, non letto&29
+                }
+            }
+        }
+
+        /*stmt = con.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         rs = stmt
@@ -117,8 +154,24 @@ public class gestoreDB {
                 if (last[0].equals(Integer.toString(rs.getInt(2))))
                     ris += "-" + last[1] + "," + last[2] + "," + last[3] + ";";
             }
-        }
-        return ris;
+        }*/
+        return ";" + ris;
+    }
+
+    public static String lastMex(String chat, String maxMexId) throws ClassNotFoundException, SQLException {
+        String mes = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+        rs = stmt.executeQuery(
+                "select login.id,login.user,messaggio from messaggichat join login on messaggichat.idMittente=login.id where idchat="
+                        + Integer.parseInt(chat) + " and idmex=" + Integer.parseInt(maxMexId) + "");
+        while (rs.next())
+            mes = chat + "," /*+ Integer.toString(rs.getInt(1)) + ","*/ + rs.getString(2) + "," + rs.getString(3);
+        return mes+"&"+maxMexId;
     }
 
     public static String getNames(String string) throws SQLException, ClassNotFoundException {
@@ -335,21 +388,5 @@ public class gestoreDB {
         while (rs.next())
             id = Integer.toString(rs.getInt(1));
         return id;
-    }
-
-    public static String lastMex(String chat, String maxMexId) throws ClassNotFoundException, SQLException {
-        String mes = "";
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
-                "root", "");
-
-        Statement stmt = con.createStatement();
-        ResultSet rs;
-        rs = stmt.executeQuery(
-                "select login.id,login.user,messaggio from messaggichat join login on messaggichat.idMittente=login.id where idchat="
-                        + Integer.parseInt(chat) + " and idmex=" + Integer.parseInt(maxMexId) + "");
-        while (rs.next())
-            mes = chat + "," + Integer.toString(rs.getInt(1)) + "," + rs.getString(2) + "," + rs.getString(3);
-        return mes;
     }
 }
