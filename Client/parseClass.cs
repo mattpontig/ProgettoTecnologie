@@ -22,7 +22,7 @@ namespace Client
                 List<Chat> list = new List<Chat>();
             try
             {
-                for (int i = 2; i < riga.Length; i++)
+                for (int i = 2; i < riga.Length-1; i++)
                 {
                     if (riga[i] != "")
                     {
@@ -30,32 +30,17 @@ namespace Client
                         List<String> utente = new List<String>();
                         if (chat[1] == "g")
                         {
-                            /*if (checkChat(chat, nome))
-                            {*/
-                            /*for (int j = 3; j < chat.Length; j++)
-                            {
-                                if (chat[j].ToString() != nome)
-                                    utente.Add(chat[j].ToString());
-                            }*/
-                            //List<String> utenti, String titolo, int id,int ultiMess, String UltimoMess
-                            String[] mess = (chat[3].Split('-'))[1].Split('&');
-                            list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0]));
+                            //List<String> utenti, String titolo, int id,int ultiMess, String UltimoMess,int messNonLetti
+                            String[] mess = (chat[4].Split('-'))[1].Split('&');
+                            list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0], int.Parse(chat[3])));
                             //}
                         }
                         else if (chat[1] == "s")
                         {
-                            /*if (checkChat(chat, nome))
-                            {*/
-                            //"prova- non letto&29"
-                            /*if (chat[3].ToString() != nome)
-                                utente.Add(chat[3].ToString());
-                            else
-                                utente.Add(chat[4].ToString());*/
-
-                            String[] div = chat[2].Split('-');
+                            String[] div = chat[3].Split('-');
                             utente.Add(div[0]);
                             String[] mess = div[1].Split('&');
-                            list.Add(new Chat(utente, "", int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0]));
+                            list.Add(new Chat(utente, "", int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0], int.Parse(chat[2])));
                             //}
                         }
                     }

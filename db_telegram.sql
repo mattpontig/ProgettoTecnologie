@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Gen 07, 2023 alle 20:52
+-- Creato il: Gen 08, 2023 alle 19:19
 -- Versione del server: 10.4.27-MariaDB
--- Versione PHP: 8.1.12
+-- Versione PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -103,7 +103,13 @@ INSERT INTO `messaggichat` (`idMex`, `messaggio`, `idChat`, `idMittente`) VALUES
 (29, ' non letto', 1, 4),
 (30, 'nuovo g', 7, 7),
 (31, 'ciao', 7, 4),
-(32, 'triplo', 2, 5);
+(32, 'triplo', 2, 5),
+(33, 'ei', 2, 6),
+(34, 'come va', 3, 6),
+(35, 'ciao', 2, 4),
+(36, 'ciao', 1, 4),
+(37, 'come va', 3, 6),
+(38, 'ciao', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -114,24 +120,24 @@ INSERT INTO `messaggichat` (`idMex`, `messaggio`, `idChat`, `idMittente`) VALUES
 CREATE TABLE `utentichat` (
   `idUtente` int(11) NOT NULL,
   `idChat` int(11) NOT NULL,
-  `chatLetta` tinyint(1) DEFAULT NULL
+  `mesNonLetti` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `utentichat`
 --
 
-INSERT INTO `utentichat` (`idUtente`, `idChat`, `chatLetta`) VALUES
+INSERT INTO `utentichat` (`idUtente`, `idChat`, `mesNonLetti`) VALUES
 (4, 1, 0),
 (4, 2, 0),
 (4, 3, 0),
-(4, 7, NULL),
+(4, 7, 0),
 (5, 1, 0),
 (5, 2, 0),
-(5, 7, NULL),
+(5, 7, 0),
 (6, 2, 0),
 (6, 3, 0),
-(7, 7, NULL);
+(7, 7, 0);
 
 --
 -- Indici per le tabelle scaricate
@@ -184,7 +190,7 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT per la tabella `messaggichat`
 --
 ALTER TABLE `messaggichat`
-  MODIFY `idMex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `idMex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- Limiti per le tabelle scaricate

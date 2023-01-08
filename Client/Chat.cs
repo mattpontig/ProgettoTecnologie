@@ -31,14 +31,14 @@ namespace Client
             UltimoMess = "";
         }
 
-        public Chat(List<String> utenti, String titolo, int id,int ultiMess,String UltimoMess)
+        public Chat(List<String> utenti, String titolo, int id,int ultiMess,String UltimoMess,int messNonLetti)
         {
             this.utenti = utenti;
             this.titolo = titolo;
             chatCaricata = false;
             messaggi = null;
             this.id = id;
-            messNonLetti = 0;
+            this.messNonLetti = messNonLetti;
             idUltimoMess = ultiMess;
             this.UltimoMess = UltimoMess;
         }
