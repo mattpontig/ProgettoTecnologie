@@ -41,7 +41,7 @@ public class clientThread extends Thread {
                     } else if (received.equals("start")) {
                         this.s.out.println("start");
                     } else {
-                        // break the string into message and recipient part
+                        // break the string into message
                         String[] st = received.split(";");
                         if (st[0].equals("RichiedoChats")) {
                             daMandare = gestoreDB.getChatNames(st[1]);
@@ -58,6 +58,7 @@ public class clientThread extends Thread {
                         } else if (st[0].equals("send")) {
                             daMandare = gestoreDB.sendMex(st[1], st[2], st[3]);
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
+                            gestoreDB.aggiungiNonLetti(st[2], st[1]);
                             notificaUtenti(utenti, st[2]);
                             /*
                              * Long idDest = Long.parseLong(gestoreDB.chatToId(st[1], st[2]));

@@ -92,26 +92,30 @@ public class gestoreDB {
                 for (int i = 0; i < ultimiMessaggi.length; i++) {
                     String[] lastMex = ultimiMessaggi[i].split(",");
                     if (Integer.parseInt(lastMex[0]) == id)
-                        ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getInt(4) + "," + rs.getString(3) + "-" + lastMex[2];
-                    //;2,g,primoGruppo,prova,prova2-5,prova,triplo;
-                    //1,pippo, non letto&29
+                        ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getInt(4) + "," + rs.getString(3)
+                                + "-" + lastMex[2];
+                    // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
+                    // 1,pippo, non letto&29
                 }
             }
         }
-            /*if (ris.contains(Integer.toString(rs.getInt(2)))) { // da sistemare questo if
-                ris += "," + rs.getString(3);
-                rs.previous();
-                if (ris.contains(Integer.toString(rs.getInt(2)))) {
-                    for (int i = 0; i < ultimiMessaggi.length; i++) {
-                        String[] last = ultimiMessaggi[i].split(",");
-                        if (last[0].equals(Integer.toString(rs.getInt(2))))
-                            ris += "-" + last[1] + "," + last[2] + "," + last[3];
-                    }
-                }
-                rs.next();
-            } else
-                ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) + "-" +ultimiMessaggi[j];*/
-        //ris += ";";
+        /*
+         * if (ris.contains(Integer.toString(rs.getInt(2)))) { // da sistemare questo if
+         * ris += "," + rs.getString(3);
+         * rs.previous();
+         * if (ris.contains(Integer.toString(rs.getInt(2)))) {
+         * for (int i = 0; i < ultimiMessaggi.length; i++) {
+         * String[] last = ultimiMessaggi[i].split(",");
+         * if (last[0].equals(Integer.toString(rs.getInt(2))))
+         * ris += "-" + last[1] + "," + last[2] + "," + last[3];
+         * }
+         * }
+         * rs.next();
+         * } else
+         * ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) +
+         * "-" +ultimiMessaggi[j];
+         */
+        // ris += ";";
         /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
 
         stmt = con.createStatement(
@@ -131,30 +135,33 @@ public class gestoreDB {
                 for (int i = 0; i < ultimiMessaggi.length; i++) {
                     String[] lastMex = ultimiMessaggi[i].split(",");
                     if (Integer.parseInt(lastMex[0]) == id)
-                        ris += ";" + rs.getInt(2) + ",s," + rs.getInt(3) + ","  + rs.getString(1) +  "-" + lastMex[2];
-                    //;2,g,primoGruppo,prova,prova2-5,prova,triplo;
-                    //1,pippo, non letto&29
+                        ris += ";" + rs.getInt(2) + ",s," + rs.getInt(3) + "," + rs.getString(1) + "-" + lastMex[2];
+                    // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
+                    // 1,pippo, non letto&29
                 }
             }
         }
 
-        /*stmt = con.createStatement(
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-        rs = stmt
-                .executeQuery(
-                        "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not lo.user='"
-                                + string
-                                + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
-                                + string + "' and c.titolo='')");
-        while (rs.next()) {
-            ris += rs.getInt(2) + ",s,," + rs.getString(1);
-            for (int i = 0; i < ultimiMessaggi.length; i++) {
-                String[] last = ultimiMessaggi[i].split(",");
-                if (last[0].equals(Integer.toString(rs.getInt(2))))
-                    ris += "-" + last[1] + "," + last[2] + "," + last[3] + ";";
-            }
-        }*/
+        /*
+         * stmt = con.createStatement(
+         * ResultSet.TYPE_SCROLL_INSENSITIVE,
+         * ResultSet.CONCUR_READ_ONLY);
+         * rs = stmt
+         * .executeQuery(
+         * "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not lo.user='"
+         * + string
+         * +
+         * "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
+         * + string + "' and c.titolo='')");
+         * while (rs.next()) {
+         * ris += rs.getInt(2) + ",s,," + rs.getString(1);
+         * for (int i = 0; i < ultimiMessaggi.length; i++) {
+         * String[] last = ultimiMessaggi[i].split(",");
+         * if (last[0].equals(Integer.toString(rs.getInt(2))))
+         * ris += "-" + last[1] + "," + last[2] + "," + last[3] + ";";
+         * }
+         * }
+         */
         return ";" + ris + ";";
     }
 
@@ -170,8 +177,8 @@ public class gestoreDB {
                 "select login.id,login.user,messaggio from messaggichat join login on messaggichat.idMittente=login.id where idchat="
                         + Integer.parseInt(chat) + " and idmex=" + Integer.parseInt(maxMexId) + "");
         while (rs.next())
-            mes = chat + "," /*+ Integer.toString(rs.getInt(1)) + ","*/ + rs.getString(2) + "," + rs.getString(3);
-        return mes+"&"+maxMexId;
+            mes = chat + "," /* + Integer.toString(rs.getInt(1)) + "," */ + rs.getString(2) + "," + rs.getString(3);
+        return mes + "&" + maxMexId;
     }
 
     public static String getNames(String string) throws SQLException, ClassNotFoundException {
@@ -388,5 +395,48 @@ public class gestoreDB {
         while (rs.next())
             id = Integer.toString(rs.getInt(1));
         return id;
+    }
+
+    public static String chatUtenti(String chi, String chat) throws SQLException, ClassNotFoundException {
+        String idAltro = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+        rs = stmt.executeQuery(
+                "select idutente,mesNonLetti from utentichat where not idUtente=" + Integer.parseInt(chi)
+                        + " and idchat=" + Integer.parseInt(chat) + "");
+        while (rs.next())
+            idAltro += rs.getString(1) + "," + rs.getString(2) + ";";
+        return idAltro;
+    }
+
+    public static void aggiungiNonLetti(String chat, String chi) throws SQLException, ClassNotFoundException {
+        String idChi = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+
+        rs = stmt.executeQuery(
+                "select id from login where user='" + chi + "'");
+        while (rs.next())
+            idChi = rs.getString(1);
+
+        String altri = chatUtenti(idChi, chat);
+        String[] nMexUtenti = altri.split(";");
+
+        for (int i = 0; i < nMexUtenti.length; i++) {
+            String[] mex = nMexUtenti[i].split(",");
+            stmt.executeUpdate(
+                    "update utentichat set mesNonLetti=" + (Integer.parseInt(mex[1]) + 1) + " where not idutente="
+                            + Integer.parseInt(idChi)
+                            + " and idchat=" + Integer.parseInt(chat) + "");
+        }
+
     }
 }
