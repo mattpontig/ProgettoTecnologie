@@ -18,9 +18,15 @@ namespace Client
             this.messaggio = messaggio;
         }
 
-        public String toMess()
+        public String toMessHost()
+        {
+            return "you" + ":" + "\t" + messaggio;
+        }
+
+        public String toMessGuest()
         {
             return nome + ":" + "\t" + messaggio;
         }
+
     }
 }

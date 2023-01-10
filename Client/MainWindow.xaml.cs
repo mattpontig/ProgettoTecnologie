@@ -29,6 +29,7 @@ namespace Client
         OpenFileDialog openFileDialog1;
         Thread clientSocket;
         Thread nuovoMess;
+        TextBox txt;
 
         public MainWindow()
         {
@@ -37,6 +38,7 @@ namespace Client
             tuttiUtenti = new List<Utente>();
             Closing += new System.ComponentModel.CancelEventHandler(MainWindow_Closing);
             enableChat();
+            txt = new TextBox();
             w = new Window1();
             w.ShowDialog();
             if (w.txtUtente.Text == "")
@@ -207,8 +209,6 @@ namespace Client
             ListChat.SelectedIndex = -1;
         }
 
-        bool stessaChat = true;
-
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
@@ -249,11 +249,13 @@ namespace Client
                 {
                     if (nome == chatMess[i].nome)
                     {
-                        SingleChat.Items.Add("\t\t\t\t\t\t\t" + chatMess[i].toMess());
+                        txt.Text = chatMess[i].toMessHost();
+                        SingleChat.Items.Add(txt.Text);
                     }
                     else
                     {
-                        SingleChat.Items.Add(chatMess[i].toMess());
+                        txt.Text = chatMess[i].toMessGuest();
+                        SingleChat.Items.Add(txt.Text);
                     }
                 }
 
