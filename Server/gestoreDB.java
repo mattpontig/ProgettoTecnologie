@@ -93,7 +93,7 @@ public class gestoreDB {
                     String[] lastMex = ultimiMessaggi[i].split(",");
                     if (Integer.parseInt(lastMex[0]) == id)
                         ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getInt(4) + "," + rs.getString(3)
-                                + "-" + lastMex[2];
+                                + "-" + lastMex[2] + "&" + getNonLetMex(id, string);
                     // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
                     // 1,pippo, non letto&29
                 }
@@ -135,7 +135,8 @@ public class gestoreDB {
                 for (int i = 0; i < ultimiMessaggi.length; i++) {
                     String[] lastMex = ultimiMessaggi[i].split(",");
                     if (Integer.parseInt(lastMex[0]) == id)
-                        ris += ";" + rs.getInt(2) + ",s," + rs.getInt(3) + "," + rs.getString(1) + "-" + lastMex[2];
+                        ris += ";" + rs.getInt(2) + ",s," + rs.getInt(3) + "," + rs.getString(1) + "-" + lastMex[2]
+                                + "&" + getNonLetMex(id, string);
                     // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
                     // 1,pippo, non letto&29
                 }
@@ -163,6 +164,25 @@ public class gestoreDB {
          * }
          */
         return ";" + ris + ";";
+    }
+
+    private static int getNonLetMex(int id, String nome) throws SQLException, ClassNotFoundException {
+        int nonL = 0;
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+        int idMio = 0;
+        rs = stmt.executeQuery("select id from login where user='" + nome + "'");
+        while (rs.next())
+            idMio = rs.getInt(1);
+        rs = stmt.executeQuery(
+                "select mesNonLetti from utentichat where idutente=" + idMio + " and idchat=" + id + "");
+        while (rs.next())
+            nonL = rs.getInt(1);
+        return nonL;
     }
 
     public static String lastMex(String chat, String maxMexId) throws ClassNotFoundException, SQLException {
@@ -199,7 +219,7 @@ public class gestoreDB {
         return ris;
     }
 
-    public static String getChatMex(String string) throws ClassNotFoundException, SQLException {
+    public static String getChatMex(String idchat, long id) throws ClassNotFoundException, SQLException {
         String ris = "";
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
@@ -211,10 +231,16 @@ public class gestoreDB {
         ResultSet rs = stmt
                 .executeQuery(
                         "select mc.idMex,lo.user,mc.messaggio from messaggichat as mc join login as lo on lo.id=mc.idMittente where mc.idChat="
-                                + Integer.parseInt(string));
+                                + Integer.parseInt(idchat));
         while (rs.next()) {
             ris += rs.getInt(1) + "," + rs.getString(2) + "," + rs.getString(3) + ";";
         }
+
+        stmt.executeUpdate(
+                "update utentichat set mesNonLetti=0 where idutente="
+                        + id
+                        + " and idchat=" + Integer.parseInt(idchat) + "");
+
         return ris;
     }
 

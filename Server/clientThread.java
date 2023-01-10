@@ -49,7 +49,7 @@ public class clientThread extends Thread {
                         } else if (st[0].equals("getUtenti")) {
                             daMandare = gestoreDB.getNames(st[1]);
                         } else if (st[0].equals("richiedoChat")) {
-                            daMandare = gestoreDB.getChatMex(st[1]);
+                            daMandare = gestoreDB.getChatMex(st[1], this.s.id);
                             // fare metodo per mettere che leggi la chat quando la richiedi
                         } else if (st[0].equals("nuovaChat")) {
                             daMandare = gestoreDB.newChat(st[1], st[2]);
