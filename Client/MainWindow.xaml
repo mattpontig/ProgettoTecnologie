@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="470" Width="800">
+    <Grid Background="#FF477B47" Margin="0,0,0,-6">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="493*"/>
             <ColumnDefinition Width="80*"/>
@@ -15,19 +15,19 @@
             <ColumnDefinition Width="9*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="ListChat" HorizontalAlignment="Left" Height="346" Margin="10,66,0,0" VerticalAlignment="Top" Width="208" SelectionChanged="List_SelectionChanged"/>
+        <ListBox x:Name="ListChat" HorizontalAlignment="Left" Height="346" Margin="10,66,0,0" VerticalAlignment="Top" Width="208" SelectionChanged="List_SelectionChanged" Background="#FFABADB3"/>
         <Grid Margin="237,22,2,53" Grid.ColumnSpan="3">
 
         </Grid>
-        <TextBox x:Name="txtMess" HorizontalAlignment="Left" Margin="237,386,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="422" Height="26" FontSize="18" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="txtMess" HorizontalAlignment="Left" Margin="251,386,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="419" Height="26" FontSize="18" Grid.ColumnSpan="3"/>
         <Button x:Name="bttSend" Content="Send" HorizontalAlignment="Left" Margin="139,386,0,0" VerticalAlignment="Top" Height="26" Width="67" Click="bttSend_Click" Grid.Column="2"/>
-        <ListBox x:Name="SingleChat" Height="338" Margin="237,40,2,0" VerticalAlignment="Top" Grid.ColumnSpan="3" MaxWidth="542" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom"/>
+        <ListBox x:Name="SingleChat" Height="338" Margin="251,36,10,0" VerticalAlignment="Top" Grid.ColumnSpan="3" MaxWidth="542" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" Background="#FFABADB3"/>
         <TextBox x:Name="txtSearch" HorizontalAlignment="Left" Margin="10,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" Height="26" FontSize="18" TextChanged="txtSearch_TextChanged"/>
         <Button x:Name="bttGruppo" Content="+" HorizontalAlignment="Left" Margin="182,40,0,0" VerticalAlignment="Top" Height="26" Width="36" Click="bttGruppo_Click"/>
         <Button x:Name="bttGruppoConfirm" Content="->" HorizontalAlignment="Left" Margin="182,40,0,0" VerticalAlignment="Top" Height="26" Width="36" Click="bttGruppoConfirm_Click"/>
         <TextBox x:Name="txtNomeGruppo" HorizontalAlignment="Left" Margin="43,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="142" Height="31" FontSize="16"/>
         <Label x:Name="labelGruppo" Content="Inserisci nome gruppo" HorizontalAlignment="Left" Margin="30,165,0,0" VerticalAlignment="Top" FontSize="16" Height="31" Width="168"/>
-        <Button x:Name="bttSendFile" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="86,386,0,0" VerticalAlignment="Top" Height="26" Width="48" Click="bttSendFile_Click">
+        <Button x:Name="bttSendFile" Grid.Column="2" Content="" HorizontalAlignment="Center" Margin="0,386,0,0" VerticalAlignment="Top" Height="26" Width="47" Click="bttSendFile_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/graffetta.png"/>
             </Button.Background>

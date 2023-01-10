@@ -111,6 +111,7 @@ namespace Client
                     this.Dispatcher.Invoke(() => { reloadChat(); });
             }
             //refresh();
+            
 
         }
 
@@ -205,7 +206,9 @@ namespace Client
             this.Dispatcher.Invoke(() => { reloadChat(); });
             ListChat.SelectedIndex = -1;
         }
-        bool messNoRead = false;
+
+        bool stessaChat = true;
+
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
@@ -216,11 +219,11 @@ namespace Client
                     chatList[index].messNonLetti = 0;
                     refresh();
                 }
-                //if (messNoRead || chatList[index].messaggi == null)
+                //if (stessaChat == false || chatList[index].messaggi == null)
                 {
                     try
                     {
-                        inst.send("richiedoChat;" + chatList[index].id);
+                        inst.send("richiedoChat;" + chatsFiltro[index].id);
                         String chat = "";
                         do
                         {
@@ -253,6 +256,7 @@ namespace Client
                         SingleChat.Items.Add(chatMess[i].toMess());
                     }
                 }
+
                 SingleChat.Items.Add("");
                 ListChat.SelectedIndex = -1;
 
@@ -260,7 +264,7 @@ namespace Client
                 SingleChat.ScrollIntoView(SingleChat.SelectedItem);
                 SingleChat.SelectedIndex = -1;
             }
-            //messNoRead = false;
+
         }
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
