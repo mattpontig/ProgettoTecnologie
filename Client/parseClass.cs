@@ -31,8 +31,10 @@ namespace Client
                         if (chat[1] == "g")
                         {
                             //List<String> utenti, String titolo, int id,int ultiMess, String UltimoMess,int messNonLetti
-                            String[] mess = (chat[4].Split('-'))[1].Split('&');
-                            list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0], int.Parse(chat[3])));
+                            String[] mess = (chat[3].Split('-'))[1].Split('&');
+                            int messNonLetti = int.Parse(mess[1].Split('$')[1]);
+                            int idUltimoMex = int.Parse(mess[1].Split('$')[0]);
+                            list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString()), idUltimoMex, mess[0], messNonLetti));
                             //}
                         }
                         else if (chat[1] == "s")
@@ -40,7 +42,9 @@ namespace Client
                             String[] div = chat[3].Split('-');
                             utente.Add(div[0]);
                             String[] mess = div[1].Split('&');
-                            list.Add(new Chat(utente, "", int.Parse(chat[0].ToString()), int.Parse(mess[1]), mess[0], int.Parse(chat[2])));
+                            int messNonLetti = int.Parse(mess[1].Split('$')[1]);
+                            int idUltimoMex = int.Parse(mess[1].Split('$')[0]);
+                            list.Add(new Chat(utente, chat[2], int.Parse(chat[0].ToString()), idUltimoMex, mess[0], messNonLetti));
                             //}
                         }
                     }

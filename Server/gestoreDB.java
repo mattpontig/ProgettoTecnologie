@@ -75,12 +75,13 @@ public class gestoreDB {
          * query per avere tutti i nomi dei gruppi che sono in contatto con string che
          * sarebbe l'user inserito nel login
          */
+        //"2,g,primoGruppo,0,pippo-ciao&53$0"
         Statement stmt = con.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         ResultSet rs = stmt
                 .executeQuery(
-                        "select distinct c.titolo, c.idChat, lo.user, mesNonLetti from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not c.titolo='' and not lo.user='"
+                        "select distinct c.titolo, c.idChat, lo.user from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not c.titolo='' and not lo.user='"
                                 + string
                                 + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
                                 + string + "')");
@@ -92,8 +93,8 @@ public class gestoreDB {
                 for (int i = 0; i < ultimiMessaggi.length; i++) {
                     String[] lastMex = ultimiMessaggi[i].split(",");
                     if (Integer.parseInt(lastMex[0]) == id)
-                        ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getInt(4) + "," + rs.getString(3)
-                                + "-" + lastMex[2] + "&" + getNonLetMex(id, string);
+                        ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3)
+                                + "-" + lastMex[2] + "$" + getNonLetMex(id, string);
                     // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
                     // 1,pippo, non letto&29
                 }
@@ -123,7 +124,7 @@ public class gestoreDB {
                 ResultSet.CONCUR_READ_ONLY);
         rs = stmt
                 .executeQuery(
-                        "select user,c.idChat, mesNonLetti from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where c.titolo='' and not lo.user='"
+                        "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where c.titolo='' and not lo.user='"
                                 + string
                                 + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
                                 + string + "')");
@@ -135,8 +136,8 @@ public class gestoreDB {
                 for (int i = 0; i < ultimiMessaggi.length; i++) {
                     String[] lastMex = ultimiMessaggi[i].split(",");
                     if (Integer.parseInt(lastMex[0]) == id)
-                        ris += ";" + rs.getInt(2) + ",s," + rs.getInt(3) + "," + rs.getString(1) + "-" + lastMex[2]
-                                + "&" + getNonLetMex(id, string);
+                        ris += ";" + rs.getInt(2) + ",s," + "," + rs.getString(1) + "-" + lastMex[2]
+                                + "$" + getNonLetMex(id, string);
                     // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
                     // 1,pippo, non letto&29
                 }
