@@ -38,6 +38,8 @@ namespace Client
             tuttiUtenti = new List<Utente>();
             Closing += new System.ComponentModel.CancelEventHandler(MainWindow_Closing);
             enableChat();
+            bttSend.Visibility = Visibility.Hidden;
+            txtMess.Visibility = Visibility.Hidden;
             txt = new TextBox();
             w = new Window1();
             w.ShowDialog();
@@ -184,9 +186,15 @@ namespace Client
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ListChat.SelectedIndex != -1)
+            {
                 index = ListChat.SelectedIndex;
+                bttSend.Visibility = Visibility.Hidden;
+                txtMess.Visibility = Visibility.Hidden;
+            }
             if (searchM == false)
             {
+                bttSend.Visibility = Visibility.Visible;
+                txtMess.Visibility = Visibility.Visible;
                 reloadChat();
             }
         }

@@ -96,15 +96,34 @@ namespace Client
         {
             Socket socket = client.Client;
 
-            // Create the preBuffer data.
+            /*// Create the preBuffer data.
             string string1 = String.Format("This is text data that precedes the file.{0}", Environment.NewLine);
             byte[] preBuf = Encoding.ASCII.GetBytes(string1);
 
             // Create the postBuffer data.
             string string2 = String.Format("This is text data that will follow the file.{0}", Environment.NewLine);
-            byte[] postBuf = Encoding.ASCII.GetBytes(string2);
+            byte[] postBuf = Encoding.ASCII.GetBytes(string2);*/
 
-            socket.SendFile(fileName, preBuf, postBuf, TransmitFileOptions.UseDefaultWorkerThread);
+            while (stream.CanWrite == false) { }
+            try
+            {
+                // Translate the passed message into ASCII and store it as a Byte array.
+                byte[] fileBytes = System.IO.File.ReadAllBytes(fileName);
+
+                // Get a client stream for reading and writing.
+                // Send the message to the connected TcpServer.
+                stream.Write(fileBytes, 0, fileBytes.Length);
+                stream.Flush();
+
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine("ArgumentNullException: {0}", e);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException: {0}", e);
+            }
 
         }
 
