@@ -106,6 +106,7 @@ namespace Client
 
             chatList.RemoveAt(idChatPrelevare);
             chatList.Insert(0, u);
+            stessaChat = false;
             this.Dispatcher.Invoke(() => { refresh(); });
             if (index != -1)
             {
@@ -113,7 +114,7 @@ namespace Client
                     this.Dispatcher.Invoke(() => { reloadChat(); });
             }
             //refresh();
-            
+
 
         }
 
@@ -203,12 +204,14 @@ namespace Client
             chatList.RemoveAt(index);
             chatList.Insert(0, u);
             index = 0;
+            stessaChat = false;
             txtMess.Text = "";
             refresh();
             this.Dispatcher.Invoke(() => { reloadChat(); });
             ListChat.SelectedIndex = -1;
         }
 
+        bool stessaChat = true;
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
@@ -219,9 +222,9 @@ namespace Client
                     chatList[index].messNonLetti = 0;
                     refresh();
                 }
-                //if (stessaChat == false || chatList[index].messaggi == null)
+                try
                 {
-                    try
+                    if (stessaChat == false || chatList[index].messaggi == null)
                     {
                         inst.send("richiedoChat;" + chatsFiltro[index].id);
                         String chat = "";
@@ -234,39 +237,40 @@ namespace Client
                             }
                         } while (chat == "" || chat == null);
                         chatList[index].messaggi = parseClass.toChat(chat);
+                    }
 
-                    }
-                    catch (Exception e)
+
+                    SingleChat.Items.Clear();
+
+                    List<Messaggio> chatMess = chatList[index].messaggi;
+                    for (int i = 0; i < chatMess.Count; i++)
                     {
-                        this.Dispatcher.Invoke(() => { reloadChat(); });
+                        if (nome == chatMess[i].nome)
+                        {
+                            txt.Text = chatMess[i].toMessHost();
+                            SingleChat.Items.Add(txt.Text);
+                        }
+                        else
+                        {
+                            txt.Text = chatMess[i].toMessGuest();
+                            SingleChat.Items.Add(txt.Text);
+                        }
                     }
+
+                    SingleChat.Items.Add("");
+                    ListChat.SelectedIndex = -1;
+
+                    SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
+                    SingleChat.ScrollIntoView(SingleChat.SelectedItem);
+                    SingleChat.SelectedIndex = -1;
+                    stessaChat = true;
                 }
 
-                SingleChat.Items.Clear();
-
-                List<Messaggio> chatMess = chatList[index].messaggi;
-                for (int i = 0; i < chatMess.Count; i++)
+                catch (Exception e)
                 {
-                    if (nome == chatMess[i].nome)
-                    {
-                        txt.Text = chatMess[i].toMessHost();
-                        SingleChat.Items.Add(txt.Text);
-                    }
-                    else
-                    {
-                        txt.Text = chatMess[i].toMessGuest();
-                        SingleChat.Items.Add(txt.Text);
-                    }
+                    this.Dispatcher.Invoke(() => { reloadChat(); });
                 }
-
-                SingleChat.Items.Add("");
-                ListChat.SelectedIndex = -1;
-
-                SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
-                SingleChat.ScrollIntoView(SingleChat.SelectedItem);
-                SingleChat.SelectedIndex = -1;
             }
-
         }
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
