@@ -21,6 +21,7 @@ namespace Client
     public partial class Window1 : Window
     {
         Connection c;
+        public String nomeUtente = "";
         public Window1()
         {
             InitializeComponent();
@@ -29,7 +30,8 @@ namespace Client
 
         private void bttLogin_Click(object sender, RoutedEventArgs e)
         {
-            c.invia("Login" + ";" + txtUtente.Text + ";" + txtPassword.Text + ";");
+            nomeUtente = txtUtente.Text;
+            c.invia("Login" + ";" + nomeUtente + ";" + txtPassword.Text + ";");
             String s = c.recive();
             //MessageBox.Show(s);
             if (s == "0")
@@ -46,7 +48,9 @@ namespace Client
         {
             WindowRegistrati w = new WindowRegistrati();
             w.ShowDialog();
-            c.invia("Login" + ";" + w.txtUtente.Text + ";" + w.txtPassword.Text + ";");
+            while(w.s == "") { }
+            nomeUtente = w.txtUtente.Text;
+            c.invia("Login" + ";" + nomeUtente + ";" + w.txtPassword.Text + ";");
             String s = c.recive();
             if (s == "0")
             {

@@ -60,109 +60,113 @@ public class gestoreDB {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram", "root", "");
 
         String chat = chatUtente(string);
-        String[] chats = chat.split(";");
-        String idMex = "";
-        for (int i = 0; i < chats.length; i++) {
-            idMex += maxMexId(chats[i]) + ";";
-        }
-        String[] idsMes = idMex.split(";");
-        String ultimoMex = "";
-        for (int i = 0; i < idsMes.length; i++) {
-            ultimoMex += lastMex(chats[i], idsMes[i]) + "\n";
-        }
-        String[] ultimiMessaggi = ultimoMex.split("\n");
-        /*
-         * query per avere tutti i nomi dei gruppi che sono in contatto con string che
-         * sarebbe l'user inserito nel login
-         */
-        // "2,g,primoGruppo,0,pippo-ciao&53$0"
-        Statement stmt = con.createStatement(
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-        ResultSet rs = stmt
-                .executeQuery(
-                        "select distinct c.titolo, c.idChat, lo.user from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not c.titolo='' and lo.user='"
-                                + string + "'");
+        if (chat.equals("") == false) {
+            String[] chats = chat.split(";");
+            String idMex = "";
+            for (int i = 0; i < chats.length; i++) {
+                idMex += maxMexId(chats[i]) + ";";
+            }
+            String[] idsMes = idMex.split(";");
+            String ultimoMex = "";
+            for (int i = 0; i < idsMes.length; i++) {
+                ultimoMex += lastMex(chats[i], idsMes[i]) + "\n";
+            }
+            String[] ultimiMessaggi = ultimoMex.split("\n");
+            /*
+             * query per avere tutti i nomi dei gruppi che sono in contatto con string che
+             * sarebbe l'user inserito nel login
+             */
+            // "2,g,primoGruppo,0,pippo-ciao&53$0"
+            Statement stmt = con.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = stmt
+                    .executeQuery(
+                            "select distinct c.titolo, c.idChat, lo.user from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not c.titolo='' and lo.user='"
+                                    + string + "'");
 
-        int id = 0;
-        while (rs.next()) {
-            if (rs.getInt(2) != id) {
-                id = rs.getInt(2);
-                for (int i = 0; i < ultimiMessaggi.length; i++) {
-                    String[] lastMex = ultimiMessaggi[i].split(",");
-                    if (Integer.parseInt(lastMex[0]) == id)
-                        ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3)
-                                + "-" + lastMex[2] + "$" + "" + getNonLetMex(id, string);
-                    // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
-                    // 1,pippo, non letto&29
+            int id = 0;
+            while (rs.next()) {
+                if (rs.getInt(2) != id) {
+                    id = rs.getInt(2);
+                    for (int i = 0; i < ultimiMessaggi.length; i++) {
+                        String[] lastMex = ultimiMessaggi[i].split(",");
+                        if (Integer.parseInt(lastMex[0]) == id)
+                            ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3)
+                                    + "-" + lastMex[2] + "$" + "" + getNonLetMex(id, string);
+                        // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
+                        // 1,pippo, non letto&29
+                    }
                 }
             }
-        }
-        /*
-         * if (ris.contains(Integer.toString(rs.getInt(2)))) { // da sistemare questo if
-         * ris += "," + rs.getString(3);
-         * rs.previous();
-         * if (ris.contains(Integer.toString(rs.getInt(2)))) {
-         * for (int i = 0; i < ultimiMessaggi.length; i++) {
-         * String[] last = ultimiMessaggi[i].split(",");
-         * if (last[0].equals(Integer.toString(rs.getInt(2))))
-         * ris += "-" + last[1] + "," + last[2] + "," + last[3];
-         * }
-         * }
-         * rs.next();
-         * } else
-         * ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) +
-         * "-" +ultimiMessaggi[j];
-         */
-        // ris += ";";
-        /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
+            /*
+             * if (ris.contains(Integer.toString(rs.getInt(2)))) { // da sistemare questo if
+             * ris += "," + rs.getString(3);
+             * rs.previous();
+             * if (ris.contains(Integer.toString(rs.getInt(2)))) {
+             * for (int i = 0; i < ultimiMessaggi.length; i++) {
+             * String[] last = ultimiMessaggi[i].split(",");
+             * if (last[0].equals(Integer.toString(rs.getInt(2))))
+             * ris += "-" + last[1] + "," + last[2] + "," + last[3];
+             * }
+             * }
+             * rs.next();
+             * } else
+             * ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3) +
+             * "-" +ultimiMessaggi[j];
+             */
+            // ris += ";";
+            /* query per avere tutti i nomi dei singoli che sono in contatto con pippo */
 
-        stmt = con.createStatement(
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-        rs = stmt
-                .executeQuery(
-                        "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where c.titolo='' and not lo.user='"
-                                + string
-                                + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
-                                + string + "')");
+            stmt = con.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            rs = stmt
+                    .executeQuery(
+                            "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where c.titolo='' and not lo.user='"
+                                    + string
+                                    + "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
+                                    + string + "')");
 
-        id = 0;
-        while (rs.next()) {
-            if (rs.getInt(2) != id) {
-                id = rs.getInt(2);
-                for (int i = 0; i < ultimiMessaggi.length; i++) {
-                    String[] lastMex = ultimiMessaggi[i].split(",");
-                    if (Integer.parseInt(lastMex[0]) == id)
-                        ris += ";" + rs.getInt(2) + ",s," + "," + rs.getString(1) + "-" + lastMex[2]
-                                + "$" + "" + getNonLetMex(id, string);
-                    // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
-                    // 1,pippo, non letto&29
+            id = 0;
+            while (rs.next()) {
+                if (rs.getInt(2) != id) {
+                    id = rs.getInt(2);
+                    for (int i = 0; i < ultimiMessaggi.length; i++) {
+                        String[] lastMex = ultimiMessaggi[i].split(",");
+                        if (Integer.parseInt(lastMex[0]) == id)
+                            ris += ";" + rs.getInt(2) + ",s," + "," + rs.getString(1) + "-" + lastMex[2]
+                                    + "$" + "" + getNonLetMex(id, string);
+                        // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
+                        // 1,pippo, non letto&29
+                    }
                 }
             }
-        }
 
-        /*
-         * stmt = con.createStatement(
-         * ResultSet.TYPE_SCROLL_INSENSITIVE,
-         * ResultSet.CONCUR_READ_ONLY);
-         * rs = stmt
-         * .executeQuery(
-         * "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not lo.user='"
-         * + string
-         * +
-         * "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
-         * + string + "' and c.titolo='')");
-         * while (rs.next()) {
-         * ris += rs.getInt(2) + ",s,," + rs.getString(1);
-         * for (int i = 0; i < ultimiMessaggi.length; i++) {
-         * String[] last = ultimiMessaggi[i].split(",");
-         * if (last[0].equals(Integer.toString(rs.getInt(2))))
-         * ris += "-" + last[1] + "," + last[2] + "," + last[3] + ";";
-         * }
-         * }
-         */
-        return ";" + ris + ";";
+            /*
+             * stmt = con.createStatement(
+             * ResultSet.TYPE_SCROLL_INSENSITIVE,
+             * ResultSet.CONCUR_READ_ONLY);
+             * rs = stmt
+             * .executeQuery(
+             * "select user,c.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where not lo.user='"
+             * + string
+             * +
+             * "' and uc.idChat in (select uc.idChat from (utentichat as uc join login as lo on uc.idUtente=lo.id) join chat as c on uc.idChat=c.idChat where user='"
+             * + string + "' and c.titolo='')");
+             * while (rs.next()) {
+             * ris += rs.getInt(2) + ",s,," + rs.getString(1);
+             * for (int i = 0; i < ultimiMessaggi.length; i++) {
+             * String[] last = ultimiMessaggi[i].split(",");
+             * if (last[0].equals(Integer.toString(rs.getInt(2))))
+             * ris += "-" + last[1] + "," + last[2] + "," + last[3] + ";";
+             * }
+             * }
+             */
+            return ";" + ris + ";";
+        }
+        else
+            return ";";
     }
 
     private static int getNonLetMex(int id, String nome) throws SQLException, ClassNotFoundException {

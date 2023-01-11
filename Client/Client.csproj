@@ -118,7 +118,9 @@
   <ItemGroup>
     <Resource Include="graffetta.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="imagesMess\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="images\luna_sole.png" />
   </ItemGroup>

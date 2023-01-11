@@ -43,13 +43,13 @@ namespace Client
             txt = new TextBox();
             w = new Window1();
             w.ShowDialog();
-            if (w.txtUtente.Text == "")
+            if (w.nomeUtente == "")
             {
                 this.Close();
             }
             else
             {
-                nome = w.txtUtente.Text;
+                nome = w.nomeUtente;
                 index = -1;
                 searchM = false;
             }
@@ -403,7 +403,6 @@ namespace Client
             {
                 try
                 {
-                    //var sr = new StreamReader(openFileDialog1.FileName);
                     inst.sendFile(openFileDialog1.FileName);
                 }
                 catch (SecurityException ex)

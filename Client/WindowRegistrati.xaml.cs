@@ -21,6 +21,7 @@ namespace Client
     public partial class WindowRegistrati : Window
     {
         Connection c;
+        public String s = "";
         public WindowRegistrati()
         {
             InitializeComponent();
@@ -30,7 +31,10 @@ namespace Client
         private void bttRegistrazione_Click(object sender, RoutedEventArgs e)
         {
             c.invia("Register" + ";" + txtUtente.Text + ";" + txtPassword.Text + ";");
-            String s = c.recive();
+            do
+            {
+               s = c.recive();
+            } while (s == "" || s == null);
             if (s == "ok")
             {
                 this.Close();
