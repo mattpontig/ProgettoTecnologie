@@ -224,7 +224,7 @@ namespace Client
                 }
                 try
                 {
-                    if (stessaChat == false || chatList[index].messaggi == null)
+                    //if (stessaChat == false || chatList[index].messaggi == null)
                     {
                         inst.send("richiedoChat;" + chatsFiltro[index].id);
                         String chat = "";
