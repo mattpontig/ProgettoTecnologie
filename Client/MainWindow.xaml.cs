@@ -245,15 +245,18 @@ namespace Client
                     List<Messaggio> chatMess = chatList[index].messaggi;
                     for (int i = 0; i < chatMess.Count; i++)
                     {
-                        if (nome == chatMess[i].nome)
+                        if (chatMess[i].messaggio != " ")
                         {
-                            txt.Text = chatMess[i].toMessHost();
-                            SingleChat.Items.Add(txt.Text);
-                        }
-                        else
-                        {
-                            txt.Text = chatMess[i].toMessGuest();
-                            SingleChat.Items.Add(txt.Text);
+                            if (nome == chatMess[i].nome)
+                            {
+                                txt.Text = chatMess[i].toMessHost();
+                                SingleChat.Items.Add(txt.Text);
+                            }
+                            else
+                            {
+                                txt.Text = chatMess[i].toMessGuest();
+                                SingleChat.Items.Add(txt.Text);
+                            }
                         }
                     }
 
@@ -331,6 +334,8 @@ namespace Client
             {
                 inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
                 enableChat();
+                searchM = false;
+                chatList = null;
                 refresh();
             }
             else
@@ -358,9 +363,8 @@ namespace Client
                     foreach (Utente te in chatGruppo)
                         s += te.toString() + "-";
                     inst.send("nuovoGruppo" + ";" + nome + ";" + txtNomeGruppo.Text + ";" + s + ";");
-
-                    chatGruppo = new List<Utente>();
                     enableChat();
+                    chatGruppo = new List<Utente>();
                     chatList = null;
                     refresh();
                 }

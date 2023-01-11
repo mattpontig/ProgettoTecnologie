@@ -66,6 +66,7 @@ namespace Client
             catch (IOException e)
             {
                 inst.toClose = true;  //impossibile prendere lo stream di input
+                inst.send("Close");
                 return;
             }
         }

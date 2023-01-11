@@ -43,20 +43,20 @@ public class serverUDP extends Thread {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                if (risposta.equals("1")) {
-                    try {
-                        risposta = gestoreDB.getChatNames(mexSplit[1]);
-                    } catch (ClassNotFoundException | SQLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    try {
-                        invia(risposta);
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
+                // if (risposta.equals("1")) {
+                // try {
+                // risposta = gestoreDB.getChatNames(mexSplit[1]);
+                // } catch (ClassNotFoundException | SQLException e) {
+                // // TODO Auto-generated catch block
+                // e.printStackTrace();
+                // }
+                // try {
+                // invia(risposta);
+                // } catch (IOException e) {
+                // // TODO Auto-generated catch block
+                // e.printStackTrace();
+                // }
+                // }
             }
             if (mexSplit[0].equals("Register")) {
                 try {
