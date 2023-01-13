@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud.DataModel;
+
 public class clientThread extends Thread {
 
     BufferedReader in;
@@ -52,19 +54,45 @@ public class clientThread extends Thread {
                             daMandare = gestoreDB.getChatMex(st[1], this.s.id);
                             // fare metodo per mettere che leggi la chat quando la richiedi
                         } else if (st[0].equals("nuovaChat")) {
-                            daMandare = gestoreDB.newChat(st[1], st[2]);
+                            String[] daMandare2 = gestoreDB.newChat(st[1], st[2]).split(";");
+                            String utenti = daMandare2[1];
+                            noticaCreazioneChat(utenti);
                         } else if (st[0].equals("nuovoGruppo")) {
-                            daMandare = gestoreDB.newGroup(st[1], st[2], st[3]);
+                            String[] daMandare2 = gestoreDB.newGroup(st[1], st[2], st[3]).split(";");
+                            daMandare = daMandare2[0];
+                            String utenti = daMandare2[1];
+                            noticaCreazioneChat(utenti);
                         } else if (st[0].equals("send")) {
                             daMandare = gestoreDB.sendMex(st[1], st[2], st[3]);
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
                             gestoreDB.aggiungiNonLetti(st[2], st[1]);
                             notificaUtenti(utenti, st[2]);
                             /*
-                             * Long idDest = Long.parseLong(gestoreDB.chatToId(st[1], st[2]));
-                             * MySocket tmp = inst.findDifferentSocketById(idDest);
-                             * if(tmp!=null)
-                             * tmp.out.println("messInArr;" + st[2] + ";");
+                             * // read the filename from the client
+                             * String filename = inFromClient.readUTF();
+                             * // create a new filename by prefixing "renamed_" to the original filename
+                             * String newFilename = "renamed_" + filename;
+                             * 
+                             * // specify the folder path
+                             * String folderPath = "/path/to/folder/";
+                             * // check if the folder exists, if not create it
+                             * File folder = new File(folderPath);
+                             * if (!folder.exists()) {
+                             * folder.mkdir();
+                             * }
+                             * 
+                             * // create a FileOutputStream to write the file to the specified folder
+                             * FileOutputStream fos = new FileOutputStream(folderPath + newFilename);
+                             * // buffer to read the data from the input stream
+                             * byte[] buffer = new byte[4096];
+                             * // read the data from the input stream
+                             * int read = 0;
+                             * while((read = inFromClient.read(buffer)) > 0) {
+                             * // write the data to the file
+                             * fos.write(buffer, 0, read);
+                             * }
+                             * // close the FileOutputStream
+                             * fos.close();
                              */
                         }
                         this.s.out.println(daMandare);
@@ -102,6 +130,18 @@ public class clientThread extends Thread {
             for (int j = 0; j < shared.getInstance().sockets.size(); j++) {
                 if (shared.getInstance().sockets.get(j).id == Integer.parseInt(idSocket[i]))
                     shared.getInstance().sockets.get(j).out.println("messInArr;" + chat + ";");
+            }
+        }
+    }
+
+    public void noticaCreazioneChat(String utenti) throws ClassNotFoundException, SQLException {
+        String[] idSocket = utenti.split(";");
+        for (int i = 0; i < idSocket.length; i++) {
+            for (int j = 0; j < shared.getInstance().sockets.size(); j++) {
+                if (shared.getInstance().sockets.get(j).id == Integer.parseInt(idSocket[i]))
+                    shared.getInstance().sockets.get(j).out
+                            .println("RichiedoChats;" + gestoreDB.idToName(shared.getInstance().sockets
+                                    .get(j).id));
             }
         }
     }

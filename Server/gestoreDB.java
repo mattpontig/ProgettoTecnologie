@@ -164,8 +164,7 @@ public class gestoreDB {
              * }
              */
             return ";" + ris + ";";
-        }
-        else
+        } else
             return ";";
     }
 
@@ -285,7 +284,7 @@ public class gestoreDB {
                 utente += rs.getString(1);
 
             rs = stmt.executeQuery(
-                    "select MAX(idChat) from chat");
+                    "select MAX(idChat) from chat where titolo=''");
             while (rs.next())
                 chat += rs.getString(1);
 
@@ -299,7 +298,7 @@ public class gestoreDB {
             stmt.executeUpdate(
                     "insert into messaggichat (messaggio,idChat,idmittente)" + " values (' '," + Integer.parseInt(chat)
                             + "," + utente + ")");
-            return "ok";
+            return "ok;" + utente2;
         }
         return "chat già esistente";
     }
@@ -398,9 +397,9 @@ public class gestoreDB {
                             + "," + idChat + ")");
         }
         stmt.executeUpdate(
-                "insert into messaggichat (messaggio,idChat,idittente)" + " values (' '," + idChat
+                "insert into messaggichat (messaggio,idChat,idmittente)" + " values (' '," + idChat
                         + "," + idCreatore + ")");
-        return "ok";
+        return "ok;" + idUtenti;
     }
 
     public static String chatUtente(String utente) throws ClassNotFoundException, SQLException {
@@ -475,5 +474,21 @@ public class gestoreDB {
                             + " and idchat=" + Integer.parseInt(chat) + "");
         }
 
+    }
+
+    public static String idToName(long string) throws SQLException, ClassNotFoundException {
+        String nome = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
+                "root", "");
+
+        Statement stmt = con.createStatement();
+        ResultSet rs;
+
+        rs = stmt.executeQuery(
+                "select user from login where id=" + Integer.parseInt(string) + "");
+        while (rs.next())
+            nome = rs.getString(1);
+        return nome;
     }
 }
