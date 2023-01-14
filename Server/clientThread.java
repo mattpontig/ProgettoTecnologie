@@ -54,16 +54,16 @@ public class clientThread extends Thread {
                             daMandare = gestoreDB.getChatMex(st[1], this.s.id);
                             // fare metodo per mettere che leggi la chat quando la richiedi
                         } else if (st[0].equals("nuovaChat")) {
-                            daMandare = gestoreDB.newChat(st[1], st[2]);
-                            /*String[] daMandare2 = gestoreDB.newChat(st[1], st[2]).split(";");
+                            //daMandare = gestoreDB.newChat(st[1], st[2]);
+                            String[] daMandare2 = gestoreDB.newChat(st[1], st[2]).split(";");
                             String utenti = daMandare2[1];
-                            noticaCreazioneChat(utenti);*/
+                            noticaCreazioneChat(utenti);
                         } else if (st[0].equals("nuovoGruppo")) {
-                            daMandare = gestoreDB.newGroup(st[1], st[2], st[3]);
-                            /*String[] daMandare2 = gestoreDB.newGroup(st[1], st[2], st[3]).split(";");
+                            //daMandare = gestoreDB.newGroup(st[1], st[2], st[3]);
+                            String[] daMandare2 = gestoreDB.newGroup(st[1], st[2], st[3]).split(";");
                             daMandare = daMandare2[0];
                             String utenti = daMandare2[1];
-                            noticaCreazioneChat(utenti);*/
+                            noticaCreazioneChat(utenti);
                         } else if (st[0].equals("send")) {
                             daMandare = gestoreDB.sendMex(st[1], st[2], st[3]);
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
@@ -136,7 +136,7 @@ public class clientThread extends Thread {
         }
     }
 
-    /*public void noticaCreazioneChat(String utenti) throws ClassNotFoundException, SQLException {
+    public void noticaCreazioneChat(String utenti) throws ClassNotFoundException, SQLException {
         String[] idSocket = utenti.split(";");
         for (int i = 0; i < idSocket.length; i++) {
             for (int j = 0; j < shared.getInstance().sockets.size(); j++) {
@@ -146,5 +146,5 @@ public class clientThread extends Thread {
                                     .get(j).id));
             }
         }
-    }*/
+    }
 }
