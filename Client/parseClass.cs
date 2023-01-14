@@ -24,7 +24,7 @@ namespace Client
             {
                 for (int i = 2; i < riga.Length-1; i++)
                 {
-                    if (riga[i] != "")
+                    if (riga[i] != "" || riga[i] != "ok")
                     {
                         String[] chat = riga[i].Split(',');
                         List<String> utente = new List<String>();
@@ -51,6 +51,7 @@ namespace Client
                 }
             }catch(Exception e) { 
             }
+
             list = bubbleSortChats(list);
             return list;
         }

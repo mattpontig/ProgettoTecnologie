@@ -148,7 +148,7 @@ namespace Client
                             chats = s.m;
                             s.nuovoMess = false;
                         }
-                    } while (chats == "" || chats == null);
+                    } while (chats == "" || chats == null || chats.StartsWith("ok"));
                     chatList = parseClass.toList(nome, chats);
                     chatsFiltro = chatList;
                 }
@@ -243,7 +243,7 @@ namespace Client
                                 chat = s.m;
                                 s.nuovoMess = false;
                             }
-                        } while (chat == "" || chat == null);
+                        } while (chat == "" || chat == null || chat.StartsWith("ok"));
                         chatList[index].messaggi = parseClass.toChat(chat);
                     }
 
@@ -342,8 +342,10 @@ namespace Client
             {
                 inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
                 enableChat();
+                index = -1;
                 searchM = false;
                 chatList = null;
+                chatGruppo = new List<Utente>();
                 refresh();
             }
             else
@@ -374,6 +376,8 @@ namespace Client
                     enableChat();
                     chatGruppo = new List<Utente>();
                     chatList = null;
+                    searchM = false;
+                    index = -1;
                     refresh();
                 }
             }

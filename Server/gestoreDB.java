@@ -283,8 +283,8 @@ public class gestoreDB {
             while (rs.next())
                 utente += rs.getString(1);
 
-            rs = stmt.executeQuery(
-                    "select MAX(idChat) from chat where titolo=''");
+            rs = stmt.executeQuery( "select MAX(idChat) from chat");
+                    //"select MAX(idChat) from chat where titolo=''");
             while (rs.next())
                 chat += rs.getString(1);
 
@@ -298,7 +298,7 @@ public class gestoreDB {
             stmt.executeUpdate(
                     "insert into messaggichat (messaggio,idChat,idmittente)" + " values (' '," + Integer.parseInt(chat)
                             + "," + utente + ")");
-            return "ok;" + utente2;
+            return "ok;"/* + utente2*/;
         }
         return "chat già esistente";
     }
@@ -476,7 +476,7 @@ public class gestoreDB {
 
     }
 
-    public static String idToName(long string) throws SQLException, ClassNotFoundException {
+    /*public static String idToName(long string) throws SQLException, ClassNotFoundException {
         String nome = "";
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
@@ -490,5 +490,5 @@ public class gestoreDB {
         while (rs.next())
             nome = rs.getString(1);
         return nome;
-    }
+    }*/
 }
