@@ -19,6 +19,7 @@ namespace Client
         public String m;
         public Boolean nuovoMess;
         public Boolean messaggioCoda;
+        public Boolean nuovaChat;
 
         public ClientSocket(int port)
         {
@@ -29,6 +30,7 @@ namespace Client
             stream = socket.GetStream();
             nuovoMess = false;
             messaggioCoda = false;
+            nuovaChat = false;
 
             connessioneTCP inst = connessioneTCP.getInstance();
             inst.setSocket(socket, stream);
@@ -54,7 +56,13 @@ namespace Client
                         }
                         if (m.StartsWith("messInArr"))
                         {
+                            m = "";
                             messaggioCoda=true;
+                        }
+                        else if (m.StartsWith("RichiedoChats"))
+                        {
+                            m = "";
+                            nuovaChat = true;
                         }
                     }
                     catch (IOException e)

@@ -29,6 +29,7 @@ namespace Client
         OpenFileDialog openFileDialog1;
         Thread clientSocket;
         Thread nuovoMess;
+        Thread nuovaChat;
         TextBox txt;
 
         public MainWindow()
@@ -59,6 +60,9 @@ namespace Client
 
             nuovoMess = new Thread(new ThreadStart(controlloMess));
             nuovoMess.Start();
+
+            nuovaChat = new Thread(new ThreadStart(controlloNewChat));
+            nuovaChat.Start();
             refresh();
         }
 
@@ -82,6 +86,21 @@ namespace Client
                     str = s.m;
                     notificaNuovoMess(str);
                     s.messaggioCoda = false;
+                }
+            }
+        }
+
+        void controlloNewChat()
+        {
+            String str = "";
+            while (true)
+            {
+                if (s.nuovaChat)
+                {
+                    //str = s.m;
+                    chatList = null;
+                    this.Dispatcher.Invoke(() => { refresh(); });
+                    s.nuovaChat = false;
                 }
             }
         }

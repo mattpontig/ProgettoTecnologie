@@ -140,10 +140,12 @@ public class clientThread extends Thread {
         String[] idSocket = utenti.split(";");
         for (int i = 0; i < idSocket.length; i++) {
             for (int j = 0; j < shared.getInstance().sockets.size(); j++) {
-                if (shared.getInstance().sockets.get(j).id == Integer.parseInt(idSocket[i]))
+                if (shared.getInstance().sockets.get(j).id == Integer.parseInt(idSocket[i])){
                     shared.getInstance().sockets.get(j).out
-                            .println("RichiedoChats;" + gestoreDB.idToName(shared.getInstance().sockets
-                                    .get(j).id));
+                            .println("RichiedoChats;")/*  + gestoreDB.idToName(shared.getInstance().sockets
+                                                     .get(j).id)*/;
+                    System.out.println("RichiedoChats;");
+                }
             }
         }
     }
