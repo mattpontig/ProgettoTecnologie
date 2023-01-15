@@ -271,7 +271,8 @@ public class gestoreDB {
         /*
          * se non c'è giaà una chat singola con l'altro utente la crea
          */
-        if (!ris.contains("utente2")) {
+        String ut = idToName(Long.parseLong(utente2));
+        if (!ris.contains(ut)) {
             /*
              * crea una chat non di gruppo vuota
              */
@@ -283,7 +284,7 @@ public class gestoreDB {
             while (rs.next())
                 utente += rs.getString(1);
 
-            rs = stmt.executeQuery( //"select MAX(idChat) from chat");
+            rs = stmt.executeQuery( // "select MAX(idChat) from chat");
                     "select MAX(idChat) from chat where titolo=''");
             while (rs.next())
                 chat += rs.getString(1);

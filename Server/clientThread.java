@@ -55,9 +55,11 @@ public class clientThread extends Thread {
                             // fare metodo per mettere che leggi la chat quando la richiedi
                         } else if (st[0].equals("nuovaChat")) {
                             daMandare = gestoreDB.newChat(st[1], st[2]);
-                            String[] daMandare2 = daMandare.split(";");
-                            String utenti = daMandare2[1];
-                            noticaCreazioneChat(utenti);
+                            if (daMandare.startsWith("ok")) {
+                                String[] daMandare2 = daMandare.split(";");
+                                String utenti = daMandare2[1];
+                                noticaCreazioneChat(utenti);
+                            }
                         } else if (st[0].equals("nuovoGruppo")) {
                             daMandare = gestoreDB.newGroup(st[1], st[2], st[3]);
                             String[] daMandare2 = daMandare.split(";");
@@ -140,10 +142,12 @@ public class clientThread extends Thread {
         String[] idSocket = utenti.split(";");
         for (int i = 0; i < idSocket.length; i++) {
             for (int j = 0; j < shared.getInstance().sockets.size(); j++) {
-                if (shared.getInstance().sockets.get(j).id == Integer.parseInt(idSocket[i])){
+                if (shared.getInstance().sockets.get(j).id == Integer.parseInt(idSocket[i])) {
                     shared.getInstance().sockets.get(j).out
-                            .println("RichiedoChats;")/*  + gestoreDB.idToName(shared.getInstance().sockets
-                                                     .get(j).id)*/;
+                            .println("RichiedoChats;")/*
+                                                       * + gestoreDB.idToName(shared.getInstance().sockets
+                                                       * .get(j).id)
+                                                       */;
                     System.out.println("RichiedoChats;");
                 }
             }
