@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -13,9 +14,10 @@ public class clientThread extends Thread {
     private String name;
     MySocket s;
     boolean isloggedin;
+    Charset utf8 = Charset.forName("UTF-8");
 
     public clientThread(MySocket s, String name) throws IOException {
-        in = new BufferedReader(new InputStreamReader(s.socket.getInputStream()));
+        in = new BufferedReader(new InputStreamReader(s.socket.getInputStream(), utf8));
         this.name = name;
         this.s = s;
         this.isloggedin = true;
@@ -71,33 +73,9 @@ public class clientThread extends Thread {
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
                             gestoreDB.aggiungiNonLetti(st[2], st[1]);
                             notificaUtenti(utenti, st[2]);
-                            /*
-                             * // read the filename from the client
-                             * String filename = inFromClient.readUTF();
-                             * // create a new filename by prefixing "renamed_" to the original filename
-                             * String newFilename = "renamed_" + filename;
-                             * 
-                             * // specify the folder path
-                             * String folderPath = "/path/to/folder/";
-                             * // check if the folder exists, if not create it
-                             * File folder = new File(folderPath);
-                             * if (!folder.exists()) {
-                             * folder.mkdir();
-                             * }
-                             * 
-                             * // create a FileOutputStream to write the file to the specified folder
-                             * FileOutputStream fos = new FileOutputStream(folderPath + newFilename);
-                             * // buffer to read the data from the input stream
-                             * byte[] buffer = new byte[4096];
-                             * // read the data from the input stream
-                             * int read = 0;
-                             * while((read = inFromClient.read(buffer)) > 0) {
-                             * // write the data to the file
-                             * fos.write(buffer, 0, read);
-                             * }
-                             * // close the FileOutputStream
-                             * fos.close();
-                             */
+                        } else if (st[0].equals("sendFile")) {
+                            daMandare = "ok";
+                            String nomeFile = st[1]; 
                         }
                         this.s.out.println(daMandare);
                         System.out.println(daMandare);

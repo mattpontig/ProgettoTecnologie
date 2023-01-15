@@ -27,7 +27,7 @@
         <Button x:Name="bttGruppoConfirm" Content="->" HorizontalAlignment="Left" Margin="182,40,0,0" VerticalAlignment="Top" Height="26" Width="36" Click="bttGruppoConfirm_Click"/>
         <TextBox x:Name="txtNomeGruppo" HorizontalAlignment="Left" Margin="43,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="142" Height="31" FontSize="16"/>
         <Label x:Name="labelGruppo" Content="Inserisci nome gruppo" HorizontalAlignment="Left" Margin="30,165,0,0" VerticalAlignment="Top" FontSize="16" Height="31" Width="168"/>
-        <Button x:Name="bttSendFile" Grid.Column="2" Content="" HorizontalAlignment="Center" Margin="0,386,0,0" VerticalAlignment="Top" Height="26" Width="47" Click="bttSendFile_Click">
+        <Button x:Name="bttSendFile" Grid.Column="2" Content="" HorizontalAlignment="Center" Margin="0,386,0,0" VerticalAlignment="Top" Height="26" Width="48" Click="bttSendFile_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/graffetta.png"/>
             </Button.Background>

@@ -41,6 +41,7 @@ namespace Client
             enableChat();
             bttSend.Visibility = Visibility.Hidden;
             txtMess.Visibility = Visibility.Hidden;
+            bttSendFile.Visibility = Visibility.Hidden;
             txt = new TextBox();
             w = new Window1();
             w.ShowDialog();
@@ -73,6 +74,7 @@ namespace Client
             txtNomeGruppo.Visibility = Visibility.Hidden;
             bttIndietro.Visibility = Visibility.Hidden;
 
+            bttSendFile.Visibility = Visibility.Visible;
             ListChat.Visibility = Visibility.Visible;
         }
 
@@ -171,7 +173,7 @@ namespace Client
                     chatList = parseClass.toList(nome, chats);
                     chatsFiltro = chatList;
                 }
-                catch (Exception ex) { ListChat.SelectedIndex = -1; }
+                catch (Exception ex) { /*ListChat.SelectedIndex = -1; */}
             }
             foreach (Chat c in chatsFiltro)
                 ListChat.Items.Add(c.toString());
@@ -214,6 +216,8 @@ namespace Client
             {
                 bttSend.Visibility = Visibility.Visible;
                 txtMess.Visibility = Visibility.Visible;
+                bttSendFile.Visibility = Visibility.Visible;
+
                 reloadChat();
             }
         }
@@ -235,7 +239,7 @@ namespace Client
             txtMess.Text = "";
             refresh();
             this.Dispatcher.Invoke(() => { reloadChat(); });
-            ListChat.SelectedIndex = -1;
+            //ListChat.SelectedIndex = -1;
         }
 
         bool stessaChat = true;
@@ -288,7 +292,7 @@ namespace Client
                     }
 
                     SingleChat.Items.Add("");
-                    ListChat.SelectedIndex = -1;
+                    //ListChat.SelectedIndex = -1;
 
                     SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
                     SingleChat.ScrollIntoView(SingleChat.SelectedItem);
@@ -428,7 +432,8 @@ namespace Client
             openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == true)
             {
-                inst.send("sendFile");
+                String name = System.IO.Path.GetFileName(openFileDialog1.FileName);
+                inst.send("sendFile;" + name + ";");
                 do
                 {
                     risp = s.m;
@@ -457,7 +462,7 @@ namespace Client
                 nuovoMess.Abort();
                 e.Cancel = false;
             }
-            else 
+            else
             {
                 e.Cancel = true;
             }

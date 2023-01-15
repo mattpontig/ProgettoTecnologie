@@ -7,7 +7,7 @@ import java.net.Socket;
 public class MySocket {
     static long idCounter = 0;
     public long id;
-    Socket socket;
+    public Socket socket;
     PrintWriter out;
 
     public MySocket(Socket socket) throws IOException {
