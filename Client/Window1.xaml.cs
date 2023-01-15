@@ -22,6 +22,7 @@ namespace Client
     {
         Connection c;
         public String nomeUtente = "";
+
         public Window1()
         {
             InitializeComponent();
@@ -37,6 +38,10 @@ namespace Client
             if (s == "0")
             {
                 txtUtente.Text = "Login Errato";
+            }
+            else if (Connection.online == false)
+            {
+                txtUtente.Text = "Server down";
             }
             else if (s == "1")
             {
@@ -55,6 +60,10 @@ namespace Client
             if (s == "0")
             {
                 txtUtente.Text = "Login Errato";
+            }
+            else if (Connection.online == false)
+            {
+                txtUtente.Text = "Server down";
             }
             else if (s == "1")
             {

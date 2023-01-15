@@ -167,7 +167,7 @@ namespace Client
                             chats = s.m;
                             s.nuovoMess = false;
                         }
-                    } while (chats == "" || chats == null || chats.StartsWith("ok"));
+                    } while (chats == "" || chats == null || chats.StartsWith("ok") || chats.StartsWith("chat"));
                     chatList = parseClass.toList(nome, chats);
                     chatsFiltro = chatList;
                 }
@@ -360,12 +360,14 @@ namespace Client
             if (chatGruppo.Count() == 1)
             {
                 inst.send("nuovaChat" + ";" + nome + ";" + chatGruppo[0].getId());
-                enableChat();
-                index = -1;
+
                 searchM = false;
                 chatList = null;
-                chatGruppo = new List<Utente>();
                 refresh();
+                chatGruppo = new List<Utente>();
+                enableChat();
+                index = -1;
+
             }
             else
             {
@@ -388,16 +390,17 @@ namespace Client
                     bttGruppoConfirm.Visibility = Visibility.Visible;
                     bttGruppo.Visibility = Visibility.Visible;
 
-                    String s = "";
+                    String ss = "";
                     foreach (Utente te in chatGruppo)
-                        s += te.toString() + "-";
+                        ss += te.toString() + "-";
                     inst.send("nuovoGruppo" + ";" + nome + ";" + txtNomeGruppo.Text + ";" + s + ";");
-                    enableChat();
-                    chatGruppo = new List<Utente>();
-                    chatList = null;
+
                     searchM = false;
-                    index = -1;
+                    chatList = null;
                     refresh();
+                    chatGruppo = new List<Utente>();
+                    enableChat();
+                    index = -1;
                 }
             }
         }
@@ -421,9 +424,16 @@ namespace Client
         private void bttSendFile_Click(object sender, RoutedEventArgs e)
         {
             connessioneTCP inst = connessioneTCP.getInstance();
+            String risp = "";
             openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == true)
             {
+                inst.send("sendFile");
+                do
+                {
+                    risp = s.m;
+                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+
                 try
                 {
                     inst.sendFile(openFileDialog1.FileName);
@@ -445,6 +455,11 @@ namespace Client
                 s.socket.Close();
                 clientSocket.Abort();
                 nuovoMess.Abort();
+                e.Cancel = false;
+            }
+            else 
+            {
+                e.Cancel = true;
             }
         }
 
