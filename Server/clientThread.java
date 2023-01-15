@@ -15,6 +15,7 @@ public class clientThread extends Thread {
     MySocket s;
     boolean isloggedin;
     Charset utf8 = Charset.forName("UTF-8");
+    s_rFile f;
 
     public clientThread(MySocket s, String name) throws IOException {
         in = new BufferedReader(new InputStreamReader(s.socket.getInputStream(), utf8));
@@ -69,14 +70,16 @@ public class clientThread extends Thread {
                             String utenti = daMandare2[1];
                             noticaCreazioneChat(utenti);
                         } else if (st[0].equals("send")) {
-                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3]);
+                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3],"0");
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
                             gestoreDB.aggiungiNonLetti(st[2], st[1]);
                             notificaUtenti(utenti, st[2]);
                         } else if (st[0].equals("sendFile")) {
                             daMandare = "ok";
-                            String nomeFile = st[1]; 
+                            f = new s_rFile(s, st[0],scn, st[3], st[1], st[2]);
+                            f.start();
                         }
+                        
                         this.s.out.println(daMandare);
                         System.out.println(daMandare);
                     }

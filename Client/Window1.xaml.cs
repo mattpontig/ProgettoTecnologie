@@ -53,7 +53,7 @@ namespace Client
         {
             WindowRegistrati w = new WindowRegistrati();
             w.ShowDialog();
-            while(w.s == "") { }
+            while(w.s != "ok") { }
             nomeUtente = w.txtUtente.Text;
             c.invia("Login" + ";" + nomeUtente + ";" + w.txtPassword.Text + ";");
             String s = c.recive();

@@ -93,7 +93,7 @@ public class gestoreDB {
                         String[] lastMex = ultimiMessaggi[i].split(",");
                         if (Integer.parseInt(lastMex[0]) == id)
                             ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3)
-                                    + "-" + lastMex[2] + "$" + "" + getNonLetMex(id, string);
+                                    + "ò" + lastMex[2] + "$" + "" + getNonLetMex(id, string);
                         // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
                         // 1,pippo, non letto&29
                     }
@@ -232,10 +232,10 @@ public class gestoreDB {
         Statement stmt = con.createStatement();
         ResultSet rs = stmt
                 .executeQuery(
-                        "select mc.idMex,lo.user,mc.messaggio from messaggichat as mc join login as lo on lo.id=mc.idMittente where mc.idChat="
+                        "select mc.idMex,lo.user,mc.messaggio,mc.file from messaggichat as mc join login as lo on lo.id=mc.idMittente where mc.idChat="
                                 + Integer.parseInt(idchat));
         while (rs.next()) {
-            ris += rs.getInt(1) + "," + rs.getString(2) + "," + rs.getString(3) + ";";
+            ris += rs.getInt(1) + "," + rs.getString(2) + "," + rs.getString(3) + "," + rs.getString(4) + ";";
         }
 
         stmt.executeUpdate(
@@ -304,7 +304,7 @@ public class gestoreDB {
         return "chat già esistente";
     }
 
-    public static String sendMex(String chi, String chat, String mex) throws ClassNotFoundException, SQLException {
+    public static String sendMex(String chi, String chat, String mex,String file) throws ClassNotFoundException, SQLException {
         String idAltro = "";
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
@@ -317,8 +317,8 @@ public class gestoreDB {
         while (rs.next())
             idAltro += rs.getString(1);
 
-        stmt.executeUpdate("insert into messaggichat (messaggio,idChat,IdMittente) values('" + mex + "',"
-                + Integer.parseInt(chat) + "," + Integer.parseInt(idAltro) + ")");
+        stmt.executeUpdate("insert into messaggichat (messaggio,idChat,IdMittente,file) values('" + mex + "',"
+                + Integer.parseInt(chat) + "," + Integer.parseInt(idAltro) + "," + Integer.parseInt(file) +  ")");
 
         return "ok";
     }
@@ -492,4 +492,5 @@ public class gestoreDB {
             nome = rs.getString(1);
         return nome;
     }
+
 }

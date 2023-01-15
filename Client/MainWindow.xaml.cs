@@ -31,6 +31,7 @@ namespace Client
         Thread nuovoMess;
         Thread nuovaChat;
         TextBox txt;
+        Button b;
 
         public MainWindow()
         {
@@ -43,6 +44,8 @@ namespace Client
             txtMess.Visibility = Visibility.Hidden;
             bttSendFile.Visibility = Visibility.Hidden;
             txt = new TextBox();
+            b = new Button();
+            b.Click += scaricaFile;
             w = new Window1();
             w.ShowDialog();
             if (w.nomeUtente == "")
@@ -65,6 +68,13 @@ namespace Client
             nuovaChat = new Thread(new ThreadStart(controlloNewChat));
             nuovaChat.Start();
             refresh();
+        }
+
+        private void scaricaFile(object sender, RoutedEventArgs e)
+        {
+            connessioneTCP inst = connessioneTCP.getInstance();
+            Button b = e.Source as Button;
+            inst.reciveFile(b.Content.ToString());
         }
 
         void enableChat()
@@ -129,7 +139,6 @@ namespace Client
 
             chatList.RemoveAt(idChatPrelevare);
             chatList.Insert(0, u);
-            stessaChat = false;
             this.Dispatcher.Invoke(() => { refresh(); });
             if (index != -1)
             {
@@ -235,14 +244,12 @@ namespace Client
             chatList.RemoveAt(index);
             chatList.Insert(0, u);
             index = 0;
-            stessaChat = false;
             txtMess.Text = "";
             refresh();
             this.Dispatcher.Invoke(() => { reloadChat(); });
             //ListChat.SelectedIndex = -1;
         }
 
-        bool stessaChat = true;
         public void reloadChat()
         {
             connessioneTCP inst = connessioneTCP.getInstance();
@@ -280,13 +287,29 @@ namespace Client
                         {
                             if (nome == chatMess[i].nome)
                             {
-                                txt.Text = chatMess[i].toMessHost();
-                                SingleChat.Items.Add(txt.Text);
+                                if (chatMess[i].file == 0)
+                                {
+                                    txt.Text = chatMess[i].toMessHost();
+                                    SingleChat.Items.Add(txt.Text);
+                                }
+                                else if (chatMess[i].file == 0)
+                                {
+                                    b.Content = chatMess[i].toMessHost();
+                                    SingleChat.Items.Add(b.Content);
+                                }
                             }
                             else
                             {
-                                txt.Text = chatMess[i].toMessGuest();
-                                SingleChat.Items.Add(txt.Text);
+                                if (chatMess[i].file == 0)
+                                {
+                                    txt.Text = chatMess[i].toMessGuest();
+                                    SingleChat.Items.Add(txt.Text);
+                                }
+                                else if (chatMess[i].file == 0)
+                                {
+                                    b.Content = chatMess[i].toMessGuest();
+                                    SingleChat.Items.Add(b.Content);
+                                }
                             }
                         }
                     }
@@ -297,7 +320,6 @@ namespace Client
                     SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
                     SingleChat.ScrollIntoView(SingleChat.SelectedItem);
                     SingleChat.SelectedIndex = -1;
-                    stessaChat = true;
                 }
 
                 catch (Exception e)
@@ -397,7 +419,7 @@ namespace Client
                     String ss = "";
                     foreach (Utente te in chatGruppo)
                         ss += te.toString() + "-";
-                    inst.send("nuovoGruppo" + ";" + nome + ";" + txtNomeGruppo.Text + ";" + s + ";");
+                    inst.send("nuovoGruppo" + ";" + nome + ";" + txtNomeGruppo.Text + ";" + ss + ";");
 
                     searchM = false;
                     chatList = null;
@@ -432,21 +454,24 @@ namespace Client
             openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == true)
             {
-                String name = System.IO.Path.GetFileName(openFileDialog1.FileName);
-                inst.send("sendFile;" + name + ";");
+                String nameFile = System.IO.Path.GetFileName(openFileDialog1.FileName);
+                inst.send("sendFile;" + nome + ";" + chatList[index].id + ";" + nameFile);
                 do
                 {
                     risp = s.m;
                 } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
 
-                try
+                if (risp.StartsWith("ok"))
                 {
-                    inst.sendFile(openFileDialog1.FileName);
-                }
-                catch (SecurityException ex)
-                {
-                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                    $"Details:\n\n{ex.StackTrace}");
+                    try
+                    {
+                        inst.sendFile(openFileDialog1.FileName);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                        $"Details:\n\n{ex.StackTrace}");
+                    }
                 }
             }
         }

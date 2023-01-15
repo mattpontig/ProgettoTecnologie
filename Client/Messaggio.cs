@@ -10,12 +10,14 @@ namespace Client
     {
         public String nome, messaggio;
         public int id;
+        public int file = 0;
 
-        public Messaggio(int id,String nome, String messaggio)
+        public Messaggio(int id,String nome, String messaggio, int file)
         {
             this.id = id;
             this.nome = nome;
             this.messaggio = messaggio;
+            this.file = file;
         }
 
         public String toMessHost()
@@ -27,6 +29,5 @@ namespace Client
         {
             return nome + ":" + "\t" + messaggio;
         }
-
     }
 }

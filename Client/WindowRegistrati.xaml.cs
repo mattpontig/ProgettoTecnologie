@@ -39,6 +39,10 @@ namespace Client
             {
                 this.Close();
             }
+            else if (s.StartsWith("Utente"))
+            {
+                txtUtente.Text = s;
+            }
         }
     }
 }

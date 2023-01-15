@@ -53,7 +53,10 @@ namespace Client
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
-            stream.Flush();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public String recive()
@@ -75,7 +78,7 @@ namespace Client
                     // Read the first batch of the TcpServer response bytes.
                     Int32 bytes = stream.Read(data, 0, data.Length);
                     //bytes = stream.ReadAsync(data, 0, data.Length).Result;
-                    responseData += System.Text.Encoding.Default.GetString(data, 0, bytes);
+                    responseData += System.Text.Encoding.UTF8.GetString(data, 0, bytes);
                 }
                 //Console.WriteLine("Received: {0}", responseData);
             }
@@ -87,7 +90,10 @@ namespace Client
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
-            catch (IOException e) { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             return responseData;
         }
@@ -96,13 +102,6 @@ namespace Client
         {
             Socket socket = client.Client;
 
-            /*// Create the preBuffer data.
-            string string1 = String.Format("This is text data that precedes the file.{0}", Environment.NewLine);
-            byte[] preBuf = Encoding.ASCII.GetBytes(string1);
-
-            // Create the postBuffer data.
-            string string2 = String.Format("This is text data that will follow the file.{0}", Environment.NewLine);
-            byte[] postBuf = Encoding.ASCII.GetBytes(string2);*/
 
             while (stream.CanWrite == false) { }
             try
@@ -130,14 +129,6 @@ namespace Client
         public void reciveFile(String name)
         {
             Socket socket = client.Client;
-
-            /*// Create the preBuffer data.
-            string string1 = String.Format("This is text data that precedes the file.{0}", Environment.NewLine);
-            byte[] preBuf = Encoding.ASCII.GetBytes(string1);
-
-            // Create the postBuffer data.
-            string string2 = String.Format("This is text data that will follow the file.{0}", Environment.NewLine);
-            byte[] postBuf = Encoding.ASCII.GetBytes(string2);*/
 
             while (stream.CanRead == false || stream.DataAvailable == false) { }
             try
