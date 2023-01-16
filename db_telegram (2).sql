@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Gen 08, 2023 alle 19:19
--- Versione del server: 10.4.27-MariaDB
--- Versione PHP: 8.2.0
+-- Creato il: Gen 16, 2023 alle 13:23
+-- Versione del server: 10.4.25-MariaDB
+-- Versione PHP: 7.4.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,8 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `chat` (
   `idChat` int(11) NOT NULL,
   `gruppo` tinyint(1) NOT NULL,
-  `titolo` varchar(25) DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `titolo` varchar(25) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `chat`
@@ -53,7 +53,7 @@ CREATE TABLE `login` (
   `id` int(11) NOT NULL,
   `user` varchar(25) NOT NULL,
   `pass` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `login`
@@ -73,43 +73,46 @@ INSERT INTO `login` (`id`, `user`, `pass`) VALUES
 
 CREATE TABLE `messaggichat` (
   `idMex` int(11) NOT NULL,
-  `messaggio` varchar(200) NOT NULL,
+  `messaggio` varchar(200) NOT NULL DEFAULT '',
   `idChat` int(11) NOT NULL,
-  `idMittente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `idMittente` int(11) NOT NULL,
+  `file` tinyint(4) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `messaggichat`
 --
 
-INSERT INTO `messaggichat` (`idMex`, `messaggio`, `idChat`, `idMittente`) VALUES
-(1, 'ciao', 1, 4),
-(2, 'ciao pippo!', 1, 5),
-(3, 'primo messaggio prova per gruppo', 2, 6),
-(4, 'prova send', 3, 4),
-(16, 'mmm', 3, 6),
-(17, 'funziona?', 3, 4),
-(18, 'penso di si', 3, 6),
-(19, 'prova nuovo send', 1, 4),
-(20, 'forse', 1, 5),
-(21, 'mmm', 1, 4),
-(22, 'riciao', 1, 4),
-(23, 'ei', 3, 4),
-(24, 'mm', 2, 4),
-(25, 'see', 3, 4),
-(26, 'boh', 3, 4),
-(27, 'bug', 2, 4),
-(28, 'rompo tutto', 3, 6),
-(29, ' non letto', 1, 4),
-(30, 'nuovo g', 7, 7),
-(31, 'ciao', 7, 4),
-(32, 'triplo', 2, 5),
-(33, 'ei', 2, 6),
-(34, 'come va', 3, 6),
-(35, 'ciao', 2, 4),
-(36, 'ciao', 1, 4),
-(37, 'come va', 3, 6),
-(38, 'ciao', 1, 4);
+INSERT INTO `messaggichat` (`idMex`, `messaggio`, `idChat`, `idMittente`, `file`) VALUES
+(1, 'ciao', 1, 4, 0),
+(2, 'ciao pippo!', 1, 5, 0),
+(3, 'primo messaggio prova per gruppo', 2, 6, 0),
+(4, 'prova send', 3, 4, 0),
+(16, 'mmm', 3, 6, 0),
+(17, 'funziona?', 3, 4, 0),
+(18, 'penso di si', 3, 6, 0),
+(19, 'prova nuovo send', 1, 4, 0),
+(20, 'forse', 1, 5, 0),
+(21, 'mmm', 1, 4, 0),
+(22, 'riciao', 1, 4, 0),
+(23, 'ei', 3, 4, 0),
+(24, 'mm', 2, 4, 0),
+(25, 'see', 3, 4, 0),
+(26, 'boh', 3, 4, 0),
+(27, 'bug', 2, 4, 0),
+(28, 'rompo tutto', 3, 6, 0),
+(29, ' non letto', 1, 4, 0),
+(30, 'nuovo g', 7, 7, 0),
+(31, 'ciao', 7, 4, 0),
+(32, 'triplo', 2, 5, 0),
+(33, 'ei', 2, 6, 0),
+(34, 'come va', 3, 6, 0),
+(35, 'ciao', 2, 4, 0),
+(36, 'ciao', 1, 4, 0),
+(37, 'come va', 3, 6, 0),
+(38, 'ciao', 1, 4, 0),
+(39, 'aaaa.txt', 1, 4, 1),
+(40, 'aaaa.txt', 1, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -121,7 +124,7 @@ CREATE TABLE `utentichat` (
   `idUtente` int(11) NOT NULL,
   `idChat` int(11) NOT NULL,
   `mesNonLetti` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `utentichat`
@@ -190,7 +193,7 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT per la tabella `messaggichat`
 --
 ALTER TABLE `messaggichat`
-  MODIFY `idMex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `idMex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- Limiti per le tabelle scaricate

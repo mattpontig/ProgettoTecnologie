@@ -70,16 +70,16 @@ public class clientThread extends Thread {
                             String utenti = daMandare2[1];
                             noticaCreazioneChat(utenti);
                         } else if (st[0].equals("send")) {
-                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3],"0");
+                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3], "0");
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
                             gestoreDB.aggiungiNonLetti(st[2], st[1]);
                             notificaUtenti(utenti, st[2]);
                         } else if (st[0].equals("sendFile")) {
-                            daMandare = "ok";
-                            f = new s_rFile(s, st[0],scn, st[3], st[1], st[2]);
+                            this.s.out.println("ok");
+                            f = new s_rFile(s, st[0], scn, st[3], st[1], st[2]);
                             f.start();
                         }
-                        
+
                         this.s.out.println(daMandare);
                         System.out.println(daMandare);
                     }
