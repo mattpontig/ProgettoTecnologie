@@ -93,7 +93,7 @@ public class gestoreDB {
                         String[] lastMex = ultimiMessaggi[i].split(",");
                         if (Integer.parseInt(lastMex[0]) == id)
                             ris += ";" + rs.getInt(2) + ",g," + rs.getString(1) + "," + rs.getString(3)
-                                    + "ò" + lastMex[2] + "$" + "" + getNonLetMex(id, string);
+                                    + "|" + lastMex[2] + "$" + "" + getNonLetMex(id, string);
                         // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
                         // 1,pippo, non letto&29
                     }
@@ -135,7 +135,7 @@ public class gestoreDB {
                     for (int i = 0; i < ultimiMessaggi.length; i++) {
                         String[] lastMex = ultimiMessaggi[i].split(",");
                         if (Integer.parseInt(lastMex[0]) == id)
-                            ris += ";" + rs.getInt(2) + ",s," + "," + rs.getString(1) + "ò" + lastMex[2]
+                            ris += ";" + rs.getInt(2) + ",s," + "," + rs.getString(1) + "|" + lastMex[2]
                                     + "$" + "" + getNonLetMex(id, string);
                         // ;2,g,primoGruppo,prova,prova2-5,prova,triplo;
                         // 1,pippo, non letto&29
@@ -283,7 +283,8 @@ public class gestoreDB {
         return "chat già esistente";
     }
 
-    public static String sendMex(String chi, String chat, String mex,String file) throws ClassNotFoundException, SQLException {
+    public static String sendMex(String chi, String chat, String mex, String file)
+            throws ClassNotFoundException, SQLException {
         String idAltro = "";
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_telegram",
@@ -297,7 +298,7 @@ public class gestoreDB {
             idAltro += rs.getString(1);
 
         stmt.executeUpdate("insert into messaggichat (messaggio,idChat,IdMittente,file) values('" + mex + "',"
-                + Integer.parseInt(chat) + "," + Integer.parseInt(idAltro) + "," + Integer.parseInt(file) +  ")");
+                + Integer.parseInt(chat) + "," + Integer.parseInt(idAltro) + "," + Integer.parseInt(file) + ")");
 
         return "ok";
     }
