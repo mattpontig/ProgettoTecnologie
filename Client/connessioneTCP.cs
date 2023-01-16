@@ -106,7 +106,7 @@ namespace Client
             while (stream.CanWrite == false) { }
             try
             {
-               
+
                 byte[] fileBytes = File.ReadAllBytes(fileName);
 
                 // Get a client stream for reading and writing.
@@ -130,16 +130,20 @@ namespace Client
         {
             Socket socket = client.Client;
 
-            //while (stream.CanRead == false || stream.DataAvailable == false) { }
+            while (stream.CanRead == false || stream.DataAvailable == false) { }
             try
             {// receive data
-                    byte[] buffer = new byte[1000000];
-                    socket.Receive(buffer, buffer.Length, SocketFlags.None);
-                    Console.WriteLine("Receive success");
+                byte[] buffer = new byte[1000000];
+                while (stream.DataAvailable == true)
+                {
+                    //socket.Receive(buffer, buffer.Length, SocketFlags.None);
+                    Int32 bytes = stream.Read(buffer, 0, buffer.Length);
+                    //}
+                    //Console.WriteLine("Received: {0}", responseData);
+                }
+                Console.WriteLine("Receive success");
 
-                    File.WriteAllBytes(@"./fileMess/" + name, buffer);
-                //}
-                //Console.WriteLine("Received: {0}", responseData);
+                File.WriteAllBytes(@"./fileMess/" + name, buffer);
             }
             catch (ArgumentNullException e)
             {

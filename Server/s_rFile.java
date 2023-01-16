@@ -6,8 +6,11 @@ import java.util.*;
 import java.net.*;
 import java.util.Arrays;
 
+import com.mysql.cj.xdevapi.DocFilterParams;
+
 public class s_rFile extends Thread {
     private InputStream in = null;
+    private OutputStream out = null;
     private String daFare, nomeFile, chi, chat;
     MySocket s;
     Charset utf8 = Charset.forName("UTF-8");
@@ -27,7 +30,6 @@ public class s_rFile extends Thread {
         this.daFare = daFare;
         this.s = s;
         this.nomeFile = nomeFile;
-        in = new DataInputStream(s.socket.getInputStream());
     }
 
     @Override
@@ -80,6 +82,7 @@ public class s_rFile extends Thread {
 
     public void provaSend(String nomeFile) throws IOException {
         BufferedOutputStream outToClient = null;
+
         try {
 
             outToClient = new BufferedOutputStream(s.socket.getOutputStream());
@@ -91,8 +94,13 @@ public class s_rFile extends Thread {
 
         if (outToClient != null) {
             //File myFile = new File("/file/" + nomeFile);
-        
-            byte[] bytes = Files.readAllBytes(Paths.get("/file/" + nomeFile));
+            /*File file;
+            file = new File("file/" + nomeFile);
+            byte[] bytes = readFileToByteArray(file);*/
+
+            Path path = Paths.get("file/" + nomeFile);
+
+            byte[] bytes = Files.readAllBytes(path);
 
             FileInputStream fis = null;
 
@@ -104,10 +112,10 @@ public class s_rFile extends Thread {
             BufferedInputStream bis = new BufferedInputStream(fis);
 
             try {
-                bis.read(bytes, 0, bytes.length);
+                //bis.read(bytes, 0, bytes.length);
                 outToClient.write(bytes, 0, bytes.length);
                 outToClient.flush();
-                outToClient.close();
+                //outToClient.close();
 
                 // File sent, exit the main method
             } catch (IOException ex) {
