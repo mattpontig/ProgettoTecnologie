@@ -44,8 +44,7 @@ namespace Client
             txtMess.Visibility = Visibility.Hidden;
             bttSendFile.Visibility = Visibility.Hidden;
             txt = new TextBox();
-            b = new Button();
-            b.Click += scaricaFile;
+
             w = new Window1();
             w.ShowDialog();
             if (w.nomeUtente == "")
@@ -279,6 +278,8 @@ namespace Client
 
 
                     SingleChat.Items.Clear();
+                    b = new Button();
+                    b.MouseDoubleClick += scaricaFile;
 
                     List<Messaggio> chatMess = chatList[index].messaggi;
                     for (int i = 0; i < chatMess.Count; i++)
@@ -292,7 +293,7 @@ namespace Client
                                     txt.Text = chatMess[i].toMessHost();
                                     SingleChat.Items.Add(txt.Text);
                                 }
-                                else if (chatMess[i].file == 0)
+                                else if (chatMess[i].file == 1)
                                 {
                                     b.Content = chatMess[i].toMessHost();
                                     SingleChat.Items.Add(b.Content);
@@ -305,7 +306,7 @@ namespace Client
                                     txt.Text = chatMess[i].toMessGuest();
                                     SingleChat.Items.Add(txt.Text);
                                 }
-                                else if (chatMess[i].file == 0)
+                                else if (chatMess[i].file == 1)
                                 {
                                     b.Content = chatMess[i].toMessGuest();
                                     SingleChat.Items.Add(b.Content);

@@ -45,7 +45,22 @@ public class clientThread extends Thread {
                     } else if (received.equals("END")) {
                     } else if (received.equals("start")) {
                         this.s.out.println("start");
-                    } else {
+                    }else if (received.startsWith("sendFile")) {
+                        // break the string into message
+                        String[] st = received.split(";");
+                        daMandare = "ok";
+                        this.s.out.println(daMandare);
+                        System.out.println(daMandare); 
+                        f = new s_rFile(s, st[0],scn, st[3], st[1], st[2]);
+                        f.start();
+                        try {
+                            f.join();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        
+                     } else {
                         // break the string into message
                         String[] st = received.split(";");
                         if (st[0].equals("RichiedoChats")) {
@@ -74,17 +89,12 @@ public class clientThread extends Thread {
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
                             gestoreDB.aggiungiNonLetti(st[2], st[1]);
                             notificaUtenti(utenti, st[2]);
-                        } else if (st[0].equals("sendFile")) {
-                            daMandare = "ok";
-                            f = new s_rFile(s, st[0],scn, st[3], st[1], st[2]);
-                            f.start();
                         }
-                        
                         this.s.out.println(daMandare);
-                        System.out.println(daMandare);
+                        System.out.println(daMandare); 
                     }
-                }
-            } catch (IOException e) {
+                    }
+                } catch (IOException e) {
                 e.printStackTrace();
                 cicla = false;
                 this.s.Close();
