@@ -17,7 +17,6 @@
         </Grid.ColumnDefinitions>
         <ListBox x:Name="ListChat" HorizontalAlignment="Left" Height="346" Margin="10,66,0,0" VerticalAlignment="Top" Width="208" SelectionChanged="List_SelectionChanged" Background="#FFABADB3"/>
         <Grid Margin="237,22,2,53" Grid.ColumnSpan="3">
-
         </Grid>
         <TextBox x:Name="txtMess" HorizontalAlignment="Left" Margin="251,386,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="419" Height="26" FontSize="18" Grid.ColumnSpan="3"/>
         <Button x:Name="bttSend" Content="Send" HorizontalAlignment="Left" Margin="139,386,0,0" VerticalAlignment="Top" Height="26" Width="67" Click="bttSend_Click" Grid.Column="2"/>

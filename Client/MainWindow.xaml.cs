@@ -31,7 +31,6 @@ namespace Client
         Thread nuovoMess;
         Thread nuovaChat;
         TextBox txt;
-        Button b;
 
         public MainWindow()
         {
@@ -43,8 +42,7 @@ namespace Client
             bttSend.Visibility = Visibility.Hidden;
             txtMess.Visibility = Visibility.Hidden;
             bttSendFile.Visibility = Visibility.Hidden;
-            txt = new TextBox();
-
+            //txt = new TextBox();
             w = new Window1();
             w.ShowDialog();
             if (w.nomeUtente == "")
@@ -67,13 +65,6 @@ namespace Client
             nuovaChat = new Thread(new ThreadStart(controlloNewChat));
             nuovaChat.Start();
             refresh();
-        }
-
-        private void scaricaFile(object sender, RoutedEventArgs e)
-        {
-            connessioneTCP inst = connessioneTCP.getInstance();
-            Button b = e.Source as Button;
-            inst.reciveFile(b.Content.ToString());
         }
 
         void enableChat()
@@ -278,45 +269,34 @@ namespace Client
 
 
                     SingleChat.Items.Clear();
-                    b = new Button();
-                    b.MouseDoubleClick += scaricaFile;
+                    Button b;
 
                     List<Messaggio> chatMess = chatList[index].messaggi;
                     for (int i = 0; i < chatMess.Count; i++)
                     {
                         if (chatMess[i].messaggio != " ")
                         {
+                            b = new Button();
+                            b.Name = "Id" + chatMess[i].id;
+                            b.Click += scaricaFile;
+                            b.Tag = chatMess[i].messaggio;
+
                             if (nome == chatMess[i].nome)
                             {
-                                if (chatMess[i].file == 0)
-                                {
-                                    txt.Text = chatMess[i].toMessHost();
-                                    SingleChat.Items.Add(txt.Text);
-                                }
-                                else if (chatMess[i].file == 1)
-                                {
-                                    b.Content = chatMess[i].toMessHost();
-                                    SingleChat.Items.Add(b.Content);
-                                }
+                                b.Content = chatMess[i].toMessHost();
                             }
                             else
                             {
-                                if (chatMess[i].file == 0)
-                                {
-                                    txt.Text = chatMess[i].toMessGuest();
-                                    SingleChat.Items.Add(txt.Text);
-                                }
-                                else if (chatMess[i].file == 1)
-                                {
-                                    b.Content = chatMess[i].toMessGuest();
-                                    SingleChat.Items.Add(b.Content);
-                                }
+                                b.Content = chatMess[i].toMessGuest();
                             }
+                            if (chatMess[i].file == 0)
+                                SingleChat.Items.Add(b.Content);
+                            else if (chatMess[i].file == 1)
+                                SingleChat.Items.Add(b);
                         }
                     }
 
                     SingleChat.Items.Add("");
-                    //ListChat.SelectedIndex = -1;
 
                     SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
                     SingleChat.ScrollIntoView(SingleChat.SelectedItem);
@@ -328,6 +308,41 @@ namespace Client
                     this.Dispatcher.Invoke(() => { reloadChat(); });
                 }
             }
+        }
+
+        private void scaricaFile(object sender, RoutedEventArgs e)
+        {
+            connessioneTCP inst = connessioneTCP.getInstance();
+            Button b = e.Source as Button;
+            String nameFile = b.Tag as String;
+
+            String risp = "";
+
+            inst.send("reciveFile;" + nameFile + ";");
+            do
+            {
+                risp = s.m;
+            } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+
+            if (risp.StartsWith("ok"))
+            {
+                try
+                {
+                    inst.reciveFile(nameFile);
+                }
+                catch (SecurityException ex)
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
+            }
+            Chat u = chatList[index];
+            chatList.RemoveAt(index);
+            chatList.Insert(0, u);
+            index = 0;
+            txtMess.Text = "";
+            refresh();
+            this.Dispatcher.Invoke(() => { reloadChat(); });
         }
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
@@ -474,6 +489,13 @@ namespace Client
                         $"Details:\n\n{ex.StackTrace}");
                     }
                 }
+                Chat u = chatList[index];
+                chatList.RemoveAt(index);
+                chatList.Insert(0, u);
+                index = 0;
+                txtMess.Text = "";
+                refresh();
+                this.Dispatcher.Invoke(() => { reloadChat(); });
             }
         }
 
@@ -501,5 +523,6 @@ namespace Client
             chatGruppo = new List<Utente>();
             searchM = false;
         }
+
     }
 }

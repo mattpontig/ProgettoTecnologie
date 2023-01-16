@@ -119,7 +119,7 @@
     <Resource Include="graffetta.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="imagesMess\" />
+    <Folder Include="fileMess\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\luna_sole.png" />

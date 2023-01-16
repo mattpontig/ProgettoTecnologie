@@ -1,25 +1,32 @@
 import java.io.*;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
+import java.nio.charset.*;
+import java.nio.file.*;
+import java.sql.*;
 import java.util.*;
 import java.net.*;
 import java.util.Arrays;
 
 public class s_rFile extends Thread {
     private InputStream in = null;
-    Scanner scn;
     private String daFare, nomeFile, chi, chat;
     MySocket s;
     Charset utf8 = Charset.forName("UTF-8");
 
-    public s_rFile(MySocket s, String daFare, Scanner scn, String nomeFile, String chi, String chat)
+    public s_rFile(MySocket s, String daFare, String nomeFile, String chi, String chat)
             throws IOException {
-        this.scn = scn;
         this.daFare = daFare;
         this.s = s;
         this.nomeFile = nomeFile;
         this.chi = chi;
         this.chat = chat;
+        in = new DataInputStream(s.socket.getInputStream());
+    }
+
+    public s_rFile(MySocket s, String daFare, String nomeFile)
+            throws IOException {
+        this.daFare = daFare;
+        this.s = s;
+        this.nomeFile = nomeFile;
         in = new DataInputStream(s.socket.getInputStream());
     }
 
@@ -44,15 +51,14 @@ public class s_rFile extends Thread {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            /*
-             * try {
-             * gestoreDB.sendFileReg(chi, chat, nomeFile);
-             * } catch (ClassNotFoundException | SQLException e) {
-             * // TODO Auto-generated catch block
-             * e.printStackTrace();
-             * };
-             */
+        }
+        else if (daFare.equals("reciveFile")) {
+            try {
+                provaSend(nomeFile);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -72,7 +78,7 @@ public class s_rFile extends Thread {
         gestoreDB.sendMex(chi, chat, nomeFile, "1");
     }
 
-    public void provaSend(/* forse nome file */) {
+    public void provaSend(String nomeFile) throws IOException {
         BufferedOutputStream outToClient = null;
         try {
 
@@ -84,21 +90,22 @@ public class s_rFile extends Thread {
         }
 
         if (outToClient != null) {
-            File myFile = new File(/* file da mandare */);
-            byte[] mybytearray = new byte[(int) myFile.length()];
+            //File myFile = new File("/file/" + nomeFile);
+        
+            byte[] bytes = Files.readAllBytes(Paths.get("/file/" + nomeFile));
 
             FileInputStream fis = null;
 
             try {
-                fis = new FileInputStream(myFile);
+                fis = new FileInputStream("/file/" + nomeFile);
             } catch (FileNotFoundException ex) {
                 // Do exception handling
             }
             BufferedInputStream bis = new BufferedInputStream(fis);
 
             try {
-                bis.read(mybytearray, 0, mybytearray.length);
-                outToClient.write(mybytearray, 0, mybytearray.length);
+                bis.read(bytes, 0, bytes.length);
+                outToClient.write(bytes, 0, bytes.length);
                 outToClient.flush();
                 outToClient.close();
 

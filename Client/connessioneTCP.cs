@@ -130,17 +130,15 @@ namespace Client
         {
             Socket socket = client.Client;
 
-            while (stream.CanRead == false || stream.DataAvailable == false) { }
+            //while (stream.CanRead == false || stream.DataAvailable == false) { }
             try
-            {
-                while (stream.DataAvailable == true)
-                {// receive data
+            {// receive data
                     byte[] buffer = new byte[1000000];
                     socket.Receive(buffer, buffer.Length, SocketFlags.None);
                     Console.WriteLine("Receive success");
 
-                    File.WriteAllBytes(@"./imagesMess/" + name, buffer);
-                }
+                    File.WriteAllBytes(@"./fileMess/" + name, buffer);
+                //}
                 //Console.WriteLine("Received: {0}", responseData);
             }
             catch (ArgumentNullException e)
@@ -150,6 +148,10 @@ namespace Client
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
         }

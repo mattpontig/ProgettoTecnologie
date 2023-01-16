@@ -51,7 +51,7 @@ public class clientThread extends Thread {
                         daMandare = "ok";
                         this.s.out.println(daMandare);
                         System.out.println(daMandare); 
-                        f = new s_rFile(s, st[0],scn, st[3], st[1], st[2]);
+                        f = new s_rFile(s, st[0],st[3], st[1], st[2]);
                         f.start();
                         try {
                             f.join();
@@ -60,7 +60,21 @@ public class clientThread extends Thread {
                             e.printStackTrace();
                         }
                         
-                     } else {
+                    } else if (received.startsWith("reciveFile")) {
+                        // break the string into message
+                        String[] st = received.split(";");
+                        daMandare = "ok";
+                        this.s.out.println(daMandare);
+                        System.out.println(daMandare);
+                        f = new s_rFile(s, st[0], st[1]);
+                        f.start();
+                        try {
+                            f.join();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    } else {
                         // break the string into message
                         String[] st = received.split(";");
                         if (st[0].equals("RichiedoChats")) {
