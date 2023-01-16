@@ -31,7 +31,7 @@ namespace Client
                         if (chat[1] == "g")
                         {
                             //List<String> utenti, String titolo, int id,int ultiMess, String UltimoMess,int messNonLetti
-                            String[] mess = (chat[3].Split('ò'))[1].Split('&');
+                            String[] mess = (chat[3].Split('|'))[1].Split('&');
                             int messNonLetti = int.Parse(mess[1].Split('$')[1]);
                             int idUltimoMex = int.Parse(mess[1].Split('$')[0]);
                             list.Add(new Chat(utente, chat[2].ToString(), int.Parse(chat[0].ToString()), idUltimoMex, mess[0], messNonLetti));
@@ -39,7 +39,7 @@ namespace Client
                         }
                         else if (chat[1] == "s")
                         {
-                            String[] div = chat[3].Split('ò');
+                            String[] div = chat[3].Split('|');
                             utente.Add(div[0]);
                             String[] mess = div[1].Split('&');
                             int messNonLetti = int.Parse(mess[1].Split('$')[1]);
