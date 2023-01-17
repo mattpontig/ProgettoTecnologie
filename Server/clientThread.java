@@ -33,82 +33,84 @@ public class clientThread extends Thread {
         while (cicla) {
             try {
                 // receive the string
-                try{
-                received = in.readLine();
-                }catch(Exception e){}
+                try {
+                    received = in.readLine();
+                } catch (Exception e) {
+                }
                 if (received != null) {
-                    System.out.println(received);
-                    if (received.equals("Close")) {
-                        this.isloggedin = false;
-                        this.s.Close();
+                    if (!received.equals("END")) {
+                        System.out.println(received);
+                        if (received.equals("Close")) {
+                            this.isloggedin = false;
+                            this.s.Close();
 
-                        cicla = false;
-                        break;
-                    } else if (received.equals("END")) {
-                    } else if (received.equals("start")) {
-                        this.s.out.println("start");
-                    } else if (received.startsWith("sendFile")) {
-                        // break the string into message
-                        String[] st = received.split(";");
-                        daMandare = "ok";
-                        this.s.out.println(daMandare);
-                        System.out.println(daMandare);
-                        f = new s_rFile(s, st[0], st[3], st[1], st[2]);
-                        f.start();
-                        try {
-                            f.join();
-                            this.s.out.println("ok");
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
+                            cicla = false;
+                            break;
+                        } else if (received.equals("start")) {
+                            this.s.out.println("start");
+                        } else if (received.startsWith("sendFile")) {
+                            // break the string into message
+                            String[] st = received.split(";");
+                            daMandare = "ok";
+                            this.s.out.println(daMandare);
+                            System.out.println(daMandare);
+                            f = new s_rFile(s, st[0], st[3], st[1], st[2]);
+                            f.start();
+                            try {
+                                f.join();
+                                this.s.out.println("ok");
+                            } catch (InterruptedException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
 
-                    } else if (received.startsWith("reciveFile")) {
-                        // break the string into message
-                        String[] st = received.split(";");
-                        daMandare = "ok";
-                        this.s.out.println(daMandare);
-                        System.out.println(daMandare);
-                        f = new s_rFile(s, st[0], st[1]);
-                        f.start();
-                        try {
-                            f.join();
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    } else {
-                        // break the string into message
-                        String[] st = received.split(";");
-                        if (st[0].equals("RichiedoChats")) {
-                            daMandare = gestoreDB.getChatNames(st[1]);
-                            this.s.id = gestoreDB.getIdFromName(st[1]);
-                        } else if (st[0].equals("getUtenti")) {
-                            daMandare = gestoreDB.getNames(st[1]);
-                        } else if (st[0].equals("richiedoChat")) {
-                            daMandare = gestoreDB.getChatMex(st[1], this.s.id);
-                            // fare metodo per mettere che leggi la chat quando la richiedi
-                        } else if (st[0].equals("nuovaChat")) {
-                            daMandare = gestoreDB.newChat(st[1], st[2]);
-                            if (daMandare.startsWith("ok")) {
+                        } else if (received.startsWith("reciveFile")) {
+                            // break the string into message
+                            String[] st = received.split(";");
+                            daMandare = "ok";
+                            this.s.out.println(daMandare);
+                            System.out.println(daMandare);
+                            f = new s_rFile(s, st[0], st[1]);
+                            f.start();
+                            try {
+                                f.join();
+                            } catch (InterruptedException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // break the string into message
+                            String[] st = received.split(";");
+                            if (st[0].equals("RichiedoChats")) {
+                                daMandare = gestoreDB.getChatNames(st[1]);
+                                this.s.id = gestoreDB.getIdFromName(st[1]);
+                            } else if (st[0].equals("getUtenti")) {
+                                daMandare = gestoreDB.getNames(st[1]);
+                            } else if (st[0].equals("richiedoChat")) {
+                                daMandare = gestoreDB.getChatMex(st[1], this.s.id);
+                                // fare metodo per mettere che leggi la chat quando la richiedi
+                            } else if (st[0].equals("nuovaChat")) {
+                                daMandare = gestoreDB.newChat(st[1], st[2]);
+                                if (daMandare.startsWith("ok")) {
+                                    String[] daMandare2 = daMandare.split(";");
+                                    String utenti = daMandare2[1];
+                                    noticaCreazioneChat(utenti);
+                                }
+                            } else if (st[0].equals("nuovoGruppo")) {
+                                daMandare = gestoreDB.newGroup(st[1], st[2], st[3]);
                                 String[] daMandare2 = daMandare.split(";");
+                                daMandare = daMandare2[0];
                                 String utenti = daMandare2[1];
                                 noticaCreazioneChat(utenti);
+                            } else if (st[0].equals("send")) {
+                                daMandare = gestoreDB.sendMex(st[1], st[2], st[3], "0");
+                                String utenti = gestoreDB.chatToId(st[1], st[2]);
+                                gestoreDB.aggiungiNonLetti(st[2], st[1]);
+                                notificaUtenti(utenti, st[2]);
                             }
-                        } else if (st[0].equals("nuovoGruppo")) {
-                            daMandare = gestoreDB.newGroup(st[1], st[2], st[3]);
-                            String[] daMandare2 = daMandare.split(";");
-                            daMandare = daMandare2[0];
-                            String utenti = daMandare2[1];
-                            noticaCreazioneChat(utenti);
-                        } else if (st[0].equals("send")) {
-                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3], "0");
-                            String utenti = gestoreDB.chatToId(st[1], st[2]);
-                            gestoreDB.aggiungiNonLetti(st[2], st[1]);
-                            notificaUtenti(utenti, st[2]);
+                            this.s.out.println(daMandare);
+                            System.out.println(daMandare);
                         }
-                        this.s.out.println(daMandare);
-                        System.out.println(daMandare);
                     }
                 }
             } catch (IOException e) {
@@ -137,7 +139,7 @@ public class clientThread extends Thread {
             shared.getInstance().removeSocket(s); // rimuove la socket dalla lista di socket attive
         } catch (IOException e) {
             e.printStackTrace();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // inst.removeSocket(_socket);

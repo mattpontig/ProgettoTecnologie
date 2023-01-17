@@ -1,0 +1,1 @@
+ip nat pool internetworking 192.0.1.1 192.0.50.10 netmask 255.255.255.0

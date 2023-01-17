@@ -1,0 +1,31 @@
+NAT
+
+Router> enable
+Router# configure terminal
+Router(config)# ip nat pool internetworking 200.100.50.1 200.100.50.10 netmask 255.255.255.0
+Router(config)# access-list 10 permit 192.168.1.0 0.0.0.255
+Router(config)# ip nat inside source list 10 pool internetworking
+Router(config)# interface fastEthernet0/0
+Router(config-if)# ip nat inside
+Router(config-if)# no shutdown
+Router(config-if)# exit
+Router(config)# int f1/0
+Router(config-if)# ip nat outside
+Router(config-if)# no shutdown
+Router(config-if)# exit
+Router(config)# do wr
+Router(config)# exit
+
+
+ACL
+
+Router> en
+Router# conf t
+Router(config)# access-list 110 permit tcp host 192.168.3.1 host 192.168.1.100 eq 80
+Router(config)# access-list 110 deny ip any any
+Router(config)# int f0/0
+Router(config-if)# ip access-group 110 out
+(Premere Ctrl+Z)
+
+richiedoChat;8
+END

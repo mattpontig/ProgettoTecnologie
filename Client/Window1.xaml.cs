@@ -32,7 +32,7 @@ namespace Client
         private void bttLogin_Click(object sender, RoutedEventArgs e)
         {
             nomeUtente = txtUtente.Text;
-            c.invia("Login" + ";" + nomeUtente + ";" + txtPassword.Text + ";");
+            c.invia("Login" + ";" + nomeUtente + ";" + txtPassword.Password.ToString() + ";");
             String s = c.recive();
             //MessageBox.Show(s);
             if (s == "0")
@@ -55,7 +55,7 @@ namespace Client
             w.ShowDialog();
             while(w.s != "ok") { }
             nomeUtente = w.txtUtente.Text;
-            c.invia("Login" + ";" + nomeUtente + ";" + w.txtPassword.Text + ";");
+            c.invia("Login" + ";" + nomeUtente + ";" + w.txtPassword.Password.ToString() + ";");
             String s = c.recive();
             if (s == "0")
             {

@@ -1,0 +1,76 @@
+\!
+version 12.2
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Router
+!
+!
+!
+!
+!
+ip dhcp pool LAN1
+ network 192.168.0.0 255.255.255.0
+ default-router 192.168.0.1
+ dns-server 208.67.222.3
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 192.168.0.1 255.255.255.0
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/0
+ no ip address
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface Serial2/0
+ ip address 192.168.5.1 255.255.255.0
+!
+interface Serial3/0
+ no ip address
+ clock rate 2000000
+ shutdown
+!
+interface FastEthernet4/0
+ no ip address
+ shutdown
+!
+interface FastEthernet5/0
+ no ip address
+ shutdown
+!
+router rip
+ version 2
+ network 192.168.0.0
+ network 192.168.5.0
+ network 192.168.8.0
+ network 200.100.50.0
+ network 208.67.222.0
+!
+ip nat pool internetworking 200.100.50.1 200.100.50.10 netmask 255.255.
