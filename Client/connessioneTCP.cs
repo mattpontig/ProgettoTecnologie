@@ -129,59 +129,22 @@ namespace Client
 
         public void reciveFile(String name)
         {
-            Socket socket = client.Client;
 
-            //while (stream.CanRead == false || stream.DataAvailable == false) { }
-            try
-            {
-                //{// receive data
-                //    byte[] buffer = new byte[1024];
-                //    //while (stream.DataAvailable == true)
-                //    {
-                //        //socket.Receive(buffer, buffer.Length, SocketFlags.None);
-                //        Int32 bytes = stream.Read(buffer, 0, buffer.Length);
-                //        //}
-                //        //Console.WriteLine("Received: {0}", responseData);
-                //    }
-                //    Console.WriteLine("Receive success");
+                byte[] buffer = new byte[4096];
+                int bytesRead;
 
-                // Create a byte array 
-                //byte[] byteArray = new byte[1024];
-                //stream.Read(byteArray, 0, byteArray.Length);
-                //FileStream f = new FileStream()
-
-                //File.WriteAllBytes(@"./fileMess/" + name, buffer);
-
-                // Create a FileStream 
-                FileStream output = File.Create(name);
-
-
-                // Create a byte array 
-                byte[] buffer = new byte[1024];
-
-
-                // Read the bytes from the NetworkStream 
-                int bytesRead = 0;
-                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+                try
                 {
-                    output.Write(buffer, 0, bytesRead);
-                    output.Flush();
-                }
-                output.Close();
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+                    using (FileStream fileStream = new FileStream(name, FileMode.Create))
+                    {
+                        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
+                        {
+                            fileStream.Write(buffer, 0, bytesRead);
+                        }
 
+                    }
+                }
+                catch (Exception e) { }
         }
 
         NetworkStream stream;

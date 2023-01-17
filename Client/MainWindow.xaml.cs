@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace Client
 {
@@ -316,24 +317,33 @@ namespace Client
             Button b = e.Source as Button;
             String nameFile = b.Tag as String;
 
-            String risp = "";
-
-            inst.send("reciveFile;" + nameFile + ";");
-            do
+            bool fileExist = File.Exists(nameFile);
+            if (fileExist)
             {
-                risp = s.m;
-            } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
-
-            if (risp.StartsWith("ok"))
+                Console.WriteLine("File exists.");
+            }
+            else
             {
-                try
+
+                String risp = "";
+
+                inst.send("reciveFile;" + nameFile + ";");
+                do
                 {
-                    inst.reciveFile(nameFile);
-                }
-                catch (SecurityException ex)
+                    risp = s.m;
+                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+
+                if (risp.StartsWith("ok"))
                 {
-                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                    $"Details:\n\n{ex.StackTrace}");
+                    try
+                    {
+                        inst.reciveFile(nameFile);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                        $"Details:\n\n{ex.StackTrace}");
+                    }
                 }
             }
         }
@@ -463,30 +473,31 @@ namespace Client
             openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == true)
             {
-                String nameFile = System.IO.Path.GetFileName(openFileDialog1.FileName);
-                inst.send("sendFile;" + nome + ";" + chatList[index].id + ";" + nameFile);
-                do
-                {
-                    risp = s.m;
-                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
 
-                if (risp.StartsWith("ok"))
-                {
-                    try
+                    String nameFile = System.IO.Path.GetFileName(openFileDialog1.FileName);
+                    inst.send("sendFile;" + nome + ";" + chatList[index].id + ";" + nameFile);
+                    do
                     {
-                        inst.sendFile(openFileDialog1.FileName);
-                    }
-                    catch (SecurityException ex)
+                        risp = s.m;
+                    } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+
+                    if (risp.StartsWith("ok"))
                     {
-                        MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                        $"Details:\n\n{ex.StackTrace}");
+                        try
+                        {
+                            inst.sendFile(openFileDialog1.FileName);
+                        }
+                        catch (SecurityException ex)
+                        {
+                            MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                            $"Details:\n\n{ex.StackTrace}");
+                        }
                     }
+                    do
+                    {
+                        risp = s.m;
+                    } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
                 }
-                do
-                {
-                    risp = s.m;
-                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
-
                 /*if (risp.StartsWith("ok"))
                 {
                     if (index != 0)
@@ -500,7 +511,6 @@ namespace Client
                     }
                     this.Dispatcher.Invoke(() => { reloadChat(); });
                 }*/
-            }
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

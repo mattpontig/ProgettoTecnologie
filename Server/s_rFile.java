@@ -35,32 +35,32 @@ public class s_rFile extends Thread {
     @Override
     public void run() {
 
-            if (daFare.equals("sendFile")) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                byte buffer[] = new byte[1024];
-                try {
-                    baos.write(buffer, 0, in.read(buffer));
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-
-                byte result[] = baos.toByteArray();
-
-                try {
-                    writeFile(result);
-                } catch (IOException | ClassNotFoundException | SQLException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            } else if (daFare.equals("reciveFile")) {
-                try {
-                    provaSend(nomeFile);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+        if (daFare.equals("sendFile")) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte buffer[] = new byte[1024];
+            try {
+                baos.write(buffer, 0, in.read(buffer));
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
             }
+
+            byte result[] = baos.toByteArray();
+
+            try {
+                writeFile(result);
+            } catch (IOException | ClassNotFoundException | SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else if (daFare.equals("reciveFile")) {
+            try {
+                provaSend(nomeFile);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     public void writeFile(byte[] result)
@@ -82,73 +82,17 @@ public class s_rFile extends Thread {
     }
 
     public void provaSend(String nomeFile) throws IOException {
-        // Create a byte array of the same length as the file 
-        //File f = new File("file/" + nomeFile);
+        try (OutputStream outputStream = s.socket.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream("file/" + nomeFile)) {
 
-        //byte[] byteArray = new byte[(int)f.length()];
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
 
-        FileInputStream fis = new FileInputStream("file/" + nomeFile); 
-        // Get the output stream of the socket 
-        OutputStream os = s.socket.getOutputStream(); 
-
-        // Create a buffer 
-        //byte[] buffer = new byte[1024]; 
-        // Create a byte array 
-        byte[] array = new byte[(int)fis.available()]; 
-
-        // Read bytes from file into buffer 
-        int bytesRead = fis.read(array); ; 
-
-        fis.close();
-
-        System.out.println(array);
-        // Write the bytes to the output stream
-        os.write(array, 0, bytesRead); 
-
-
-        // Flush the output stream and close the socket
-        os.flush();
-        //s.socket.close();
-
-        /*OutputStream  outToClient = null;
-        
-        try {
-        
-            outToClient = s.socket.getOutputStream();
-        } catch (
-        
-        IOException ex) {
-            // Do exception handling
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
-        if (outToClient != null) {
-        
-            Path path = Paths.get("file/" + nomeFile);
-        
-            byte[] bytes = Files.readAllBytes(path);
-        
-            FileInputStream fis = null;
-        
-            try {
-                fis = new FileInputStream("/file/" + nomeFile);
-            } catch (FileNotFoundException ex) {
-                // Do exception handling
-            }
-            BufferedInputStream bis = new BufferedInputStream(fis);
-        
-            try {
-                //bis.read(bytes, 0, bytes.length);
-                outToClient.write(bytes, 0, bytes.length);
-                outToClient.flush();
-                outToClient.close();
-                
-                //outToClient.close();
-        
-                // File sent, exit the main method
-            } catch (Exception ex) {
-                // Do exception handling
-            }
-        }*/
-
     }
 }
