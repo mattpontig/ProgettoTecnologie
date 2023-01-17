@@ -350,6 +350,7 @@ namespace Client
                 {
                     risp = s.m;
                 } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+                s.reload();
             }
         }
 
@@ -503,8 +504,9 @@ namespace Client
                         risp = s.m;
                     } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
                 }
-                /*if (risp.StartsWith("ok"))
+                if (risp.StartsWith("ok"))
                 {
+                    s.reload();
                     if (index != 0)
                     {
                         Chat u = chatList[index];
@@ -515,7 +517,7 @@ namespace Client
                         this.Dispatcher.Invoke(() => { refresh(); });
                     }
                     this.Dispatcher.Invoke(() => { reloadChat(); });
-                }*/
+                }
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

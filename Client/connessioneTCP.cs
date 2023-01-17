@@ -32,12 +32,12 @@ namespace Client
         Byte[] data;
         public void send(String message)
         {
-            stream = client.GetStream();
-            while (stream.CanWrite == false) { }
             try
             {
+                stream = client.GetStream();
+                while (stream.CanWrite == false) { }
                 // Translate the passed message into ASCII and store it as a Byte array.
-                data = System.Text.Encoding.Default.GetBytes(message + "\r\nEND\r\n");
+                data = System.Text.Encoding.UTF8.GetBytes(message + "\r\nEND\r\n");
 
                 // Get a client stream for reading and writing.
                 // Send the message to the connected TcpServer.

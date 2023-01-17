@@ -79,5 +79,18 @@ namespace Client
             }
         }
 
+        public void reload()
+        {
+            socket = new TcpClient();
+            socket.Connect("localhost", PORT);
+            stream = socket.GetStream();
+            nuovoMess = false;
+            messaggioCoda = false;
+            nuovaChat = false;
+
+            connessioneTCP inst = connessioneTCP.getInstance();
+            inst.setSocket(socket, stream);
+        }
+
     }
 }

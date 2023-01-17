@@ -26,16 +26,15 @@ public class clientThread extends Thread {
 
     @Override
     public void run() {
-        shared inst = shared.getInstance();
         String received = "";
         boolean cicla = true;
         String daMandare = "";
         while (cicla) {
             try {
                 // receive the string
-                try{
-                received = in.readLine();
-            } catch (Exception e) {
+                try {
+                    received = in.readLine();
+                } catch (Exception e) {
                 }
                 if (received != null) {
                     if (!received.equals("END")) {
@@ -43,7 +42,6 @@ public class clientThread extends Thread {
                         if (received.equals("Close")) {
                             this.isloggedin = false;
                             this.s.Close();
-
                             cicla = false;
                             break;
                         } else if (received.equals("start")) {
@@ -59,6 +57,9 @@ public class clientThread extends Thread {
                             try {
                                 f.join();
                                 this.s.out.println("ok");
+                                String utenti = gestoreDB.chatToId(st[1], st[2]);
+                                gestoreDB.aggiungiNonLetti(st[2], st[1]);
+                                notificaUtenti(utenti, st[2]);
                             } catch (InterruptedException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
@@ -146,6 +147,11 @@ public class clientThread extends Thread {
         // inst.removeSocket(_socket);
     }
 
+    public void close() {
+        this.s.Close();
+        shared.getInstance().removeSocket(s);
+    }
+    
     public void notificaUtenti(String utenti, String chat) {
         String[] idSocket = utenti.split(";");
         for (int i = 0; i < idSocket.length; i++) {
