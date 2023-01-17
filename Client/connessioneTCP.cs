@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -130,20 +131,43 @@ namespace Client
         {
             Socket socket = client.Client;
 
-            while (stream.CanRead == false || stream.DataAvailable == false) { }
+            //while (stream.CanRead == false || stream.DataAvailable == false) { }
             try
-            {// receive data
-                byte[] buffer = new byte[1000000];
-                while (stream.DataAvailable == true)
-                {
-                    //socket.Receive(buffer, buffer.Length, SocketFlags.None);
-                    Int32 bytes = stream.Read(buffer, 0, buffer.Length);
-                    //}
-                    //Console.WriteLine("Received: {0}", responseData);
-                }
-                Console.WriteLine("Receive success");
+            {
+                //{// receive data
+                //    byte[] buffer = new byte[1024];
+                //    //while (stream.DataAvailable == true)
+                //    {
+                //        //socket.Receive(buffer, buffer.Length, SocketFlags.None);
+                //        Int32 bytes = stream.Read(buffer, 0, buffer.Length);
+                //        //}
+                //        //Console.WriteLine("Received: {0}", responseData);
+                //    }
+                //    Console.WriteLine("Receive success");
 
-                File.WriteAllBytes(@"./fileMess/" + name, buffer);
+                // Create a byte array 
+                //byte[] byteArray = new byte[1024];
+                //stream.Read(byteArray, 0, byteArray.Length);
+                //FileStream f = new FileStream()
+
+                //File.WriteAllBytes(@"./fileMess/" + name, buffer);
+
+                // Create a FileStream 
+                FileStream output = File.Create(name);
+
+
+                // Create a byte array 
+                byte[] buffer = new byte[1024];
+
+
+                // Read the bytes from the NetworkStream 
+                int bytesRead = 0;
+                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    output.Write(buffer, 0, bytesRead);
+                    output.Flush();
+                }
+                output.Close();
             }
             catch (ArgumentNullException e)
             {

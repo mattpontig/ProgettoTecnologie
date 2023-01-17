@@ -33,7 +33,9 @@ public class clientThread extends Thread {
         while (cicla) {
             try {
                 // receive the string
+                try{
                 received = in.readLine();
+                }catch(Exception e){}
                 if (received != null) {
                     System.out.println(received);
                     if (received.equals("Close")) {
@@ -45,21 +47,22 @@ public class clientThread extends Thread {
                     } else if (received.equals("END")) {
                     } else if (received.equals("start")) {
                         this.s.out.println("start");
-                    }else if (received.startsWith("sendFile")) {
+                    } else if (received.startsWith("sendFile")) {
                         // break the string into message
                         String[] st = received.split(";");
                         daMandare = "ok";
                         this.s.out.println(daMandare);
-                        System.out.println(daMandare); 
-                        f = new s_rFile(s, st[0],st[3], st[1], st[2]);
+                        System.out.println(daMandare);
+                        f = new s_rFile(s, st[0], st[3], st[1], st[2]);
                         f.start();
                         try {
                             f.join();
+                            this.s.out.println("ok");
                         } catch (InterruptedException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
-                        
+
                     } else if (received.startsWith("reciveFile")) {
                         // break the string into message
                         String[] st = received.split(";");
@@ -99,16 +102,16 @@ public class clientThread extends Thread {
                             String utenti = daMandare2[1];
                             noticaCreazioneChat(utenti);
                         } else if (st[0].equals("send")) {
-                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3],"0");
+                            daMandare = gestoreDB.sendMex(st[1], st[2], st[3], "0");
                             String utenti = gestoreDB.chatToId(st[1], st[2]);
                             gestoreDB.aggiungiNonLetti(st[2], st[1]);
                             notificaUtenti(utenti, st[2]);
                         }
                         this.s.out.println(daMandare);
-                        System.out.println(daMandare); 
+                        System.out.println(daMandare);
                     }
-                    }
-                } catch (IOException e) {
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
                 cicla = false;
                 this.s.Close();
@@ -119,6 +122,11 @@ public class clientThread extends Thread {
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+                cicla = false;
+                this.s.Close();
+                shared.getInstance().removeSocket(s); // rimuove la socket dalla lista di socket attive
             }
         }
         try {
@@ -128,6 +136,8 @@ public class clientThread extends Thread {
             this.s.Close();
             shared.getInstance().removeSocket(s); // rimuove la socket dalla lista di socket attive
         } catch (IOException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
             e.printStackTrace();
         }
         // inst.removeSocket(_socket);

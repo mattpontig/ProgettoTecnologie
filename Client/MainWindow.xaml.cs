@@ -336,13 +336,6 @@ namespace Client
                     $"Details:\n\n{ex.StackTrace}");
                 }
             }
-            Chat u = chatList[index];
-            chatList.RemoveAt(index);
-            chatList.Insert(0, u);
-            index = 0;
-            txtMess.Text = "";
-            refresh();
-            this.Dispatcher.Invoke(() => { reloadChat(); });
         }
 
         private void bttGruppo_Click(object sender, RoutedEventArgs e)
@@ -489,13 +482,24 @@ namespace Client
                         $"Details:\n\n{ex.StackTrace}");
                     }
                 }
-                Chat u = chatList[index];
-                chatList.RemoveAt(index);
-                chatList.Insert(0, u);
-                index = 0;
-                txtMess.Text = "";
-                refresh();
-                this.Dispatcher.Invoke(() => { reloadChat(); });
+                do
+                {
+                    risp = s.m;
+                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+
+                /*if (risp.StartsWith("ok"))
+                {
+                    if (index != 0)
+                    {
+                        Chat u = chatList[index];
+                        chatList.RemoveAt(index);
+                        chatList.Insert(0, u);
+                        index = 0;
+                        txtMess.Text = "";
+                        this.Dispatcher.Invoke(() => { refresh(); });
+                    }
+                    this.Dispatcher.Invoke(() => { reloadChat(); });
+                }*/
             }
         }
 
