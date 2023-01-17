@@ -33,9 +33,9 @@ public class clientThread extends Thread {
         while (cicla) {
             try {
                 // receive the string
-                try {
-                    received = in.readLine();
-                } catch (Exception e) {
+                try{
+                received = in.readLine();
+            } catch (Exception e) {
                 }
                 if (received != null) {
                     if (!received.equals("END")) {
@@ -74,6 +74,7 @@ public class clientThread extends Thread {
                             f.start();
                             try {
                                 f.join();
+                                this.s.out.println("ok");
                             } catch (InterruptedException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();

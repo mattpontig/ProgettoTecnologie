@@ -32,6 +32,7 @@ namespace Client
         Byte[] data;
         public void send(String message)
         {
+            stream = client.GetStream();
             while (stream.CanWrite == false) { }
             try
             {
@@ -101,29 +102,7 @@ namespace Client
 
         public void sendFile(String fileName)
         {
-            /*Socket socket = client.Client;
 
-
-            while (stream.CanWrite == false) { }
-            try
-            {
-
-                byte[] fileBytes = File.ReadAllBytes(fileName);
-
-                // Get a client stream for reading and writing.
-                // Send the message to the connected TcpServer.
-                stream.Write(fileBytes, 0, fileBytes.Length);
-                stream.Flush();
-
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }*/
             BinaryWriter writer = new BinaryWriter(stream);
             byte[] file = File.ReadAllBytes(fileName);
             writer.Write(file);
@@ -133,21 +112,21 @@ namespace Client
         public void reciveFile(String name)
         {
 
-                byte[] buffer = new byte[4096];
-                int bytesRead;
+            byte[] buffer = new byte[4096];
+            int bytesRead;
 
-                try
+            try
+            {
+                FileStream fileStream = new FileStream(name, FileMode.Create);
                 {
-                    using (FileStream fileStream = new FileStream(name, FileMode.Create))
+                    while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
                     {
-                        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
-                        {
-                            fileStream.Write(buffer, 0, bytesRead);
-                        }
-
+                        fileStream.Write(buffer, 0, bytesRead);
                     }
+                    fileStream.Close();
                 }
-                catch (Exception e) { }
+            }
+            catch (Exception e) { }
         }
 
         NetworkStream stream;

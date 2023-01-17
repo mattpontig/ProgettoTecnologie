@@ -209,8 +209,8 @@ namespace Client
             if (ListChat.SelectedIndex != -1)
             {
                 index = ListChat.SelectedIndex;
-                bttSend.Visibility = Visibility.Hidden;
-                txtMess.Visibility = Visibility.Hidden;
+                //bttSend.Visibility = Visibility.Hidden;
+                //txtMess.Visibility = Visibility.Hidden;
             }
             if (searchM == false)
             {
@@ -318,7 +318,7 @@ namespace Client
             String nameFile = b.Tag as String;
 
             bool fileExist = File.Exists(nameFile);
-            if (!fileExist)
+            if (fileExist)
             {
                 Console.WriteLine("File exists.");
             }
@@ -330,22 +330,26 @@ namespace Client
                 inst.send("reciveFile;" + nameFile + ";");
                 do
                 {
-                    inst.reciveFile(nameFile);
                     risp = s.m;
                 } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
 
-                //if (risp.StartsWith("ok"))
-                //{
-                //    try
-                //    {
-                        
-                //    }
-                //    catch (SecurityException ex)
-                //    {
-                //        MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                //        $"Details:\n\n{ex.StackTrace}");
-                //    }
-                //}
+                if (risp.StartsWith("ok"))
+                {
+                    try
+                    {
+                        inst.reciveFile(nameFile);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                        $"Details:\n\n{ex.StackTrace}");
+                    }
+                }
+
+                do
+                {
+                    risp = s.m;
+                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
             }
         }
 

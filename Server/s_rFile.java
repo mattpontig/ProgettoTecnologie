@@ -89,7 +89,7 @@ public class s_rFile extends Thread {
                 outputStream.write(buffer, 0, bytesRead);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

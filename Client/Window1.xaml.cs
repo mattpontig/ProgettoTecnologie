@@ -54,20 +54,23 @@ namespace Client
             WindowRegistrati w = new WindowRegistrati();
             w.ShowDialog();
             while(w.s != "ok") { }
-            nomeUtente = w.txtUtente.Text;
-            c.invia("Login" + ";" + nomeUtente + ";" + w.txtPassword.Password.ToString() + ";");
-            String s = c.recive();
-            if (s == "0")
+            if (w.close == false)
             {
-                txtUtente.Text = "Login Errato";
-            }
-            else if (Connection.online == false)
-            {
-                txtUtente.Text = "Server down";
-            }
-            else if (s == "1")
-            {
-                this.Close();
+                nomeUtente = w.txtUtente.Text;
+                c.invia("Login" + ";" + nomeUtente + ";" + w.txtPassword.Password.ToString() + ";");
+                String s = c.recive();
+                if (s == "0")
+                {
+                    txtUtente.Text = "Login Errato";
+                }
+                else if (Connection.online == false)
+                {
+                    txtUtente.Text = "Server down";
+                }
+                else if (s == "1")
+                {
+                    this.Close();
+                }
             }
         }
     }
