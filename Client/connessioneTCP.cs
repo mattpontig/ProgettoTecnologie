@@ -101,7 +101,7 @@ namespace Client
 
         public void sendFile(String fileName)
         {
-            Socket socket = client.Client;
+            /*Socket socket = client.Client;
 
 
             while (stream.CanWrite == false) { }
@@ -123,7 +123,10 @@ namespace Client
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
-            }
+            }*/
+            BinaryWriter writer = new BinaryWriter(stream);
+            byte[] file = File.ReadAllBytes(fileName);
+            writer.Write(file);
 
         }
 

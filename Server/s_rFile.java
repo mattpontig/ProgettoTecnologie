@@ -36,20 +36,9 @@ public class s_rFile extends Thread {
     public void run() {
 
         if (daFare.equals("sendFile")) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte buffer[] = new byte[1024];
             try {
-                baos.write(buffer, 0, in.read(buffer));
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-
-            byte result[] = baos.toByteArray();
-
-            try {
-                writeFile(result);
-            } catch (IOException | ClassNotFoundException | SQLException e) {
+                write(nomeFile);
+            } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -63,6 +52,18 @@ public class s_rFile extends Thread {
         }
     }
 
+    public void write(String nome) throws IOException {
+        InputStream in = s.socket.getInputStream();
+        BufferedInputStream bis = new BufferedInputStream(in);
+        FileOutputStream fos = new FileOutputStream("file/" + nomeFile);
+        
+        byte[] buffer = new byte[4096];
+        int count;
+        while ((count = bis.read(buffer)) > 0) {
+            fos.write(buffer, 0, count);
+        }
+    }
+    
     public void writeFile(byte[] result)
             throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         try (FileOutputStream fos = new FileOutputStream("file/" + nomeFile)) {
