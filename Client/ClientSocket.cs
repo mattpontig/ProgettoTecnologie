@@ -56,12 +56,12 @@ namespace Client
                         }
                         if (m.StartsWith("messInArr"))
                         {
-                            m = "";
+                            //m = line;
                             messaggioCoda=true;
                         }
                         else if (m.StartsWith("RichiedoChats"))
                         {
-                            m = "";
+                            //m = line;
                             nuovaChat = true;
                         }
                     }
@@ -73,9 +73,9 @@ namespace Client
             }
             catch (IOException e)
             {
-                inst.toClose = true;  //impossibile prendere lo stream di input
-                inst.send("Close");
-                return;
+
+                //inst.send("Close");
+                //return;
             }
         }
 

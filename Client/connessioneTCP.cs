@@ -16,7 +16,6 @@ namespace Client
     public class connessioneTCP
     {
         public TcpClient client;
-        public bool toClose = false;
 
 
         private static connessioneTCP _instance = null;
@@ -114,7 +113,7 @@ namespace Client
 
             byte[] buffer = new byte[4096];
             int bytesRead;
-
+            //TcpClient tmp = client;
             try
             {
                 FileStream fileStream = new FileStream(name, FileMode.Create);

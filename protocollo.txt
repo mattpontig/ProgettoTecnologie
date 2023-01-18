@@ -1,0 +1,31 @@
+Protocollo 
+
+Server to Client:
+
+Stringa con tutte le chat = ;;id,g/s,titolo,altroUtente|ultimoMess&idUltimoMess$messNonLetti;
+
+Stringa con i messaggi = id,nome,mess,file(1/0)
+
+Client to Server:
+
+Stringa login = Login;nomeUtente;Password; Server = ok / 0 = Credenziali errate
+
+Stringa registrazione = Register;nomeUtente;Password; Server = ok / Utente già registrato
+
+Stringa richiedere le chat = RichiedoChats;Nome;
+
+Stringa richiedere messaggi = "richiedoChat;idChat
+
+Stringa get tutti gli utenti = getUtenti;NomeUtente;
+
+Stringa chiudere socket = Close;
+
+Stringa nuovo gruppo = nuovoGruppo;Nome;NomeGruppo;Utenti Server = ok
+
+Stringa nuovo chat singola  = nuovaChat;Nome;idAltro Server = ok
+
+Stringa mandare messaggi = send;Nome;idChat;messaggio Server = ok
+
+Stringa scarica file = reciveFile;nameFile; Server = ok
+
+Stringa manda file = sendFile;nome;idChat;nameFile Server = ok

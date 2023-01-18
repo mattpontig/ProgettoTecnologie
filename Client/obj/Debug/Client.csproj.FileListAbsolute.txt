@@ -137,3 +137,4 @@ R:\Desktop\provaeeeeeee\Client\obj\Debug\Client.csproj.GenerateResource.cache
 R:\Desktop\provaeeeeeee\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
 R:\Desktop\provaeeeeeee\Client\obj\Debug\Client.exe
 R:\Desktop\provaeeeeeee\Client\obj\Debug\Client.pdb
+R:\Desktop\provaeeeeeee\Client\obj\Debug\Client.csproj.SuggestedBindingRedirects.cache

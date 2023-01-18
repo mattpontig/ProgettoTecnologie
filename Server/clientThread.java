@@ -57,6 +57,7 @@ public class clientThread extends Thread {
                             try {
                                 f.join();
                                 this.s.out.println("ok");
+                                // shared.getInstance().removeSocket(s.id);
                                 String utenti = gestoreDB.chatToId(st[1], st[2]);
                                 gestoreDB.aggiungiNonLetti(st[2], st[1]);
                                 notificaUtenti(utenti, st[2]);
@@ -76,6 +77,7 @@ public class clientThread extends Thread {
                             try {
                                 f.join();
                                 this.s.out.println("ok");
+                                shared.getInstance().removeSocket(s.id);
                             } catch (InterruptedException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
@@ -151,7 +153,7 @@ public class clientThread extends Thread {
         this.s.Close();
         shared.getInstance().removeSocket(s);
     }
-    
+
     public void notificaUtenti(String utenti, String chat) {
         String[] idSocket = utenti.split(";");
         for (int i = 0; i < idSocket.length; i++) {

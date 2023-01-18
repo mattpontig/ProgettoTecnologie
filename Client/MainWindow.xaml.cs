@@ -127,7 +127,6 @@ namespace Client
             this.Dispatcher.Invoke(() => { addMessNonLetti(idChatPrelevare); });
 
             Chat u = chatList[idChatPrelevare];
-
             chatList.RemoveAt(idChatPrelevare);
             chatList.Insert(0, u);
             this.Dispatcher.Invoke(() => { refresh(); });
@@ -301,7 +300,7 @@ namespace Client
 
                     SingleChat.SelectedIndex = SingleChat.Items.Count - 1;
                     SingleChat.ScrollIntoView(SingleChat.SelectedItem);
-                    SingleChat.SelectedIndex = -1;
+                    //SingleChat.SelectedIndex = -1;
                 }
 
                 catch (Exception e)
@@ -346,11 +345,13 @@ namespace Client
                     }
                 }
 
-                do
+                /*do
                 {
                     risp = s.m;
-                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+                } while (risp == "" || risp == null || risp.StartsWith("ok") == false);*/
                 s.reload();
+                chatList = null;
+                refresh();
             }
         }
 
@@ -499,14 +500,14 @@ namespace Client
                             $"Details:\n\n{ex.StackTrace}");
                         }
                     }
-                    do
+                    /*do
                     {
                         risp = s.m;
-                    } while (risp == "" || risp == null || risp.StartsWith("ok") == false);
+                    } while (risp == "" || risp == null || risp.StartsWith("ok") == false);*/
                 }
-                if (risp.StartsWith("ok"))
+                //if (risp.StartsWith("ok"))
                 {
-                    s.reload();
+                    //s.reload();
                     if (index != 0)
                     {
                         Chat u = chatList[index];
@@ -514,7 +515,9 @@ namespace Client
                         chatList.Insert(0, u);
                         index = 0;
                         txtMess.Text = "";
-                        this.Dispatcher.Invoke(() => { refresh(); });
+                        //chatList = null;
+                    s.reload();
+                    this.Dispatcher.Invoke(() => { refresh(); });
                     }
                     this.Dispatcher.Invoke(() => { reloadChat(); });
                 }
